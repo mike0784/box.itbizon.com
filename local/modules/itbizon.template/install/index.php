@@ -67,7 +67,7 @@ class itbizon_template extends CModule
      */
     public function InstallEvents()
     {
-        RegisterModuleDependences('im', 'OnBeforeConfirmNotify', 'itbizon.finance', '\\Itbizon\\Finance\\Operation', 'OnBeforeConfirmNotify');
+
     }
 
     /**
@@ -75,7 +75,7 @@ class itbizon_template extends CModule
      */
     public function UnInstallEvents()
     {
-        UnRegisterModuleDependences('im', 'OnBeforeConfirmNotify', 'itbizon.finance', '\\Itbizon\\Finance\\Operation', 'OnBeforeConfirmNotify');
+
     }
 
     /**
