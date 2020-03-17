@@ -1,8 +1,13 @@
 <?php
-use Bitrix\Main\ModuleManager;
-use Bitrix\Main\EventManager;
+use \Bitrix\Main\Application;
+use \Bitrix\Main\Loader;
+use \Bitrix\Main\ModuleManager;
+use \Bitrix\Main\EventManager;
+use \Itbizon\Tourism\TravelPoint\Model\RegionTable;
+use \Itbizon\Tourism\TravelPoint\Model\CountryTable;
+use \Itbizon\Tourism\TravelPoint\Model\CityTable;
 
-class itbizon_tourism extends CModule
+class itbizon_tourism extends \CModule
 {
     /**
      * itbizon_template constructor.
@@ -44,15 +49,22 @@ class itbizon_tourism extends CModule
      */
     public function InstallDB()
     {
-        try
+        require_once($_SERVER['DOCUMENT_ROOT'].'/local/modules/itbizon.tourism/lib/travelpoint/model/region.php');
+        require_once($_SERVER['DOCUMENT_ROOT'].'/local/modules/itbizon.tourism/lib/travelpoint/model/country.php');
+        require_once($_SERVER['DOCUMENT_ROOT'].'/local/modules/itbizon.tourism/lib/travelpoint/model/city.php');
+        $db = Application::getConnection();
+        $entities = [
+            RegionTable::getEntity(),
+            CountryTable::getEntity(),
+            CityTable::getEntity(),
+        ];
+        /** @var \Bitrix\Main\ORM\Entity $entity  */
+        foreach($entities as $entity)
         {
-            return true;
+            if(!$db->isTableExists($entity->getDBTableName()))
+                $entity->createDbTable();
         }
-        catch(Exception $e)
-        {
-
-        }
-        return false;
+        return true;
     }
 
     /**
@@ -75,13 +87,6 @@ class itbizon_tourism extends CModule
             '\\Itbizon\\Tourism\\Fields\\TravelPoint',
             'getUserTypeDescription'
         );
-        EventManager::getInstance()->RegisterEventHandler(
-            'main',
-            'OnUserTypeBuildList',
-            $this->MODULE_ID,
-            '\\Itbizon\\Tourism\\Fields\\ClassRate',
-            'getUserTypeDescription'
-        );
     }
 
     /**
@@ -94,13 +99,6 @@ class itbizon_tourism extends CModule
             'OnUserTypeBuildList',
             $this->MODULE_ID,
             '\\Itbizon\\Tourism\\Fields\\TravelPoint',
-            'getUserTypeDescription'
-        );
-        EventManager::getInstance()->unRegisterEventHandler(
-            'main',
-            'OnUserTypeBuildList',
-            $this->MODULE_ID,
-            '\\Itbizon\\Tourism\\Fields\\ClassRate',
             'getUserTypeDescription'
         );
     }
