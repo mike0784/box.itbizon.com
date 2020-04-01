@@ -1,4 +1,6 @@
 <?php
+
+use Bitrix\Main\Application;
 use Bitrix\Main\ModuleManager;
 
 class itbizon_template extends CModule
@@ -9,17 +11,16 @@ class itbizon_template extends CModule
     public function __construct()
     {
         $arModuleVersion = [];
-        include(__DIR__.'/version.php');
-        if(is_array($arModuleVersion) && array_key_exists('VERSION', $arModuleVersion))
-        {
-            $this->MODULE_VERSION      = $arModuleVersion['VERSION'];
+        include(__DIR__ . '/version.php');
+        if (is_array($arModuleVersion) && array_key_exists('VERSION', $arModuleVersion)) {
+            $this->MODULE_VERSION = $arModuleVersion['VERSION'];
             $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
         }
-        $this->MODULE_ID          = 'itbizon.template';
-        $this->MODULE_NAME        = '[BizON] Шаблон модуля';
+        $this->MODULE_ID = 'itbizon.template';
+        $this->MODULE_NAME = '[BizON] Шаблон модуля';
         $this->MODULE_DESCRIPTION = 'Описание модуля';
-        $this->PARTNER_NAME       = 'BizON';
-        $this->PARTNER_URI        = 'https://itbizon.com';
+        $this->PARTNER_NAME = 'BizON';
+        $this->PARTNER_URI = 'https://itbizon.com';
     }
 
     /**
@@ -43,15 +44,21 @@ class itbizon_template extends CModule
      */
     public function InstallDB()
     {
-        try
-        {
+        try {
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.template/lib/systemfines/model/fines.php');
+            $db = Application::getConnection();
+            $entities = [
+                FinesTable::getEntity(),
+            ];
+            /** @var \Bitrix\Main\ORM\Entity $entity */
+            foreach ($entities as $entity) {
+                if (!$db->isTableExists($entity->getDBTableName()))
+                    $entity->createDbTable();
+            }
             return true;
+        } catch (Exception $e) {
+            return false;
         }
-        catch(Exception $e)
-        {
-
-        }
-        return false;
     }
 
     /**
@@ -83,16 +90,13 @@ class itbizon_template extends CModule
      */
     public function DoInstall()
     {
-        if(!ModuleManager::isModuleInstalled($this->MODULE_ID))
-        {
+        if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             $this->InstallDB();
             $this->InstallFiles();
             $this->InstallEvents();
             $this->InstallTasks();
             CAdminMessage::ShowNote('Модуль установлен');
-        }
-        else
-        {
+        } else {
             CAdminMessage::ShowNote('Ошибка установки модуля');
         }
         ModuleManager::registerModule($this->MODULE_ID);
@@ -103,16 +107,13 @@ class itbizon_template extends CModule
      */
     public function DoUninstall()
     {
-        if(ModuleManager::isModuleInstalled($this->MODULE_ID))
-        {
+        if (ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             $this->UnInstallTasks();
             $this->UnInstallEvents();
             $this->UnInstallFiles();
             $this->UnInstallDB();
             CAdminMessage::ShowNote('Модуль удален');
-        }
-        else
-        {
+        } else {
             CAdminMessage::ShowNote('Ошибка удаления модуля');
         }
         ModuleManager::unRegisterModule($this->MODULE_ID);
