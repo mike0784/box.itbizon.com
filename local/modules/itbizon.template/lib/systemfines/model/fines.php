@@ -2,7 +2,9 @@
 
 namespace Itbizon\Template\SystemFines\Model;
 
+use Bitrix\Main\Entity\EventResult;
 use Bitrix\Main\ORM\Data\DataManager;
+use Bitrix\Main\ORM\Event;
 use Bitrix\Main\ORM\Query\Join;
 use \Bitrix\Main\ORM\Fields;
 
@@ -67,14 +69,13 @@ class FinesTable extends DataManager
             new Fields\IntegerField(
                 'VALUE',
                 [
-                    'required' => true,
                     'validation' => function () {
                         return array(
                             function ($value) {
-                                if ($value !== 0) {
+                                if (is_numeric($value) && $value !== 0) {
                                     return true;
                                 } else {
-                                    return 'Сумма не должна равняться 0';
+                                    return 'Размер штрафа или бонуса должен содержать корректные цыфры';
                                 }
                             }
                         );
@@ -85,6 +86,33 @@ class FinesTable extends DataManager
                 'COMMENT'
             ),
         ];
+    }
+
+    public static function onBeforeAdd(Event $event)
+    {
+        $result = new EventResult();
+        $data = $event->getParameter("fields");
+
+        if (isset($data['VALUE'])) {
+            $val = $data['VALUE'] * 100;
+            $result->modifyFields(array('VALUE' => $val));
+        }
+
+
+        return $result;
+    }
+
+    public static function onBeforeUpdate(Event $event)
+    {
+        $result = new EventResult();
+        $data = $event->getParameter("fields");
+        if (isset($data['VALUE'])) {
+            $val = $data['VALUE'] * 100;
+            $result->modifyFields(array('VALUE' => $val));
+        }
+
+
+        return $result;
     }
 
 }
