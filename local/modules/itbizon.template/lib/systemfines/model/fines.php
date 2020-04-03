@@ -51,7 +51,7 @@ class FinesTable extends DataManager
                 ]
             ),
             (new Fields\Relations\Reference(
-                'CREATOR_ID',
+                'CREATOR',
                 \Bitrix\Main\UserTable::getEntity(),
                 Join::on('this.CREATOR_ID', 'ref.ID')
             ))->configureJoinType('left'),
@@ -62,7 +62,7 @@ class FinesTable extends DataManager
                 ]
             ),
             (new Fields\Relations\Reference(
-                'TARGET_ID',
+                'TARGET',
                 \Bitrix\Main\UserTable::getEntity(),
                 Join::on('this.TARGET_ID', 'ref.ID')
             ))->configureJoinType('left'),
