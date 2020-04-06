@@ -6,10 +6,10 @@ $arComponentDescription = array(
 	"DESCRIPTION" => "TEST",
 	"COMPLEX" => "Y",
 	"PATH" => array(
-		"ID" => "создание штрафов",
+		"ID" => "Тестовый компонент",
 		"CHILD" => array(
-			"ID" => "create",
-			"NAME" => 'Штрафы',
+			"ID" => "router",
+            'NAME'  => 'Роутер',
 		),
 	),
 );

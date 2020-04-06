@@ -6,18 +6,6 @@ if (!CModule::IncludeModule("itbizon.template")) {
 }
 $arComponentParameters = [
     'PARAMETERS' => [
-        'SEF_MODE' => [
-            'index'  => [
-                'NAME'      => 'Шаблон таблицы',
-                'DEFAULT'   => 'index.php',
-                'VARIABLES' => [],
-            ],
-            'create'   => [
-                'NAME'      => 'Шаблон настроек',
-                'DEFAULT'   => 'create/',
-                'VARIABLES' => [],
-            ],
-        ],
     ],
 ];
 

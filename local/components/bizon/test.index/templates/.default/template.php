@@ -23,12 +23,20 @@
                 <td><?= $fine['DATE_CREATE'] ?></td>
                 <td><?= $targetUser->getName() ?></td>
                 <td><?= $creatorUser->getName() ?></td>
-                <td><a href="#">Редактировать</a>
-                    <a href="#">Удалить</a>
+                <td><a href="<?= $fine['ID'] ?>/edit/">Редактировать</a>
+                    <a id="deleteFine" data-path="<?= $arResult['PATH'] ?>"
+                       data-id="<?= $fine['ID'] ?>"
+                       href="#">Удалить</a>
                 </td>
             </tr>
         <?php } ?>
         </tbody>
     </table>
+
+    <button type="button" class="btn btn-primary" id="showPopup" data-toggle="modal" data-target="#myModal"
+            data-path="<?= $arResult['PATH'] ?>">
+        создать
+    </button>
 </div>
+
 

@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\UI\Extension;
+use Itbizon\Template\TestClass;
 
 require($_SERVER['DOCUMENT_ROOT'] . "/bitrix/header.php");
 $APPLICATION->SetTitle("");
@@ -8,12 +9,12 @@ $APPLICATION->SetTitle("");
 Extension::load('ui.bootstrap4');
 
 $APPLICATION->IncludeComponent(
-    "bizon:test.index",
+    "bizon:test.router",
     "",
     Array(
         "SEF_FOLDER" => "/local/test/",
         "SEF_MODE" => "Y",
-        "SEF_URL_TEMPLATES" => Array("create"=>"create/","index"=>"index.php")
+        "SEF_URL_TEMPLATES" => Array("edit"=>"#ID#/edit/","index"=>"")
     )
 );
 

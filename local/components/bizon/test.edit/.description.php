@@ -5,10 +5,10 @@ $arComponentDescription = array(
 	"NAME" => 'Test',
 	"DESCRIPTION" => "TEST",
 	"PATH" => array(
-		"ID" => "Тестовый компонент",
+        "ID" => "Тестовый компонент",
 		"CHILD" => array(
-			"ID" => "index",
-            'NAME'  => 'Индекс',
+			"ID" => "edit",
+			"NAME" => 'Штрафы',
 		),
 	),
 );
