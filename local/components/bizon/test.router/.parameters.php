@@ -13,7 +13,7 @@ $arComponentParameters = [
                 'VARIABLES' => [],
             ],
             'edit'   => [
-                'NAME'      => 'Проспотр и редактирование',
+                'NAME'      => 'Просмотр и редактирование',
                 'DEFAULT'   => '#ID#/edit/',
                 'VARIABLES' => ['ID'],
             ],

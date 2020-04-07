@@ -3,10 +3,12 @@
 namespace Itbizon\Template\SystemFines\Model;
 
 use Bitrix\Main\Entity\EventResult;
+use Bitrix\Main\Entity\ExpressionField;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Event;
 use Bitrix\Main\ORM\Query\Join;
 use \Bitrix\Main\ORM\Fields;
+use \Bitrix\Main\Type\Date;
 
 class FinesTable extends DataManager
 {
@@ -41,7 +43,7 @@ class FinesTable extends DataManager
             new Fields\DateField(
                 'DATE_CREATE',
                 [
-                    'default_value' => new \Bitrix\Main\Type\Date
+                    'default_value' => new Date
                 ]
             ),
             new Fields\IntegerField(
@@ -55,6 +57,7 @@ class FinesTable extends DataManager
                 \Bitrix\Main\UserTable::getEntity(),
                 Join::on('this.CREATOR_ID', 'ref.ID')
             ))->configureJoinType('left'),
+
             new Fields\IntegerField(
                 'TARGET_ID',
                 [
@@ -98,7 +101,6 @@ class FinesTable extends DataManager
             $result->modifyFields(array('VALUE' => $val));
         }
 
-
         return $result;
     }
 
@@ -111,8 +113,6 @@ class FinesTable extends DataManager
             $result->modifyFields(array('VALUE' => $val));
         }
 
-
         return $result;
     }
-
 }

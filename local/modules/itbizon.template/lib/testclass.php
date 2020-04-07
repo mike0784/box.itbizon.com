@@ -3,6 +3,7 @@
 namespace Itbizon\Template;
 
 use Bitrix\Main\UserTable;
+use Itbizon\Template\SystemFines\Fines;
 use Itbizon\Template\SystemFines\Model\FinesTable;
 
 
@@ -161,10 +162,11 @@ class TestClass
             $html .= '<td>' . $fine['TITLE'] . '</td>';
             $html .= '<td>' . $fine['VALUE'] . '</td>';
             $html .= '<td>' . $fine['DATE_CREATE'] . '</td>';
-            $html .= '<td>' . $targetUser->getName()  . '</td>';
+            $html .= '<td>' . $targetUser->getName() . '</td>';
             $html .= '<td>' . $creatorUser->getName() . '</td>';
-            $html .= '<td><a href="index.php?update=1&id=' . $fine['ID'] . '">Редактировать</a></td>';
-            $html .= '<td><a href="index.php?id=' . $fine['ID'] . '">Удалить</a></td>';
+            $html .= '<td><a href="index.php?update=1&id=' . $fine['ID'] . '">Редактировать</a>
+                      <a href="index.php?id=' . $fine['ID'] . '">Удалить</a>          
+                      </td>';
             $html .= '</tr>';
         }
         $html .= '</tbody></table>';

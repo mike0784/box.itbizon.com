@@ -2,6 +2,7 @@
 
 use Bitrix\Main\Application;
 use Bitrix\Main\ModuleManager;
+use Itbizon\Template\SystemFines\Model\FinesTable;
 
 class itbizon_template extends CModule
 {

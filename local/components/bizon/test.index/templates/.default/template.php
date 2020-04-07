@@ -12,24 +12,20 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($arResult['FINES'] as $fine) {
-            $targetUser = Bitrix\Main\UserTable::getByPrimary($fine['TARGET_ID'])->fetchObject();
-            $creatorUser = Bitrix\Main\UserTable::getByPrimary($fine['CREATOR_ID'])->fetchObject();
-            ?>
+        <? foreach ($arResult['FINES'] as $fine): ?>
             <tr>
-                <th scope="row"><?= $fine['ID'] ?></th>
-                <td><?= $fine['TITLE'] ?></td>
-                <td><?= $fine['VALUE'] ?></td>
-                <td><?= $fine['DATE_CREATE'] ?></td>
-                <td><?= $targetUser->getName() ?></td>
-                <td><?= $creatorUser->getName() ?></td>
-                <td><a href="<?= $fine['ID'] ?>/edit/">Редактировать</a>
-                    <a id="deleteFine" data-path="<?= $arResult['PATH'] ?>"
-                       data-id="<?= $fine['ID'] ?>"
+                <th scope="row"><?= $fine->getId() ?></th>
+                <td><?= $fine->getTitle() ?></td>
+                <td><?= $fine->getValue() ?></td>
+                <td><?= $fine->getDateCreate() ?></td>
+                <td><?= $fine->getCreator()->getName() ?></td>
+                <td><?= $fine->getTarget()->getName() ?></td>
+                <td><a href="<?= $fine->getId() ?>/edit/">Редактировать</a>
+                    <a id="deleteFine" data-path="<?= $arResult['PATH'] . '?ID=' . $fine->getId() ?>"
                        href="#">Удалить</a>
                 </td>
             </tr>
-        <?php } ?>
+        <? endforeach ?>
         </tbody>
     </table>
 

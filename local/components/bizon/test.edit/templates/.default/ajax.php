@@ -1,12 +1,16 @@
 <?php
 
+use Bitrix\Main\Loader;
+use \Itbizon\Template\SystemFines\Model\FinesTable;
+
 require($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');
 header('Content-Type: application/json');
 
 global $APPLICATION;
 
-function answer($message, $data = null)
+function answer(string $message, $data = null, int $code = 200)
 {
+    http_response_code($code);
     echo json_encode(['message' => $message, 'data' => $data]);
     die();
 }
@@ -21,9 +25,8 @@ function convertErrorToArray($fine)
 }
 
 try {
-    if (!\Bitrix\Main\Loader::includeModule('itbizon.template')) {
-        http_response_code(500);
-        answer('Модель не подключен');
+    if (!Loader::includeModule('itbizon.template')) {
+        answer('Модель не подключен', null, 500);
     }
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -31,18 +34,14 @@ try {
         unset($_REQUEST['ID']);
         $request = $_REQUEST;
 
-        $fine = \Itbizon\Template\SystemFines\Model\FinesTable::update($id, $request);
+        $fine = FinesTable::update($id, $request);
 
         if (!$fine->isSuccess()) {
-            http_response_code(400);
-            answer('invalid response', convertErrorToArray($fine));
+            answer('invalid response', convertErrorToArray($fine), 400);
         }
 
-        http_response_code(204);
-        answer('Success');
+        answer('Success', null, 204);
     }
-
 } catch (Exception $e) {
-    http_response_code(500);
-    answer($e->getMessage());
+    answer($e->getMessage(), null, 500);
 }

@@ -1,6 +1,7 @@
 <?php
 
-use Bitrix\Main\UserTable;
+use Bitrix\Main\Loader;
+use \Bitrix\Main\SystemException;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
@@ -8,85 +9,67 @@ class ComponentClass extends \CBitrixComponent
 {
     public function executeComponent()
     {
-        if (!\Bitrix\Main\Loader::includeModule('itbizon.template')) {
-            return false;
-        }
-
-        $arDefaultUrlTemplates404 = [
-            'index' => 'index',
-            'edit' => '#ID#/edit/',
-            'delete' => '#ID#/delete/',
-        ];
-
-        $arDefaultVariableAliases404 = [];
-        $arDefaultVariableAliases = [];
-        $arComponentVariables = [];
-        $SEF_FOLDER = '';
-        $arUrlTemplates = [];
-
-        if ($this->arParams['SEF_MODE'] == 'Y') {
-
-            $arVariables = [];
-
-            $arUrlTemplates = CComponentEngine::MakeComponentUrlTemplates(
-                $arDefaultUrlTemplates404,
-                $this->arParams['SEF_URL_TEMPLATES']
-            );
-
-            $arVariableAliases = CComponentEngine::MakeComponentVariableAliases(
-                $arDefaultVariableAliases404,
-                $this->arParams['VARIABLE_ALIASES']
-            );
-
-            $componentPage = CComponentEngine::ParseComponentPath(
-                $this->arParams['SEF_FOLDER'],
-                $arUrlTemplates,
-                $arVariables
-            );
-
-            if (strlen($componentPage) <= 0) {
-                $componentPage = 'index';
+        try {
+            if (!Loader::includeModule('itbizon.template')) {
+                throw new SystemException('Модуль itbizon.template должен быть установлен');
             }
 
-            CComponentEngine::InitComponentVariables(
-                $componentPage,
-                $arComponentVariables,
-                $arVariableAliases,
-                $arVariables);
+            $arDefaultUrlTemplates404 = [
+                'index' => 'index',
+                'edit' => '#ID#/edit/',
+            ];
 
-            $SEF_FOLDER = $this->arParams['SEF_FOLDER'];
+            $arDefaultVariableAliases404 = [];
+            $arComponentVariables = [];
 
-        } else {
-            $arVariables = [];
+            if ($this->arParams['SEF_MODE'] == 'Y') {
 
-            $arVariableAliases = CComponentEngine::MakeComponentVariableAliases(
-                $arDefaultVariableAliases,
-                $this->arParams['VARIABLE_ALIASES']
-            );
+                $arVariables = [];
 
-            CComponentEngine::InitComponentVariables(
-                false,
-                $arComponentVariables,
-                $arVariableAliases,
-                $arVariables
-            );
+                $arUrlTemplates = CComponentEngine::MakeComponentUrlTemplates(
+                    $arDefaultUrlTemplates404,
+                    $this->arParams['SEF_URL_TEMPLATES']
+                );
 
-            $componentPage = '';
-            if (intval($arVariables['ELEMENT_ID']) > 0) {
-                $componentPage = 'element';
+                $arVariableAliases = CComponentEngine::MakeComponentVariableAliases(
+                    $arDefaultVariableAliases404,
+                    $this->arParams['VARIABLE_ALIASES']
+                );
+
+                $componentPage = CComponentEngine::ParseComponentPath(
+                    $this->arParams['SEF_FOLDER'],
+                    $arUrlTemplates,
+                    $arVariables
+                );
+
+                if (strlen($componentPage) <= 0) {
+                    $componentPage = 'index';
+                }
+
+                CComponentEngine::InitComponentVariables(
+                    $componentPage,
+                    $arComponentVariables,
+                    $arVariableAliases,
+                    $arVariables);
+
+                $SEF_FOLDER = $this->arParams['SEF_FOLDER'];
+
+                $this->arResult = [
+                    'FOLDER' => $SEF_FOLDER,
+                    'URL_TEMPLATES' => $arUrlTemplates,
+                    'VARIABLES' => $arVariables,
+                    'ALIASES' => $arVariableAliases,
+                ];
+
+                $this->IncludeComponentTemplate($componentPage);
+                return true;
+
             } else {
-                $componentPage = 'index';
+                throw new SystemException('Режим ЧПУ должен быть включен');
             }
+        } catch (Exception $e) {
+           ShowMessage($e->getMessage());
         }
-
-        $this->arResult = [
-            'FOLDER' => $SEF_FOLDER,
-            'URL_TEMPLATES' => $arUrlTemplates,
-            'VARIABLES' => $arVariables,
-            'ALIASES' => $arVariableAliases,
-        ];
-
-        $this->IncludeComponentTemplate($componentPage);
-        return true;
+        return false;
     }
 }

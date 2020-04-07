@@ -1,6 +1,9 @@
 <?php
 
+use \Bitrix\Main\Loader;
 use Bitrix\Main\UserTable;
+use \Itbizon\Template\SystemFines\Entities\Fines;
+use \Itbizon\Template\SystemFines\EntityManager;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
@@ -8,12 +11,12 @@ class TableClass extends \CBitrixComponent
 {
     public function executeComponent()
     {
-        if (!\Bitrix\Main\Loader::includeModule('itbizon.template')) {
+        if (!Loader::includeModule('itbizon.template')) {
             return false;
         }
 
-        $fines = \Itbizon\Template\SystemFines\Model\FinesTable::getList();
-        $users = UserTable::getList();
+        $fines = EntityManager::getRepository(Fines::class)->findAll();
+        $users = UserTable::getList()->fetchAll();
         $path = $this->GetPath() . '/templates/.default/ajax.php';
 
         $this->arResult = [

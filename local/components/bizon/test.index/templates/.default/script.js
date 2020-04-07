@@ -18,16 +18,15 @@ $(document).ready(function () {
 
     $(document).on('click', '#deleteFine', function (e) {
         e.preventDefault();
+
         let link = $(this);
         $.ajax({
             type: "POST",
-            data: { ID: link.data('id')},
             url: link.data('path'),
             success: function (response) {
                 location.reload(true);
             },
             error: function (xhr) {
-                console.log(xhr.responseText)
             },
         });
     });

@@ -1,12 +1,17 @@
 <?php
 
+use \Bitrix\Main\Loader;
+use \Bitrix\Main\UserTable;
+use \Itbizon\Template\SystemFines\Model\FinesTable;
+
 require($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');
 header('Content-Type: application/json');
 
 global $APPLICATION;
 
-function answer($message, $data = null)
+function answer($message, $data = null, int $code = 200)
 {
+    http_response_code($code);
     echo json_encode(['message' => $message, 'data' => $data]);
     die();
 }
@@ -21,28 +26,23 @@ function convertErrorToArray($fine)
 }
 
 try {
-    if (!\Bitrix\Main\Loader::includeModule('itbizon.template')) {
-        http_response_code(500);
-        answer('Модель не подключен');
+    if (!Loader::includeModule('itbizon.template')) {
+        answer('Модель не подключен', null, 500);
     }
 
-    if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_REQUEST['ID'])){
+    if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_REQUEST['ID'])) {
         $request = $_REQUEST;
-        $fine = \Itbizon\Template\SystemFines\Model\FinesTable::getByPrimary($request['ID'])->fetchObject();
-        if($fine){
+        $fine = FinesTable::getByPrimary($request['ID'])->fetchObject();
+        if ($fine) {
             $fine->delete();
-            http_response_code(204);
-            answer('Success');
+            answer('Success', null, 204);
         }
-        http_response_code(404);
-        answer('error');
+        answer('error', null, 404);
     }
 
     if ($_SERVER['REQUEST_METHOD'] === "GET") {
-        $creatorUsers = \Bitrix\Main\UserTable::getList();
-        $targetUsers = \Bitrix\Main\UserTable::getList();
+        $users = UserTable::getList()->fetchAll();
         $path = $APPLICATION->GetCurDir() . 'ajax.php';
-
         ob_start();
         require(__DIR__ . '/include/popup.php');
         $html = ob_get_clean();
@@ -51,18 +51,13 @@ try {
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $request = $_REQUEST;
-        $fine = \Itbizon\Template\SystemFines\Model\FinesTable::add($request);
+        $fine = FinesTable::add($request);
 
         if (!$fine->isSuccess()) {
-            http_response_code(400);
-            answer('invalid response', convertErrorToArray($fine));
+            answer('invalid response', convertErrorToArray($fine), 400);
         }
-
-        http_response_code(201);
-        answer('Success');
+        answer('Success', null, 201);
     }
-
 } catch (Exception $e) {
-    http_response_code(500);
-    answer($e->getMessage());
+    answer($e->getMessage(), null, 500);
 }
