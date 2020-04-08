@@ -68,11 +68,11 @@ class Fines
     }
 
     /**
-     * @return integer
+     * @return float
      */
-    public function getValue(): int
+    public function getValue(): float
     {
-        return $this->value;
+        return $this->value / 100;
     }
 
     public function setCreator(int $userId): self

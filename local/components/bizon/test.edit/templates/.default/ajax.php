@@ -1,6 +1,9 @@
 <?php
 
 use Bitrix\Main\Loader;
+use Bitrix\Main\UserTable;
+use Itbizon\Template\SystemFines\Entities\Fines;
+use Itbizon\Template\SystemFines\EntityManager;
 use \Itbizon\Template\SystemFines\Model\FinesTable;
 
 require($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');
@@ -29,8 +32,21 @@ try {
         answer('Модель не подключен', null, 500);
     }
 
+    if ($_SERVER['REQUEST_METHOD'] === "GET" && isset($_REQUEST['ID'])) {
+        $users = UserTable::getList()->fetchAll();
+        $fine = EntityManager::getRepository(Fines::class)->findById($_REQUEST['ID']);
+        $path = $APPLICATION->GetCurDir() . 'ajax.php';
+        ob_start();
+        require(__DIR__ . '/include/popup.php');
+        $html = ob_get_clean();
+        answer('Success', $html);
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $id = $_REQUEST['ID'];
+        if (empty($id)) {
+            answer('invalid response', [], 500);
+        }
         unset($_REQUEST['ID']);
         $request = $_REQUEST;
 
