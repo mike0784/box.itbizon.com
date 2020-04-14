@@ -3,7 +3,8 @@
 namespace Itbizon\Template\SystemFines\Model;
 
 use Bitrix\Main\Entity\EventResult;
-use Bitrix\Main\Entity\ExpressionField;
+use \Bitrix\Main\Event as MainEvent;
+use Bitrix\Main\EventManager;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Event;
 use Bitrix\Main\ORM\Query\Join;
@@ -106,6 +107,7 @@ class FinesTable extends DataManager
 
     public static function onBeforeUpdate(Event $event)
     {
+
         $result = new EventResult();
         $data = $event->getParameter("fields");
         if (isset($data['VALUE'])) {
@@ -114,5 +116,18 @@ class FinesTable extends DataManager
         }
 
         return $result;
+    }
+
+    public static function OnAfterAdd(Event $event)
+    {
+        $params = $event->getParameter("fields");
+        $event = new MainEvent("itbizon.template", "OnAfterAddFine", $params);
+        EventManager::getInstance()->send($event);
+    }
+
+    public static function OnAfterDelete(Event $event)
+    {
+        $event = new MainEvent("itbizon.template", "OnAfterDeleteFine");
+        EventManager::getInstance()->send($event);
     }
 }

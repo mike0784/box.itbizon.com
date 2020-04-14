@@ -16,7 +16,8 @@ class CBPItbizonaddfine extends CBPActivity
             "VALUE" => "",
             "TARGET_ID" => "",
             "CREATOR_ID" => "",
-            "COMMENT" => ""
+            "COMMENT" => "",
+            'ID' => null
         );
 
         $this->SetPropertiesTypes(
@@ -62,6 +63,7 @@ class CBPItbizonaddfine extends CBPActivity
                 $this->WriteToTrackingService($fine->getErrorMessages());
                 throw new Exception('Ошибка создания штрафа');
             }
+            $this->ID = $fine->getObject()->getId();
 
         } catch (Exception $e) {
             $this->WriteToTrackingService($e->getMessage());
@@ -153,7 +155,8 @@ class CBPItbizonaddfine extends CBPActivity
         &$arWorkflowVariables,
         $arCurrentValues,
         &$arErrors
-    ) {
+    )
+    {
         $arErrors = self::ValidateProperties(
             $arCurrentValues,
             new CBPWorkflowTemplateUser(CBPWorkflowTemplateUser::CurrentUser)

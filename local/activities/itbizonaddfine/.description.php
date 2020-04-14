@@ -13,6 +13,12 @@ $arActivityDescription = [
     'JSCLASS' => 'BizProcActivity',
     'CATEGORY' => [
         'ID' => 'other',
+    ],
+    "RETURN" => [
+        'ID_FINE' => [
+            'NAME' => 'ID',
+            'TYPE' => FieldType::INT
+        ]
     ]
 ];
 ?>
