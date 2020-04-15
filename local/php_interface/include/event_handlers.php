@@ -2,7 +2,7 @@
 
 use Bitrix\Main\EventManager;
 
-//get instance ORM EventManager
+//get instance EventManager
 $eventManager = EventManager::getInstance();
 //Add new event
 $eventManager->addEventHandler(
