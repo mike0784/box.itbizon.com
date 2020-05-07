@@ -1,6 +1,7 @@
 <?php
 
-//use
+use Bitrix\Main\Application;
+use Bitrix\Main\ModuleManager;
 
 class itbizon_meleshev extends CModule
 {
@@ -23,56 +24,6 @@ class itbizon_meleshev extends CModule
         $this->MODULE_ID          = 'itbizon.meleshev';
         $this->MODULE_NAME        = '[BizON] Тестовый модуль НМ';
         $this->MODULE_DESCRIPTION = 'Обычный тестовый модуль';
-        $this->PARTNER_NAME       = 'BizON';
-        $this->PARTNER_URI        = 'https://itbizon.com';
-    }
-
-    /**
-     *
-     */
-    public function InstallFiles()
-    {
-        return true;
-    }
-
-    /**
-     *
-     */
-    public function UnInstallFiles()
-    {
-
-    }
-
-    /**
-     *
-     */
-    public function InstallDB()
-    {
-
-    }
-
-    /**
-     *
-     */
-    public function UnInstallDB()
-    {
-
-    }
-
-    /**
-     *
-     */
-    public function InstallEvents()
-    {
-
-    }
-
-    /**
-     *
-     */
-    public function UnInstallEvents()
-    {
-
     }
 
     /**
@@ -81,10 +32,6 @@ class itbizon_meleshev extends CModule
     public function DoInstall()
     {
         if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
-            $this->InstallDB();
-            $this->InstallFiles();
-            $this->InstallEvents();
-            $this->InstallTasks();
             CAdminMessage::ShowNote('Модуль установлен');
         } else {
             CAdminMessage::ShowNote('Ошибка установки модуля');
@@ -98,10 +45,6 @@ class itbizon_meleshev extends CModule
     public function DoUninstall()
     {
         if (ModuleManager::isModuleInstalled($this->MODULE_ID)) {
-            $this->UnInstallTasks();
-            $this->UnInstallEvents();
-            $this->UnInstallFiles();
-            $this->UnInstallDB();
             CAdminMessage::ShowNote('Модуль удален');
         } else {
             CAdminMessage::ShowNote('Ошибка удаления модуля');
