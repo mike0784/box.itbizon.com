@@ -3,18 +3,18 @@
 use Bitrix\Main\Application;
 use Bitrix\Main\ModuleManager;
 
-class TestModule extends CModule
+class itbizon_kulakov extends CModule
 {
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->MODULE_ID = 'itbizon.kulakov';
-        $this->MODULE_NAME = '[BizON] Тестовый модуль';
-        $this->MODULE_DESCRIPTION = 'Модуль от Кулакова';
-        $this->PARTNER_NAME = 'BizON';
-        $this->PARTNER_URI = 'https://itbizon.com';
+        $this->MODULE_ID = "itbizon.kulakov";
+        $this->MODULE_NAME = "[BizON] Тестовый модуль";
+        $this->MODULE_DESCRIPTION = "Модуль от Кулакова";
+        $this->MODULE_VERSION = "0.1";
+        $this->MODULE_VERSION_DATE = "2020-05-07 01:00:00";
     }
 
     /**
