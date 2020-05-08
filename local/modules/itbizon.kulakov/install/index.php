@@ -25,6 +25,7 @@ class itbizon_kulakov extends CModule
         if(!ModuleManager::isModuleInstalled($this->MODULE_ID))
         {
             CAdminMessage::ShowNote('Тестовый модуль установлен');
+            $this->InstallDB();
         } else
         {
             CAdminMessage::ShowNote('Ошибка установки тестого модуля');
@@ -41,11 +42,50 @@ class itbizon_kulakov extends CModule
         if(ModuleManager::isModuleInstalled($this->MODULE_ID))
         {
             CAdminMessage::ShowNote('Тестовый модуль удален');
-        } else
+            $this->UnInstallDB();
+        }
+        else
         {
             CAdminMessage::ShowNote('Ошибка удаления тестого модуля');
         }
 
         ModuleManager::unRegisterModule($this->MODULE_ID);
+    }
+
+    /**
+     * @return bool
+     */
+    public function InstallDB()
+    {
+        try
+        {
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kulakov/orm/itbinvoicetable.php');
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kulakov/orm/itbproducttable.php');
+
+            $db = Application::getConnection();
+            $entities = [
+                \TestModule\Tables\ItbProductTable::getEntity(),
+                \TestModule\Tables\ItbInvoiceTable::getEntity(),
+            ];
+
+            foreach ($entities as $entity)
+            {
+                if (!$db->isTableExists($entity->getDBTableName()))
+                $entity->createDbTable();
+            }
+            return true;
+        }
+        catch (Exception $e)
+        {
+            return false;
+        }
+    }
+
+    /**
+     *
+     */
+    public function UnInstallDB()
+    {
+
     }
 }
