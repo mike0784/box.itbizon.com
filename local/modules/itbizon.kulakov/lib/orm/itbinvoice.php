@@ -1,6 +1,6 @@
 <?php
 
-namespace TestModule\Tables;
+namespace Itbizon\Kulakov\Orm;
 
 use \Bitrix\Main\Entity;
 use \Bitrix\Main\Type\DateTime;

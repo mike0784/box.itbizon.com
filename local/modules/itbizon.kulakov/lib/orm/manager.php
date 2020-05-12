@@ -1,7 +1,9 @@
 <?php
 
-use TestModule\Tables\ItbInvoiceTable;
-use TestModule\Tables\ItbProductTable;
+namespace Itbizon\Kulakov\Orm;
+
+use Itbizon\Kulakov\Orm\ItbInvoiceTable;
+use Itbizon\Kulakov\Orm\ItbProductTable;
 
 class Manager
 {
@@ -10,11 +12,13 @@ class Manager
      * @param $data - Параметры для создания Invoice
      * @return ItbInvoiceTable
      */
-    public function addInvoice($title,  $amount = 0, $comment = "")
+    public function addInvoice($title,  $amount = 0, $comment = "", $user_id = 0)
     {
         global $USER;
+        $creator_id = $user_id;
 
-        $creator_id = $USER->GetID();
+        if(isset($USER))
+            $creator_id = $USER->GetID();
 
         $invoice = ItbInvoiceTable::createObject();
 
@@ -79,8 +83,13 @@ class Manager
             throw new Exception('Заполните обязательное поле invoice_id');
 
         global $USER;
+        $creator_id = 0;
 
-        $creator_id = $USER->GetID();
+        if(isset($USER))
+            $creator_id = $USER->GetID();
+        else if(isset($data['creator_id']))
+            $creator_id = $data['creator_id'];
+
         $invoiceID  = $data['invoice_id'];
 
         $product = ItbProductTable::createObject();

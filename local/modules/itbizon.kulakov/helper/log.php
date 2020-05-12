@@ -6,7 +6,7 @@ use \Bitrix\Main\Diag\Debug;
 
 class Log
 {
-    const path = '/local/modules/itbizon.kulakov/log/';
+    const path = '/local/modules/itbizon.kulakov/logs/';
     static public $filename = 'log_';
 
     public static function write($obj)

@@ -59,13 +59,13 @@ class itbizon_kulakov extends CModule
     {
         try
         {
-            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kulakov/orm/itbinvoicetable.php');
-            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kulakov/orm/itbproducttable.php');
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kulakov/lib/orm/itbinvoice.php');
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kulakov/lib/orm/itbproduct.php');
 
             $db = Application::getConnection();
             $entities = [
-                \TestModule\Tables\ItbProductTable::getEntity(),
-                \TestModule\Tables\ItbInvoiceTable::getEntity(),
+                Itbizon\Kulakov\Orm\ItbProductTable::getEntity(),
+                Itbizon\Kulakov\Orm\ItbInvoiceTable::getEntity(),
             ];
 
             foreach ($entities as $entity)
