@@ -69,7 +69,7 @@ class itbizon_meleshev extends CModule
         ];
         $cars  = [
             [
-                "SHOP_ID" => 0,
+                "SHOP_ID" => 1,
                 "MARK" => "Super",
                 "MODEL" => "Machine",
                 "VALUE" => 100000,
@@ -84,7 +84,7 @@ class itbizon_meleshev extends CModule
                 "IS_USED" => "Y"
             ],
             [
-                "SHOP_ID" => 1,
+                "SHOP_ID" => 2,
                 "MARK" => "Bad",
                 "MODEL" => "Machine",
                 "VALUE" => 500000,
