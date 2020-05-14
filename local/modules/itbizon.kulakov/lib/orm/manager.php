@@ -12,7 +12,7 @@ class Manager
      * @param $data - Параметры для создания Invoice
      * @return ItbInvoiceTable
      */
-    public function addInvoice($title,  $amount = 0, $comment = "", $user_id = 0)
+    public function addInvoice($title,  $comment = "", $user_id = 0)
     {
         global $USER;
         $creator_id = $user_id;
@@ -24,12 +24,32 @@ class Manager
 
         $invoice->set('TITLE', $title);
         $invoice->set('CREATOR_ID', $creator_id);
-        $invoice->set('AMOUNT', $amount);
         $invoice->set('COMMENT', $comment);
 
         $invoice->save();
 
         return $invoice;
+    }
+
+    public function editInvoice($id, $title,  $comment = "", $user_id = 0)
+    {
+
+        if(!$id) return false;
+
+        $data = self::getInvoice($id);
+
+        if(!empty($data['invoice'])) {
+            $invoice = $data['invoice'];
+
+            $invoice->set('TITLE', $title);
+            $invoice->set('COMMENT', $comment);
+
+            $invoice->save();
+            return $invoice;
+        }
+
+
+        return false;
     }
 
     /**
@@ -77,6 +97,26 @@ class Manager
     /**
      *
      */
+    public function getInvoiceList()
+    {
+        $result = ItbInvoiceTable::getList();
+        return $result->fetchAll();
+    }
+
+    /**
+     *
+     */
+    public function getProductList($invoice_id = 0)
+    {
+        $result = ItbProductTable::getList(array(
+            'filter' => array('=INVOICE_ID' => $invoice_id)
+        ));
+        return $result->fetchAll();
+    }
+
+    /**
+     *
+     */
     public function addProduct($data)
     {
         if(empty($data['invoice_id']))
@@ -101,21 +141,20 @@ class Manager
         $product->set('COUNT',      (isset($data['count']) ? $data['count'] : 0));
         $product->set('COMMENT',    (isset($data['comment']) ? $data['comment'] : ""));
 
-        $product->save();
-
         $invoice = ItbInvoiceTable::getByPrimary($invoiceID)
             ->fetchObject();
 
         if($invoice) {
             $amountInvoice = $invoice->get('AMOUNT');
-
             // Перерасчет суммы
-            $amountInvoice += $data['COUNT'] * $data['VALUE'];
+            $amountInvoice += $data['count'] * $data['value'];
 
             $invoice->set('AMOUNT', $amountInvoice);
 
             $invoice->save();
         }
+
+        $product->save();
 
         return $product;
     }
@@ -126,7 +165,10 @@ class Manager
     public function removeProduct($id)
     {
         $product = ItbProductTable::getByPrimary($id, [
-            'select' => ['*' => 'INVOICE']
+            'select' => [
+                '*' => 'INVOICE',
+                '*'
+            ]
         ])->fetchObject();
 
         if(!$product) return false;
@@ -144,11 +186,12 @@ class Manager
             $amountInvoice -= $productCount * $productValue;
 
             $invoice->set('AMOUNT', $amountInvoice);
+            $amountInvoice = $invoice->get('AMOUNT');
 
             $invoice->save();
         }
-
         $product->delete();
+
         return true;
     }
 

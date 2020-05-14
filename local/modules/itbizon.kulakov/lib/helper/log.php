@@ -1,6 +1,6 @@
 <?php
 
-namespace TestModule;
+namespace Itbizon\Kulakov\Helper;
 
 use \Bitrix\Main\Diag\Debug;
 
