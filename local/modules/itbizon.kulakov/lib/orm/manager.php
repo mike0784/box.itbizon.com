@@ -31,6 +31,13 @@ class Manager
         return $invoice;
     }
 
+    /**
+     * @param $id
+     * @param $title
+     * @param string $comment
+     * @param int $user_id
+     * @return bool|mixed
+     */
     public function editInvoice($id, $title,  $comment = "", $user_id = 0)
     {
 
