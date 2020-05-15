@@ -11,17 +11,20 @@ class Log
 
     public static function write($obj)
     {
+
         $time = time();
         $date = date("d-F-Y", $time);
 
-        $pathToFolder = self::path;
-        $pathToFile = $pathToFolder . '/' . self::$filename . $date . '.txt';
+        $pathToFolder = $_SERVER['DOCUMENT_ROOT'] . self::path;
+        $pathToFile = $pathToFolder . self::$filename . $date . '.txt';
 
-        if(!file_exists($pathToFolder))
-            mkdir($pathToFolder);
+        if(!file_exists($pathToFolder)) {
+            mkdir($pathToFolder, 0777, true);
+            chmod($pathToFolder, 0777);
+        }
 
-        $data = date("[G:i:s] ", $time) . print_r($obj,true);
-        Debug::writeToFile($data, "", $pathToFile);
+        $data = date("[G:i:s] ", $time) . print_r($obj,true) . "\n";
+        file_put_contents($pathToFile, $data, FILE_APPEND);
 
     }
 }
