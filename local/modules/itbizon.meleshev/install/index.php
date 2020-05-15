@@ -65,6 +65,18 @@ class itbizon_meleshev extends CModule
                 "AMOUNT" => 0,
                 "COUNT" => 0,
                 "COMMENT" => "Hi"
+            ],
+            [
+                "TITLE" => "Auto",
+                "AMOUNT" => 0,
+                "COUNT" => 0,
+                "COMMENT" => "Columbia Pictures"
+            ],
+            [
+                "TITLE" => "Cars",
+                "AMOUNT" => 0,
+                "COUNT" => 0,
+                "COMMENT" => "Best cars"
             ]
         ];
         $cars  = [
@@ -90,6 +102,22 @@ class itbizon_meleshev extends CModule
                 "VALUE" => 500000,
                 "IS_USED" => "Y",
                 "COMMENT" => "Some problems"
+            ],
+            [
+                "SHOP_ID" => 4,
+                "MARK" => "Ford",
+                "MODEL" => "Machine",
+                "VALUE" => 1500000,
+                "IS_USED" => "Y",
+                "COMMENT" => ""
+            ],
+            [
+                "SHOP_ID" => 4,
+                "MARK" => "BMW",
+                "MODEL" => "Machine",
+                "VALUE" => 1500000,
+                "IS_USED" => "Y",
+                "COMMENT" => "Germany"
             ]
         ];
 
