@@ -11,9 +11,9 @@ class IndexClass extends \CBitrixComponent
                 throw new Exception('Ошибка подключения модуля itbizon.kulakov');
 
             $invoicesList = Itbizon\Kulakov\Orm\Manager::getInvoiceList();
-            $usersList = Bitrix\Main\UserTable::getList(Array(
-                "select"=>Array("ID","NAME"),
-            ))->fetchAll();
+            $usersList = Bitrix\Main\UserTable::getList([
+                "select"=>["ID","NAME"],
+            ])->fetchAll();
             $usersListID = array_column($usersList, 'ID');
             $usersListName = array_column($usersList, 'NAME');
             $users = array_combine($usersListID, $usersListName);

@@ -24,6 +24,7 @@ class itbizon_kulakov extends CModule
     {
         if(!ModuleManager::isModuleInstalled($this->MODULE_ID))
         {
+//            $this->UnInstallDB();
             CAdminMessage::ShowNote('Тестовый модуль установлен');
             $this->InstallDB();
         } else
@@ -86,6 +87,27 @@ class itbizon_kulakov extends CModule
      */
     public function UnInstallDB()
     {
+        try
+        {
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kulakov/lib/orm/itbinvoice.php');
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kulakov/lib/orm/itbproduct.php');
 
+            $db = Application::getConnection();
+            $entities = [
+                Itbizon\Kulakov\Orm\ItbProductTable::getEntity(),
+                Itbizon\Kulakov\Orm\ItbInvoiceTable::getEntity(),
+            ];
+
+            foreach ($entities as $entity)
+            {
+                if ($db->isTableExists($entity->getDBTableName()))
+                    $db->dropTable($entity->getDBTableName());
+            }
+            return true;
+        }
+        catch (Exception $e)
+        {
+            return false;
+        }
     }
 }

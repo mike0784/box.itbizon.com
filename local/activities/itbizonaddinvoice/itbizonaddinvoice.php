@@ -46,8 +46,8 @@ class CBPItbizonAddInvoice extends CBPActivity
             $create_id = intval(CBPHelper::ExtractUsers($this->arProperties['CREATOR_ID'], $this->GetDocumentId(), true));
 
             $invoice = Itbizon\Kulakov\Orm\Manager::addInvoice(
-                $this->arProperties['TITLE'],
-                $this->arProperties['COMMENT'],
+                $this->TITLE,
+                $this->COMMENT,
                 $create_id
             );
 

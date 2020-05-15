@@ -1,7 +1,5 @@
 <?php
 
-use \Bitrix\Bizproc\FieldType;
-
 $arActivityDescription = [
     'NAME' => '[itbizon] Накладные',
     'DESCRIPTION' => '[itbizon] Накладные',

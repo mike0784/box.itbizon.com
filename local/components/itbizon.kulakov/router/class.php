@@ -15,7 +15,6 @@ class RouteClass extends CBitrixComponent
             $arDefaultUrlTemplates404 = [
                 'list' => 'index.php',
                 'edit' => 'edit/#ID#/',
-
             ];
 
             $arDefaultVariableAliases404 = [];

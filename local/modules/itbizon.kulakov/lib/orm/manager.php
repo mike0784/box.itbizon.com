@@ -17,7 +17,7 @@ class Manager
         global $USER;
         $creator_id = $user_id;
 
-        if(isset($USER))
+        if(isset($USER) && $user_id == 0)
             $creator_id = $USER->GetID();
 
         $invoice = ItbInvoiceTable::createObject();
@@ -132,10 +132,11 @@ class Manager
         global $USER;
         $creator_id = 0;
 
-        if(isset($USER))
-            $creator_id = $USER->GetID();
-        else if(isset($data['creator_id']))
+        if(isset($data['creator_id']))
             $creator_id = $data['creator_id'];
+        else if(isset($USER))
+            $creator_id = $USER->GetID();
+
 
         $invoiceID  = $data['invoice_id'];
 

@@ -14,9 +14,9 @@ class EditClass extends \CBitrixComponent
             $path = $this->GetPath() . '/templates/.default/ajax.php';
             $pathToHome = "/local/test_component/";
 
-            $usersList = Bitrix\Main\UserTable::getList(Array(
-                "select"=>Array("ID","NAME"),
-            ))->fetchAll();
+            $usersList = Bitrix\Main\UserTable::getList([
+                "select"=>["ID","NAME"],
+            ])->fetchAll();
             $usersListID = array_column($usersList, 'ID');
             $usersListName = array_column($usersList, 'NAME');
             $users = array_combine($usersListID, $usersListName);
