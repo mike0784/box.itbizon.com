@@ -4,6 +4,8 @@ namespace Itbizon\Kulakov\Orm;
 
 use \Bitrix\Main\Entity;
 use \Bitrix\Main\Type\DateTime;
+use Itbizon\Kulakov\Helper\Log;
+
 
 class ItbProductTable extends Entity\DataManager
 {
@@ -32,7 +34,7 @@ class ItbProductTable extends Entity\DataManager
             )),
             new Entity\ReferenceField(
                 'INVOICE',
-                'TestModule\Tables\ItbInvoiceTable',
+                'Itbizon\Kulakov\Orm\ItbInvoiceTable',
                 array('=this.INVOICE_ID' => 'ref.ID')
             ),
             new Entity\StringField('TITLE', array(
@@ -78,21 +80,21 @@ class ItbProductTable extends Entity\DataManager
 
     public static function onBeforeAdd()
     {
-        \TestModule\Log::write("Добавление товара");
+        Log::write("Добавление товара");
     }
 
     public static function OnAfterAdd()
     {
-        \TestModule\Log::write("Товар успешно добавлен");
+        Log::write("Товар успешно добавлен");
     }
 
     public static function OnBeforeDelete()
     {
-        \TestModule\Log::write("Удаление товара");
+        Log::write("Удаление товара");
     }
 
     public static function OnAfterDelete ()
     {
-        \TestModule\Log::write("Товар успешно удален");
+        Log::write("Товар успешно удален");
     }
 }

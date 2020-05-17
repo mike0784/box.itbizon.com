@@ -4,6 +4,7 @@ namespace Itbizon\Kulakov\Orm;
 
 use \Bitrix\Main\Entity;
 use \Bitrix\Main\Type\DateTime;
+use Itbizon\Kulakov\Helper\Log;
 
 class ItbInvoiceTable extends Entity\DataManager
 {
@@ -51,21 +52,21 @@ class ItbInvoiceTable extends Entity\DataManager
 
     public static function onBeforeAdd()
     {
-        \TestModule\Log::write("Добавление накладной");
+        Log::write("Добавление накладной");
     }
 
     public static function OnAfterAdd()
     {
-        \TestModule\Log::write("Накладная успешно добавлена");
+        Log::write("Накладная успешно добавлена");
     }
 
     public static function OnBeforeDelete()
     {
-        \TestModule\Log::write("Удаление накладной");
+        Log::write("Удаление накладной");
     }
 
     public static function OnAfterDelete ()
     {
-        \TestModule\Log::write("Накладная успешно удалена");
+        Log::write("Накладная успешно удалена");
     }
 }
