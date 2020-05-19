@@ -3,6 +3,7 @@
 use Bitrix\Main\Loader;
 use Bitrix\Main\UserTable;
 use Itbizon\Meleshev\AutoTable;
+use Itbizon\Meleshev\Manager;
 use Itbizon\Meleshev\ShopTable;
 use Bitrix\Main\UI\PageNavigation;
 
@@ -15,38 +16,25 @@ class EditClass extends \CBitrixComponent
         if (!Loader::includeModule('itbizon.meleshev')) {
             return false;
         }
-        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        var_dump($currentUrl);
 
         $post = $_POST;
-
-        if (isset($post['ID'])) {
+        if (isset($post['NEW_CAR'])) {
+            $this->addOrUpdateCar($post);
+        }
+        elseif (isset($post['CAR'])) {
+            $this->addOrUpdateCar($post);
+        }
+        elseif (isset($post['ID'])) {
             $this->addOrUpdateShop($post);
         }
 
         $id = $this->arParams['ID'];
 
         if ($id > 0) {
-            $shop = ShopTable::getById($id)->fetch();
-//            $carsCount = ShopTable::getCountOfAllAuto($id);
-//
-//            $nav = new PageNavigation("nav-more-cars");
-//            $nav->allowAllRecords(true)
-//                ->setPageSize(5)
-//                ->initFromUri();
-//
-//            $carsList = AutoTable::getList([
-//                'filter'      => ['=SHOP_ID' => $id],
-//                'count_total' => true,
-//                'offset'      => $nav->getOffset(),
-//                'limit'       => $nav->getLimit()
-//            ]);
-//
-//            $nav->setRecordCount($carsCount);
-//
-//            while ($cars = $carsList->fetch())
-//            {
-//            }
+            $shopAndCars = manager::getShopWithCars($id);
+            $shop = $shopAndCars['shop'];
+            $cars = $shopAndCars['cars'];
+
         } else {
             $shop = [
                 "ID" => 0,
@@ -55,13 +43,15 @@ class EditClass extends \CBitrixComponent
                 "COUNT" => 0,
                 "COMMENT" => ""
             ];
+            $cars = [];
         }
 
         $users = UserTable::getList()->fetchAll();
 
         $this->arResult = [
             'SHOP' => $shop,
-            "USERS" => $users
+            "USERS" => $users,
+            'CARS' => $cars
         ];
 
         $this->IncludeComponentTemplate();
@@ -89,6 +79,28 @@ class EditClass extends \CBitrixComponent
         $regexp = '/.*\:\d+(.*)edit\/\d/';
         preg_match($regexp, $currentUrl, $matches);
         LocalRedirect($matches[1]);
+    }
+
+    public function addOrUpdateCar($post)
+    {
+        $post['IS_USED'] = isset($post['IS_USED']) ? 'Y' : 'N';
+        if (isset($post['NEW_CAR'])) {
+            unset($post['NEW_CAR']);
+            $result = AutoTable::add($post);
+            if (!$result->isSuccess()) {
+                $messages = $result->getErrorMessages();
+                throw new Exception(implode('\r\n', $messages));
+            }
+        }
+
+        if (isset($post['CAR'])) {
+            unset($post['CAR']);
+            $result = AutoTable::update($post['ID'], $post);
+            if (!$result->isSuccess()) {
+                throw new Exception("Не удалось обновить данные");
+            }
+        }
+
     }
 
 }
