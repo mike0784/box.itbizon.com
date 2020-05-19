@@ -14,12 +14,8 @@ Extension::load('ui.bootstrap4');
         <span>Отдел</span>
         <span>
             <select id="group" class="p-1">
-                <?php
-                if(!empty($arResult['WORKGROUP_LIST']))
-                    foreach ($arResult['WORKGROUP_LIST'] as $workGroup) : ?>
-                    <?php if($workGroup['ACTIVE'] == 'Y') : ?>
-                        <option value="<?= $workGroup['ID']; ?>" <?= ($arResult['WORKGROUP_ID'] == $workGroup['ID']) ? "selected" : "" ?>><?= $workGroup['NAME']; ?></option>
-                    <?php endif; ?>
+                <?php foreach ($arResult['DEP_LIST'] as $group) : ?>
+                    <option value="<?= $group['ID']; ?>" <?= ($arResult['DEP_ID'] == $group['ID']) ? "selected" : "" ?>><?= $group['NAME']; ?></option>
                 <?php endforeach; ?>
             </select>
         </span>
@@ -38,12 +34,14 @@ Extension::load('ui.bootstrap4');
             </tr>
         </thead>
         <tbody>
+        <?php foreach ($arResult['USERS'] as $user) : ?>
             <tr>
-                <td>Иванов Т.Т.</td>
+                <td><?= $user["FULLNAME"] ?></td>
                 <td><a href="#">2</a></td>
                 <td><a href="#">11</a></td>
                 <td><a href="#">15</a></td>
             </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>

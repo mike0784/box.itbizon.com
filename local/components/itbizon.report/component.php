@@ -3,29 +3,57 @@
 use Bitrix\Socialnetwork\WorkgroupTable;
 
 $dateFormat = "Y-m-d";
-$workGroup = WorkgroupTable::getList()->fetchAll();
 
 $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 $dateFrom = $request->getCookieRaw("REPORT_FROM");
 $dateTo = $request->getCookieRaw("REPORT_TO");
-$groupID = $request->getCookieRaw("REPORT_GROUP");
-
-$users = [];
-
+$groupID = intval($request->getCookieRaw("REPORT_GROUP"));
+$groups = Bitrix\Im\Integration\Intranet\Department::GetList();
 
 
-$r = CUser::GetList(
+var_dump($groupID);
+//var_dump(!$groupID);
+if(!$groupID)
+    $groupID = intval($groups[0]['ID']);
+
+//$groups_ = CIBlockSection::getGroup([]);
+//var_dump($groups_);
+
+$usersList = CUser::GetList(
     ($by = "id"),
     ($order = "desc"),
     [
-        "GROUPS_ID" => [12]
-    ]
+//        "UF_DEPARTMENT" => "57"
+    ],
+    ["SELECT" => ["UF_*"]]
 );
 
-while($arItem = $r->GetNext())
-{
-    echo "[". $arItem['ID']."] (".$arItem['LOGIN'].") ".$arItem['NAME']." ".$arItem['LAST_NAME']."<br>";
+
+$users = [];
+
+while ($arItem = $usersList->GetNext()) {
+    $fullName = $arItem['LAST_NAME'] . " " .
+        substr($arItem['NAME'], 0, 1) . ".";
+    if(!empty($arItem['SECOND_NAME']))
+        $fullName .= substr($arItem['SECOND_NAME'], 0, 1) . ".";
+
+    $users[] = [
+        'ID' => $arItem['ID'],
+        'LOGIN' => $arItem['LOGIN'],
+        'FULLNAME' => $fullName,
+        'CALL' => 3,
+        'TASK_DONE' => 2,
+        'TASK_' => 7
+    ];
+//    echo $arItem['NAME'];
+//    if($arItem['ID'] == 9){
+ var_dump($arItem);
+
+    break;
+//}
 }
+
+//var_dump($arUsers);
 
 //var_dump($r->result);
 
@@ -33,8 +61,9 @@ $arResult = array();
 //$arResult["DOMAIN"] = isset($_REQUEST["domain"]) ? $_REQUEST["domain"] : '';
 //$arResult["AJAX_PATH"] = $componentPath."/ajax.php";
 
-$arResult['WORKGROUP_LIST'] = $workGroup;
-$arResult['WORKGROUP_ID'] = $groupID;
+$arResult['DEP_LIST'] = $groups;
+$arResult['DEP_ID'] = $groupID;
+$arResult['USERS'] = $users;
 
 if(!empty($dateFrom)) {
     $arResult['INTERVAL'] = [
