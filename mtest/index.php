@@ -1,6 +1,7 @@
 <?php
 
 use \Bitrix\Main\Loader;
+use Bitrix\Main\UI\Extension;
 use Itbizon\Meleshev\AutoTable;
 use Itbizon\Meleshev\ShopTable;
 
@@ -17,8 +18,20 @@ try {
 } catch (Exception $ex) {
     echo $ex->getMessage();
 }
+Extension::load('ui.bootstrap4');
 
-$shopId = 1;
+$APPLICATION->IncludeComponent(
+    "bizon:meleshev.index",
+    "",
+    Array(
+        "SEF_FOLDER" => "/mtest/",
+        "SEF_MODE" => "Y",
+//        "SEF_URL_TEMPLATES" => Array("edit"=>"edit/#ID#/","index"=>"list/")
+    )
+);
+
+
+/*$shopId = 1;
 $count = ShopTable::getCountOfAllAuto($shopId);
 $shop = ShopTable::getById($shopId)->fetch();
 $parameters = [
@@ -32,6 +45,6 @@ $cars = AutoTable::getList($parameters)->fetchAll();
 foreach ($cars as $car) {
 
     echo "<br />Машина №{$car["ID"]} с маркой {$car["MARK"]}";
-}
+}*/
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
