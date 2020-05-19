@@ -1,5 +1,7 @@
 <?php
 
+namespace Itbizon\Meleshev;
+
 use Itbizon\Meleshev\AutoTable;
 use Itbizon\Meleshev\ShopTable;
 
@@ -18,7 +20,7 @@ class Manager
         }
     }
 
-    public function deleteCar($carId)
+    public static function deleteCar($carId)
     {
         $result = AutoTable::delete($carId);
         if (!$result->isSuccess()) {
@@ -26,12 +28,8 @@ class Manager
         }
     }
 
-    public function deleteShop($shopId)
+    public static function deleteShop($shopId)
     {
-//        $res = ShopTable::getAllAuto($shopId);
-//        foreach ($res as $auto) {
-//            $auto->delete();
-//        }
         $sqlQuery = "DELETE FROM itb_auto WHERE SHOP_ID = $shopId";
 
         $db = \Bitrix\Main\Application::getConnection();
@@ -46,10 +44,10 @@ class Manager
 
     }
 
-    public function getShopWithCars($shopId)
+    public static function getShopWithCars($shopId)
     {
         $shop = ShopTable::getById($shopId)->fetch();
-        $cars = ShopTable::getAllAuto($shop->id);
-        return [$shop, $cars];
+        $cars = ShopTable::getAllAuto($shopId);
+        return ['shop' => $shop, 'cars' => $cars];
     }
 }

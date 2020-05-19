@@ -79,9 +79,6 @@ class AutoTable extends DataManager
         $id = $data["ID"];
         fwrite($log, "Конец записи в бд нового авто с идентификатором $id");
         fclose($log);
-        echo "on after add auto<br />";
-        var_dump($data);
-        echo "<br />";
         $shopId = $data["SHOP_ID"];
         $shopData = ShopTable::getById($shopId)->fetch();
         $shopData["COUNT"]  = ShopTable::getCountOfAllAuto($shopId);
