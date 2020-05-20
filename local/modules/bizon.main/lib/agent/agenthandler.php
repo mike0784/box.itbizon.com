@@ -22,7 +22,7 @@ class AgentHandler {
             ["NAME" => "[BizON] Еженедельная задача РОИ"]
         )->Fetch();
 
-        $documentTypeID = $template["DOCUMENT_TYPE"][2] . "_";
+
 
         $dsummFlat      = $template["CONSTANTS"]["UF_DSUMM_FLAT"]["Default"];
         $dsummPitched   = $template["CONSTANTS"]["UF_DSUMM_PITCHED"]["Default"];
@@ -52,13 +52,10 @@ class AgentHandler {
             while ($arEnum = $itEnum->Fetch()) {
                 $listFiledsVal[$UF_KEY][$arEnum["VALUE"]] = $arEnum["ID"];
             }
-
         }
-
 
         $dealList = DealTable::getList([
             'filter' => [
-
                 'LOGIC' => 'OR',
                 [
                     '=UF_STADY' => $listFiledsVal["UF_STADY"]["Передан на исполнение"],
@@ -79,6 +76,8 @@ class AgentHandler {
             ]
         ])->fetchAll();
 
+        $documentTypeID = $template["DOCUMENT_TYPE"][2] . "_";
+
         foreach ($dealList as $dealItem) {
             $timestamp      = new \DateTime();
             $timestamp->setTimestamp(strtotime($dealItem["UF_DSCMP"]->toString()));
@@ -86,12 +85,11 @@ class AgentHandler {
             $timestampNow    = new \DateTime();
             $intervalDays = $timestampNow->diff($timestamp)->days;
 
-            var_dump($intervalDays % $dscmp);
             if(($intervalDays % $dscmp) === 0 && $intervalDays) {
                 $arError = [];
                 $template["DOCUMENT_TYPE"][2] = $documentTypeID . $dealItem["ID"];
 
-                $workflow = \CBPDocument::startWorkflow(
+                \CBPDocument::startWorkflow(
                     $template["ID"],
                     $template["DOCUMENT_TYPE"],
                     [],
