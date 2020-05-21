@@ -3,31 +3,40 @@
 namespace Bizon\Main\Agent;
 
 use Bitrix\Crm\DealTable;
-//use Bitrix\Crm\UserField;
-use Bitrix\Disk\Uf\UserFieldManager;
 use Bitrix\Bizproc\Workflow\Type\Entity\GlobalConstTable;
 use Bitrix\Main\Loader;
 
 class AgentHandler {
+
+    const FIELD_DBCMP           = "UF_CRM_1590046933"; // Дата начала СМР
+    const FIELD_STAGE           = "UF_CRM_1590046866"; // Стадия исполнения
+    const FIELD_TYPEDEAL        = "UF_CRM_1590046909"; // Тип сделки
+    const VAL_STAGE_USED        = "38";                // Стадия исполнения - Передан на исполнение
+    const VAL_TYPEDEAL_FLAT     = "40";                // Тип сделки - Плоская
+    const VAL_TYPEDEAL_PITCHED  = "41";                // Тип сделки - Скатная
+
+    const BP_ID                 = "28";                // ID БП
+
     /**
      * Агент для постановки задач руководителям
      * отдела исполнения
      */
     static public function taskForExec() {
 
-        $retVal = "\Bizon\Main\Agent\AgentHandler::taskForExec();";
+        $retVal = __METHOD__ . "();";
 
         if (!Loader::includeModule('bizproc'))
-        {
             return $retVal;
-        }
 
-        $template = \CBPWorkflowTemplateLoader::GetList(
-            ["ID" => "DESC"],
-            ["NAME" => "[BizON] Еженедельная задача РОИ"]
-        )->Fetch();
-
-        $constants = GlobalConstTable::getList()->fetchAll();
+        $constants = GlobalConstTable::getList([
+            'filter' => [
+                'ID' => [
+                    'UF_DSCMP',
+                    'UF_DSUMM_FLAT',
+                    'UF_DSUMM_PITCHED',
+                ]
+            ]
+        ])->fetchAll();
 
         // Для удобства обращения по ключам
         $constants = array_combine(
@@ -35,30 +44,22 @@ class AgentHandler {
             array_column($constants, "PROPERTY_VALUE")
         );
 
-//        Дата начала СМР	                        - UF_DBCMP              - Строка
-//        Дата начала СМР	                        - UF_DSCMP	            - Целое число
-//        Сумма сделки (Плоская)	                - UF_DSUMM_FLAT	        - Число
-//        Сумма сделки (Скатная)	                - UF_DSUMM_PITCHED	    - Число
-//        Стадия исполнения	                        - UF_STAGE	            - Строка
-//        Стадия исполнения - Передан на исполнение	- VAL_STAGE_USED	    - Строка
-//        Тип сделки	                            - UF_TYPEDEAL	        - Строка
-//        Тип сделки - Плоская	                    - VAL_TYPEDEAL_FLAT	    - Строка
-//        Тип сделки - Скатная	                    - VAL_TYPEDEAL_PITCHED	- Строка
+        if(empty($constants["UF_DSCMP"])) return $retVal;
 
         $dealList = DealTable::getList([
             'filter' => [
                 'LOGIC' => 'OR',
                 [
                     '>=OPPORTUNITY'                 => $constants["UF_DSUMM_FLAT"],
-                    '='.$constants["UF_STAGE"]      => $constants["VAL_STAGE_USED"],
-                    '='.$constants["UF_TYPEDEAL"]   => $constants["VAL_TYPEDEAL_FLAT"],
-                    "!".$constants["UF_DBCMP"]      => "",
+                    '='.self::FIELD_STAGE           => self::VAL_STAGE_USED,
+                    '='.self::FIELD_TYPEDEAL        => self::VAL_TYPEDEAL_FLAT,
+                    "!".self::FIELD_DBCMP           => "",
                 ],
                 [
                     '>=OPPORTUNITY'                 => $constants["UF_DSUMM_PITCHED"],
-                    '='.$constants["UF_STAGE"]      => $constants["VAL_STAGE_USED"],
-                    '='.$constants["UF_TYPEDEAL"]   => $constants["VAL_TYPEDEAL_PITCHED"],
-                    "!".$constants["UF_DBCMP"]      => "",
+                    '='.self::FIELD_STAGE           => self::VAL_STAGE_USED,
+                    '='.self::FIELD_TYPEDEAL        => self::VAL_TYPEDEAL_PITCHED,
+                    "!".self::FIELD_DBCMP           => "",
                 ]
             ],
             'select' => [
@@ -67,20 +68,27 @@ class AgentHandler {
             ]
         ]);
 
-        while ($dealItem = $dealList->fetch()) {
-            $timestamp      = new \DateTime();
-            $timestamp->setTimestamp(strtotime($dealItem[$constants["UF_DBCMP"]]->toString()));
 
-            $timestampNow    = new \DateTime();
+        $templateType = [
+            'crm',
+            'CCrmDeal',
+            ''
+        ];
+
+        $timestamp       = new \DateTime();
+        $timestampNow    = new \DateTime();
+
+        while ($dealItem = $dealList->fetch()) {
+            $timestamp->setTimestamp(strtotime($dealItem[self::FIELD_DBCMP]->toString()));
             $intervalDays = $timestampNow->diff($timestamp)->days;
 
             if(($intervalDays % $constants["UF_DSCMP"]) === 0 && $intervalDays) {
                 $arError = [];
-                $template["DOCUMENT_TYPE"][2] = "DEAL_" . $dealItem["ID"];
+                $templateType[2] = "DEAL_" . $dealItem["ID"];
 
                 $workflowID = \CBPDocument::startWorkflow(
-                    $template["ID"],
-                    $template["DOCUMENT_TYPE"],
+                    self::BP_ID,
+                    $templateType,
                     [],
                     $arError
                 );
