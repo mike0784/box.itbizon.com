@@ -5,7 +5,7 @@ namespace Bizon\Main\Agent;
 use Bitrix\Crm\DealTable;
 //use Bitrix\Crm\UserField;
 use Bitrix\Disk\Uf\UserFieldManager;
-use \Bitrix\Bizproc\Workflow\Type\Entity\GlobalConstTable;
+use Bitrix\Bizproc\Workflow\Type\Entity\GlobalConstTable;
 use Bitrix\Main\Loader;
 
 class AgentHandler {
@@ -15,9 +15,11 @@ class AgentHandler {
      */
     static public function taskForExec() {
 
+        $retVal = "\Bizon\Main\Agent\AgentHandler::taskForExec();";
+
         if (!Loader::includeModule('bizproc'))
         {
-            return;
+            return $retVal;
         }
 
         $template = \CBPWorkflowTemplateLoader::GetList(
@@ -30,85 +32,49 @@ class AgentHandler {
         // Для удобства обращения по ключам
         $constants = array_combine(
             array_column($constants, "ID"),
-            array_values($constants)
+            array_column($constants, "PROPERTY_VALUE")
         );
 
-        $dsummFlat      = $constants["UF_DSUMM_FLAT"]["PROPERTY_VALUE"];
-        $dsummPitched   = $constants["UF_DSUMM_PITCHED"]["PROPERTY_VALUE"];
-        $dscmp          = $constants["UF_DSCMP"]["PROPERTY_VALUE"];
-
-//        121	CRM_DEAL	UF_DNUM	    Строка	100
-//        120	CRM_DEAL	UF_DSUMM	Деньги	100
-//        119	CRM_DEAL	UF_DSCMP	Дата	100
-//        118	CRM_DEAL	UF_TYPEDEAL	Список	100
-//        117	CRM_DEAL	UF_STADY	Список	100
-//        116	CRM_DEAL	UF_FOREMAN	Привязка к сотруднику
-
-//        if (!Loader::includeModule('crm'))
-//        {
-//            ShowError(GetMessage('CRM_MODULE_NOT_INSTALLED'));
-//            return;
-//        }
-
-        $manager = new \CUserTypeManager();
-        $CCrmFields = $manager->GetUserFields("CRM_DEAL", 0, "ru");
-
-        $CCrmFields = array_combine(
-            array_column($CCrmFields, "EDIT_FORM_LABEL"),
-            array_values($CCrmFields)
-        );
-
-        $listFileds = [
-            "Тип сделки"            => $CCrmFields["Тип сделки"]['ID'],
-            "Стадия исполнения"     => $CCrmFields["Стадия исполнения"]['ID'],
-        ];
-
-        $listFiledsVal = [];
-
-        $obEnum = new \CUserFieldEnum;
-        foreach ($listFileds as $UF_KEY => $listFiled) {
-            $itEnum = $obEnum->GetList([], ["USER_FIELD_ID" => $listFiled]);
-            $listFiledsVal[$UF_KEY] = [];
-            while ($arEnum = $itEnum->Fetch()) {
-                $listFiledsVal[$UF_KEY][$arEnum["VALUE"]] = $arEnum["ID"];
-            }
-        }
-
-        $fieldStady = $CCrmFields["Стадия исполнения"]["FIELD_NAME"];
-        $fieldType = $CCrmFields["Тип сделки"]["FIELD_NAME"];
-        $fieldSumm = $CCrmFields["Сумма сделки"]["FIELD_NAME"];
-        $fieldCMP = $CCrmFields["Дата начала СМР"]["FIELD_NAME"];
+//        Дата начала СМР	                        - UF_DBCMP              - Строка
+//        Дата начала СМР	                        - UF_DSCMP	            - Целое число
+//        Сумма сделки (Плоская)	                - UF_DSUMM_FLAT	        - Число
+//        Сумма сделки (Скатная)	                - UF_DSUMM_PITCHED	    - Число
+//        Стадия исполнения	                        - UF_STAGE	            - Строка
+//        Стадия исполнения - Передан на исполнение	- VAL_STAGE_USED	    - Строка
+//        Тип сделки	                            - UF_TYPEDEAL	        - Строка
+//        Тип сделки - Плоская	                    - VAL_TYPEDEAL_FLAT	    - Строка
+//        Тип сделки - Скатная	                    - VAL_TYPEDEAL_PITCHED	- Строка
 
         $dealList = DealTable::getList([
             'filter' => [
                 'LOGIC' => 'OR',
                 [
-                    '='.$fieldStady         => $listFiledsVal["Стадия исполнения"]["Передан на исполнение"],
-                    '='.$fieldType          => $listFiledsVal["Тип сделки"]["Плоская"],
-                    '>='.$fieldSumm         => $dsummFlat,
-                    "!".$fieldCMP           => "",
+                    '>=OPPORTUNITY'                 => $constants["UF_DSUMM_FLAT"],
+                    '='.$constants["UF_STAGE"]      => $constants["VAL_STAGE_USED"],
+                    '='.$constants["UF_TYPEDEAL"]   => $constants["VAL_TYPEDEAL_FLAT"],
+                    "!".$constants["UF_DBCMP"]      => "",
                 ],
                 [
-                    '='.$fieldStady         => $listFiledsVal["Стадия исполнения"]["Передан на исполнение"],
-                    '='.$fieldType          => $listFiledsVal["Тип сделки"]["Скатная"],
-                    '>='.$fieldSumm         => $dsummPitched,
-                    "!".$fieldCMP           => "",
+                    '>=OPPORTUNITY'                 => $constants["UF_DSUMM_PITCHED"],
+                    '='.$constants["UF_STAGE"]      => $constants["VAL_STAGE_USED"],
+                    '='.$constants["UF_TYPEDEAL"]   => $constants["VAL_TYPEDEAL_PITCHED"],
+                    "!".$constants["UF_DBCMP"]      => "",
                 ]
             ],
             'select' => [
                 '*',
                 'UF_*',
             ]
-        ])->fetchAll();
+        ]);
 
-        foreach ($dealList as $dealItem) {
+        while ($dealItem = $dealList->fetch()) {
             $timestamp      = new \DateTime();
-            $timestamp->setTimestamp(strtotime($dealItem[$fieldCMP]->toString()));
+            $timestamp->setTimestamp(strtotime($dealItem[$constants["UF_DBCMP"]]->toString()));
 
             $timestampNow    = new \DateTime();
             $intervalDays = $timestampNow->diff($timestamp)->days;
 
-            if(($intervalDays % $dscmp) === 0 && $intervalDays) {
+            if(($intervalDays % $constants["UF_DSCMP"]) === 0 && $intervalDays) {
                 $arError = [];
                 $template["DOCUMENT_TYPE"][2] = "DEAL_" . $dealItem["ID"];
 
@@ -122,6 +88,6 @@ class AgentHandler {
             }
         }
 
-        return 1;
+        return $retVal;
     }
 }
