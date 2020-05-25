@@ -2,14 +2,19 @@
 
 namespace Itbizon\Meleshev;
 
+use Exception;
 use Itbizon\Meleshev\AutoTable;
 use Itbizon\Meleshev\ShopTable;
 
 class Manager
 {
-    public function createShop()
+    public static function createShop($data)
     {
+        $result = ShopTable::add($data);
 
+        if (!$result->isSuccess()) {
+            throw new Exception("Ошибка: магазин не добавлен.");
+        }
     }
 
     public static function addCar($data)
