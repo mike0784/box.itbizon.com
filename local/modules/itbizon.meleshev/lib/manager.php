@@ -3,8 +3,8 @@
 namespace Itbizon\Meleshev;
 
 use Exception;
-use Itbizon\Meleshev\AutoTable;
-use Itbizon\Meleshev\ShopTable;
+use Itbizon\Meleshev\Model\AutoTable;
+use Itbizon\Meleshev\Model\ShopTable;
 
 class Manager
 {
