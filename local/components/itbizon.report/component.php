@@ -1,79 +1,108 @@
 <?php if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 
 use Bitrix\Socialnetwork\WorkgroupTable;
+use Bitrix\Voximplant\Model\CallUserTable;
+use \Bitrix\Main\Loader;
+use \Bitrix\Main\Type\DateTime;
 
-$dateFormat = "Y-m-d";
+$dateFormatOutput = "Y-m-d";
+$dateFormatFilter = "d.m.Y 00:00:00";
 
 $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
-$dateFrom = $request->getCookieRaw("REPORT_FROM");
-$dateTo = $request->getCookieRaw("REPORT_TO");
+$strDateFrom = $request->getCookieRaw("REPORT_FROM");
+$strDateTo = $request->getCookieRaw("REPORT_TO");
 $groupID = intval($request->getCookieRaw("REPORT_GROUP"));
 $groups = Bitrix\Im\Integration\Intranet\Department::GetList();
 
-
-var_dump($groupID);
-//var_dump(!$groupID);
 if(!$groupID)
     $groupID = intval($groups[0]['ID']);
 
-//$groups_ = CIBlockSection::getGroup([]);
-//var_dump($groups_);
-
-$usersList = CUser::GetList(
-    ($by = "id"),
-    ($order = "desc"),
-    [
-//        "UF_DEPARTMENT" => "57"
-    ],
-    ["SELECT" => ["UF_*"]]
-);
-
+$usersList =  \Bitrix\Main\UserTable::getList([
+        "filter" => [
+            "UF_DEPARTMENT" => $groupID
+        ],
+        "select" => [
+            '*',
+            'UF_DEPARTMENT'
+        ]
+    ]);
 
 $users = [];
+$tasksListScript = [];
 
-while ($arItem = $usersList->GetNext()) {
+//if(!Loader::includeModule('voximplant'))
+//    throw new Exception('Ошибка подключения модуля voximplant');
+//
+
+$dateFrom = \DateTime::createFromFormat($dateFormatOutput, $strDateFrom);
+$dateTo = \DateTime::createFromFormat($dateFormatOutput, $strDateTo);
+
+while ($arItem = $usersList->fetch()) {
     $fullName = $arItem['LAST_NAME'] . " " .
         substr($arItem['NAME'], 0, 1) . ".";
     if(!empty($arItem['SECOND_NAME']))
         $fullName .= substr($arItem['SECOND_NAME'], 0, 1) . ".";
 
+    $voicesList = [];
+
+    $tasksList = \CTasks::GetList([],
+        [
+            '::LOGIC' => 'AND',
+            'CREATED_BY' => $arItem['ID'],
+            '>=DEADLINE' => $dateFrom->format($dateFormatFilter),
+            '<=DEADLINE' => $dateTo->format($dateFormatFilter),
+        ],
+        [
+            "ID",
+//            "TITLE",
+//            "CREATED_BY",
+//            "DESCRIPTION",
+//            "DATE_START",
+//            "CLOSED_DATE",
+//            "DEADLINE",
+//            "REAL_STATUS"
+        ]
+    );
+
+    $taskDoneNum = 0;
+    $taskNum = 0;
+
+    while ($task = $tasksList->Fetch()) {
+        if($task["REAL_STATUS"] == 5)
+            $taskDoneNum++;
+        else 
+            $taskNum++;
+
+    }
+
     $users[] = [
         'ID' => $arItem['ID'],
         'LOGIN' => $arItem['LOGIN'],
         'FULLNAME' => $fullName,
-        'CALL' => 3,
-        'TASK_DONE' => 2,
-        'TASK_' => 7
+        'CALL_NUM' => count($voicesList),
+        'TASK_DONE_NUM' => $taskDoneNum,
+        'TASK_NUM' => $taskNum,
+//        'TASKS' => $tasks,
     ];
-//    echo $arItem['NAME'];
-//    if($arItem['ID'] == 9){
- var_dump($arItem);
 
-    break;
-//}
 }
 
-//var_dump($arUsers);
-
-//var_dump($r->result);
-
 $arResult = array();
-//$arResult["DOMAIN"] = isset($_REQUEST["domain"]) ? $_REQUEST["domain"] : '';
-//$arResult["AJAX_PATH"] = $componentPath."/ajax.php";
+$arResult["AJAX_PATH"] = $this->GetPath() . '/templates/.default/ajax.php';
 
 $arResult['DEP_LIST'] = $groups;
 $arResult['DEP_ID'] = $groupID;
 $arResult['USERS'] = $users;
 
-if(!empty($dateFrom)) {
+if(!empty($strDateFrom)) {
     $arResult['INTERVAL'] = [
-        'FROM'  => $dateFrom,
-        'TO'    => $dateTo
+        'FROM'  => $strDateFrom,
+        'TO'    => $strDateTo
     ];
 } else {
     $arResult['INTERVAL'] = [
-        'FROM'  => date($dateFormat, strtotime("-7 days")),
-        'TO'    => date($dateFormat)
+        'FROM'  => date($dateFormatOutput, strtotime("-7 days")),
+        'TO'    => date($dateFormatOutput)
     ];
 }
 

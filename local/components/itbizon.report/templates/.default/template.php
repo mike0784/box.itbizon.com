@@ -35,13 +35,20 @@ Extension::load('ui.bootstrap4');
         </thead>
         <tbody>
         <?php foreach ($arResult['USERS'] as $user) : ?>
-            <tr>
+            <tr id="<?= $user["ID"] ?>">
                 <td><?= $user["FULLNAME"] ?></td>
-                <td><a href="#">2</a></td>
-                <td><a href="#">11</a></td>
-                <td><a href="#">15</a></td>
+                <td><a class="call-list" href="#"><?= $user["CALL_NUM"] ?></a></td>
+                <td><a class="task-done-list" href="#"><?= $user["TASK_DONE_NUM"] ?></a></td>
+                <td><a class="task-list" href="#"><?= $user["TASK_NUM"] ?></a></td>
             </tr>
+<!--            <script>-->
+<!--                const userTaskDoneList <?//= $user["ID"] ?> <?//= json_encode($user["TASKS"]) ?> ;-->
+<!--//            </script>-->
         <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+
+<script>
+    var pathAjax = '<?= $arResult["AJAX_PATH"]?>';
+</script>
