@@ -2,8 +2,8 @@
 
 use Bitrix\Main\Application;
 use Bitrix\Main\ModuleManager;
-use Itbizon\Meleshev\AutoTable;
-use Itbizon\Meleshev\ShopTable;
+use Itbizon\Meleshev\Model\AutoTable;
+use Itbizon\Meleshev\Model\ShopTable;
 
 class itbizon_meleshev extends CModule
 {
@@ -30,8 +30,8 @@ class itbizon_meleshev extends CModule
 
     public function InstallDB()
     {
-        require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/Models/auto.php');
-        require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/Models/shop.php');
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/model/auto.php');
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/model/shop.php');
         try {
             $db = Application::getConnection();
             $entities = [
@@ -132,8 +132,8 @@ class itbizon_meleshev extends CModule
 
     public function UnInstallDB()
     {
-        require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/Models/auto.php');
-        require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/Models/shop.php');
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/model/auto.php');
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/model/shop.php');
         try {
             $db = Application::getConnection();
             $entities = [

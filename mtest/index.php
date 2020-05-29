@@ -2,12 +2,8 @@
 
 use \Bitrix\Main\Loader;
 use Bitrix\Main\UI\Extension;
-use Itbizon\Meleshev\AutoTable;
-use Itbizon\Meleshev\ShopTable;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/Models/auto.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.meleshev/lib/Models/shop.php');
 
 $APPLICATION->SetTitle("Модель НМ. Тест");
 

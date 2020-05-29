@@ -3,7 +3,7 @@
 use Bitrix\Main\Loader;
 use Bitrix\Main\UserTable;
 use Itbizon\Meleshev\Manager;
-use Itbizon\Meleshev\ShopTable;
+use Itbizon\Meleshev\Model\ShopTable;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 

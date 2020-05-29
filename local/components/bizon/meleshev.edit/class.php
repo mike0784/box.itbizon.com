@@ -2,10 +2,9 @@
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\UserTable;
-use Itbizon\Meleshev\AutoTable;
+use Itbizon\Meleshev\Model\AutoTable;
 use Itbizon\Meleshev\Manager;
-use Itbizon\Meleshev\ShopTable;
-use Bitrix\Main\UI\PageNavigation;
+use Itbizon\Meleshev\Model\ShopTable;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 

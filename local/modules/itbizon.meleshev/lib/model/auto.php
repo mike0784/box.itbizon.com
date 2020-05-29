@@ -1,6 +1,6 @@
 <?php
 
-namespace Itbizon\Meleshev;
+namespace Itbizon\Meleshev\Model;
 
 use Bitrix\Main\Entity\DataManager;
 use Bitrix\Main\Entity\IntegerField;
