@@ -21,20 +21,17 @@ try {
     if (!Loader::includeModule("tasks"))
         throw new Exception("Модуль tasks не найден");
 
-    if ($_SERVER['REQUEST_METHOD'] === "GET" && isset($_REQUEST['taskDone']))
+    if ($_SERVER['REQUEST_METHOD'] === "GET" && isset($_REQUEST['TASK_DONE']))
     {
         $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 
-        $strDateFrom = $request->getCookieRaw("REPORT_FROM");
-        $strDateTo = $request->getCookieRaw("REPORT_TO");
+        $strDateFrom = isset($_REQUEST["REPORT_FROM"]) ? $_REQUEST["REPORT_FROM"] : date($dateFormatOutput, strtotime("-7 days"));
+        $strDateTo = isset($_REQUEST["REPORT_TO"]) ? $_REQUEST["REPORT_TO"] : date($dateFormatOutput);
 
         $dateFrom = DateTime::createFromFormat(DATE_FORMAT_OUTPUT, $strDateFrom);
         $dateTo = DateTime::createFromFormat(DATE_FORMAT_OUTPUT, $strDateTo);
 
-        var_dump($request->getCookieRawList());
-        var_dump($strDateFrom);
-
-        $id = $_REQUEST['taskDone'];
+        $id = $_REQUEST['TASK_DONE'];
         if($id)
         {
             $tasksList = CTasks::GetList([],
@@ -56,6 +53,7 @@ try {
                     "REAL_STATUS"
                 ]
             );
+
         }
 
         ob_start();

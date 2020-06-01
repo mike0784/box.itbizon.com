@@ -86,17 +86,20 @@ function showTaskTable() {
 
     const id = $(this).parents("tr").first().attr("id");
 
+    console.log(this, id);
+
     $.ajax({
         type: "GET",
-        url: pathAjax + "?taskDone=" + id,
+        url: pathAjax
+            + "?REPORT_FROM=" + BX.getCookie("REPORT_FROM")
+            + "&REPORT_TO=" + BX.getCookie("REPORT_TO")
+            + "&TASK_DONE=" + id,
         success: function (response) {
-            console.log(pathAjax + "?taskDone=" + id);
             console.log(response);
-            // createPopup(response.data, "task-done", function() {
-            // });
+            createPopup(response.data, "task-done", function() {
+            });
         },
         error: function (xhr) {
-            console.log(pathAjax + "?taskDone=" + id);
             console.log(xhr);
         },
     });
