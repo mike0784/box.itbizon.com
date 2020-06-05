@@ -12,10 +12,8 @@ class Auth
     // Используется в случае регистрации
     private $pdd = null;
 
-    public function __construct($auth)
+    public function __construct(Array $auth)
     {
-        if(!is_array_assoc($auth))
-            throw new \Exception("Invalid auth data");
 
         if(!array_key_exists("APP_NAME", $auth))
             throw new \Exception("Undefined APP_NAME");

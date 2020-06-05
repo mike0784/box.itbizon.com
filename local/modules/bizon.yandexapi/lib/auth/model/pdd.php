@@ -46,12 +46,6 @@ class PDDTable extends DataManager
                     'required' => true
                 ]
             ),
-            new Fields\DateField(
-                'DATE_CREATE',
-                [
-                    'default_value' => new Date
-                ]
-            ),
         ];
     }
 }
