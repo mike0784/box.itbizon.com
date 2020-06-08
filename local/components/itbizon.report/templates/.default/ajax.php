@@ -21,7 +21,7 @@ try {
     if (!Loader::includeModule("tasks"))
         throw new Exception("Модуль tasks не найден");
 
-    if ($_SERVER['REQUEST_METHOD'] === "GET" && isset($_REQUEST['TASK_DONE']))
+    if ($_SERVER['REQUEST_METHOD'] === "GET" && isset($_REQUEST['TASK_DONE_FUSER']))
     {
         $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 
@@ -31,13 +31,12 @@ try {
         $dateFrom = DateTime::createFromFormat(DATE_FORMAT_OUTPUT, $strDateFrom);
         $dateTo = DateTime::createFromFormat(DATE_FORMAT_OUTPUT, $strDateTo);
 
-        $id = $_REQUEST['TASK_DONE'];
+        $id = $_REQUEST['TASK_DONE_FUSER'];
         if($id)
         {
             $tasksList = CTasks::GetList([],
                 [
-                    '::LOGIC'       => 'AND',
-                    'CREATED_BY'    => $arItem['ID'],
+                    'CREATED_BY'    => $id,
                     '>=DEADLINE'    => $dateFrom->format(DATE_FORMAT_FILTER),
                     '<=DEADLINE'    => $dateTo->format(DATE_FORMAT_FILTER),
                     '=REAL_STATUS'  => '5'
@@ -54,13 +53,13 @@ try {
                 ]
             );
 
+            ob_start();
+            require(__DIR__ . '/include/taskTable.php');
+            $html = ob_get_clean();
+            answer('Success', $html);
         }
 
-        ob_start();
-        require(__DIR__ . '/include/taskTable.php');
-        $html = ob_get_clean();
-        answer('Success', $html);
-
+        answer('Error', null, 500);
     }
 
 }

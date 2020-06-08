@@ -93,7 +93,7 @@ function showTaskTable() {
         url: pathAjax
             + "?REPORT_FROM=" + BX.getCookie("REPORT_FROM")
             + "&REPORT_TO=" + BX.getCookie("REPORT_TO")
-            + "&TASK_DONE=" + id,
+            + "&TASK_DONE_FUSER=" + id,
         success: function (response) {
             console.log(response);
             createPopup(response.data, "task-done", function() {
