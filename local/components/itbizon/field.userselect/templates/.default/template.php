@@ -1,8 +1,6 @@
-<?
+<? if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 use \Bitrix\Main;
-
-if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 Main\UI\Extension::load("crm.entity-editor");
 
@@ -27,7 +25,7 @@ if (Main\Loader::includeModule('socialnetwork'))
         }
     }
 
-    $dstUsers = CSocNetLogDestination::GetUsers(['id' => $destUserIDs]);
+    $dstUsers = CSocNetLogDestination::GetUsers();
     $structure = CSocNetLogDestination::GetStucture(['LAZY_LOAD' => true]);
 
     $currentUser = [];
