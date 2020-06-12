@@ -47,20 +47,21 @@ while ($arItem = $usersList->fetch()) {
 
     $tasksList = \CTasks::GetList([],
         [
-            '::LOGIC' => 'AND',
-            'CREATED_BY' => $arItem['ID'],
+//            '::LOGIC' => 'AND',
+            '=CREATED_BY' => $arItem['ID'],
+//            '=CREATED_BY' => '9',
             '>=DEADLINE' => $dateFrom->format($dateFormatFilter),
             '<=DEADLINE' => $dateTo->format($dateFormatFilter),
         ],
         [
             "ID",
-//            "TITLE",
+            "TITLE",
 //            "CREATED_BY",
 //            "DESCRIPTION",
 //            "DATE_START",
 //            "CLOSED_DATE",
 //            "DEADLINE",
-//            "REAL_STATUS"
+            "REAL_STATUS"
         ]
     );
 
@@ -72,7 +73,7 @@ while ($arItem = $usersList->fetch()) {
             $taskDoneNum++;
         else 
             $taskNum++;
-
+        echo "<pre>" . print_r($task, true) . "</pre>";
     }
 
     $users[] = [

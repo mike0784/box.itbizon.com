@@ -62,10 +62,7 @@ class CBPItbizonAddYandexMail extends CBPActivity
                 $this->arProperties['DOMAIN']
             );
 
-            if(!$mailDomain->isSuccess())
-                $this->WriteToTrackingService($mailDomain->getErrorMessage());
-            else
-                $this->WriteToTrackingService("Почта создана");
+            $this->WriteToTrackingService("Почта создана");
 
             $this->UID = $uid;
 
