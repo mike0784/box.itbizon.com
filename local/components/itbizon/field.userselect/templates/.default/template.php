@@ -38,7 +38,6 @@ if (Main\Loader::includeModule('socialnetwork'))
     $department = $structure['department'];
     $departmentRelation = $structure['department_relation'];
     $departmentRelationHead = $structure['department_relation_head'];
-    var_dump($component->status);
     ?>
     <script type="text/javascript">
 
