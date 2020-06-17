@@ -34,11 +34,15 @@ window.createField = function()
     var userElement = BX.create("div", { props: { className: "crm-widget-employee-container" } });
 
     window._input = BX.create("input", { attrs: { name: fieldname, type: "hidden", value: window.user.value } });
-    window._editButton = BX.create("span", { props: { className: "crm-widget-employee-change" }, text: "Сменить" });
 
-    BX.bind(window._editButton, "click", window._editButtonClickHandler);
+    // Возможность выбора пользователя
+    if(window.changestatus)
+   {
+       window._editButton = BX.create("span", { props: { className: "crm-widget-employee-change" }, text: "Сменить" });
+       BX.bind(window._editButton, "click", window._editButtonClickHandler);
+       userElement.appendChild(window._editButton);
 
-    userElement.appendChild(window._editButton);
+   }
     userElement.appendChild(window._photoElement);
     userElement.appendChild(
         BX.create("span",

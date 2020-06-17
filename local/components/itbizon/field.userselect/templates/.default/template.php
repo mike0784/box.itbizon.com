@@ -38,12 +38,14 @@ if (Main\Loader::includeModule('socialnetwork'))
     $department = $structure['department'];
     $departmentRelation = $structure['department_relation'];
     $departmentRelationHead = $structure['department_relation_head'];
+    var_dump($component->status);
     ?>
     <script type="text/javascript">
 
         window.user = <?=CUtil::PhpToJSObject($currentUser)?>;
         var fieldname = <?=CUtil::PhpToJSObject($component->fieldName)?>;
         var fieldId = <?=CUtil::PhpToJSObject($component->fieldId)?>;
+        window.changestatus = <?=CUtil::PhpToJSObject($component->status)?>;
 
         BX.ready(
             function () {

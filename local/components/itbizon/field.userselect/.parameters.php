@@ -12,5 +12,6 @@ $arComponentParameters = [
         'FIELD_NAME'    => 'USER_SELECT',
         'FIELD_ID'      => 'USER_SELECT',
         'TITLE'         => 'Название поля',
+        'CHANGE_ACTIVE' => true
     ],
 ];
