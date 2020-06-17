@@ -1,8 +1,9 @@
 window.createField = function()
 {
+    const userLink = "/company/personal/user/"+window.user.entityId+"/";
     window._photoElement = BX.create("a",
         {
-            props: { className: "crm-widget-employee-avatar-container", target: "_blank" },
+            props: { href:userLink, className: "crm-widget-employee-avatar-container", target: "_blank" },
             style:
                 {
                     backgroundImage: (window.user.photoUrl === "") ? "url('" + window.user.photoUrl + "')" : "",
@@ -13,12 +14,12 @@ window.createField = function()
 
     window._nameElement = BX.create("a",
         {
-            props: { className: "crm-widget-employee-name", target: "_blank" },
+            props: { href:userLink, className: "crm-widget-employee-name", target: "_blank"},
             text: window.user.formattedName
         }
     );
 
-    if (window.user.showUrl !== "")
+    if (window.user.showUrl)
     {
         window._photoElement.href = window.user.showUrl;
         window._nameElement.href = window.user.showUrl;
