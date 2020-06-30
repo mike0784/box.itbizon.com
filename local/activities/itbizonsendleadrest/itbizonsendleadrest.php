@@ -92,7 +92,7 @@ class CBPItBizonSendLeadRest extends CBPActivity
 
             $queryData = http_build_query([
                 'fields' => array_merge($uf, [
-                    "TITLE" => $this->NAME.' '.$this->LAST_NAME,
+                    "TITLE" => $this->TITLE,
                     "NAME" => $this->NAME,
                     "LAST_NAME" => $this->LAST_NAME,
                     "SECOND_NAME" => $this->SECOND_NAME,
