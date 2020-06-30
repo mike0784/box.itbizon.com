@@ -78,14 +78,17 @@ class CBPItBizonSendLeadRest extends CBPActivity
             $uf = (array)json_decode($this->USER_FIELD);
 
             $phoneData = [];
-            $phones = explode(',', $this->PHONE);
-            foreach ($phones as $phone)
-                $phoneData[] = ["VALUE" => $phone, "VALUE_TYPE" => "WORK"];
+            $phones = explode(';', $this->PHONE);
+            foreach ($phones as $phone){
+                $partPhone = explode(': ', $phone);
+                $phoneData[] = ["VALUE" => isset($partPhone[1]) ? $partPhone[1] : $phone, "VALUE_TYPE" => "WORK"];
+            }
 
             $emailData = [];
-            $emails = explode(',', $this->EMAIL);
+            $emails = explode(';', $this->EMAIL);
             foreach ($emails as $email)
-                $emailData[] = ["VALUE" => $email, "VALUE_TYPE" => "WORK"];
+                $partEmail = explode(': ', $email);
+                $emailData[] = ["VALUE" => isset($partEmail[1]) ? $partEmail[1] : $email, "VALUE_TYPE" => "WORK"];
 
             $queryData = http_build_query([
                 'fields' => array_merge($uf, [
