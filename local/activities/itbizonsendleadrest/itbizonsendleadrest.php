@@ -29,6 +29,7 @@ class CBPItBizonSendLeadRest extends CBPActivity
             'PHONE'         => null,
             'EMAIL'         => null,
             'COMMENT'       => null,
+            'RESPONSIBLE_ID'=> null,
             'USER_FIELD'    => "[]",
         ];
 
@@ -41,6 +42,9 @@ class CBPItBizonSendLeadRest extends CBPActivity
             ],
             'TITLE' => [
                 'Type' => FieldType::STRING
+            ],
+            'RESPONSIBLE_ID' => [
+                'Type' => FieldType::INT
             ],
             'NAME' => [
                 'Type' => FieldType::STRING
@@ -100,7 +104,7 @@ class CBPItBizonSendLeadRest extends CBPActivity
                     "SOURCE_ID" =>  $this->SOURCE_ID,
                     "COMMENTS" =>  $this->COMMENT,
                     "OPENED" => "Y",
-                    "ASSIGNED_BY_ID" => 1,
+                    "ASSIGNED_BY_ID" => $this->RESPONSIBLE_ID,
                     "PHONE" => $phoneData,
                     "EMAIL" => $emailData,
                 ]),
@@ -181,6 +185,7 @@ class CBPItBizonSendLeadRest extends CBPActivity
                 'LAST_NAME'     => null,
                 'SECOND_NAME'   => null,
                 'SOURCE_ID'     => null,
+                'RESPONSIBLE_ID'=> null,
                 'PHONE'         => null,
                 'EMAIL'         => null,
                 'COMMENT'       => null,
@@ -247,6 +252,7 @@ class CBPItBizonSendLeadRest extends CBPActivity
             'SOURCE_ID'     => $arCurrentValues['SOURCE_ID'],
             'PHONE'         => $arCurrentValues['PHONE'],
             'EMAIL'         => $arCurrentValues['EMAIL'],
+            'RESPONSIBLE_ID'=> $arCurrentValues['RESPONSIBLE_ID'],
             'COMMENT'       => $arCurrentValues['COMMENT'],
             'USER_FIELD'    => json_encode(array_combine(
                 $arCurrentValues['UF_KEYS'],

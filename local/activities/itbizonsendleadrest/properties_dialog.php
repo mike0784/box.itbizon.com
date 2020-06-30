@@ -31,6 +31,12 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
     </td>
 </tr>
 <tr>
+    <td align="right" width="40%"><span class="adm-required-field">Ответственный:</span></td>
+    <td width="60%">
+        <?= CBPDocument::ShowParameterField('int', 'RESPONSIBLE_ID', $arCurrentValues['RESPONSIBLE_ID'], ['rows' => 1]) ?>
+    </td>
+</tr>
+<tr>
     <td align="right" width="40%"><span class="adm-required-field">Отчество:</span></td>
     <td width="60%">
         <?= CBPDocument::ShowParameterField('string', 'SECOND_NAME', $arCurrentValues['SECOND_NAME'], ['rows' => 1]) ?>
