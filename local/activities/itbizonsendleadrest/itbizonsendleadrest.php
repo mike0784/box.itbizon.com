@@ -8,6 +8,18 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 /**
  * Class CBPItBizonSendLeadRest
+ * @property mixed|null USER_FIELD
+ * @property mixed|null PHONE
+ * @property mixed|null EMAIL
+ * @property mixed|null TITLE
+ * @property mixed|null NAME
+ * @property mixed|null LAST_NAME
+ * @property mixed|null SECOND_NAME
+ * @property mixed|null SOURCE_ID
+ * @property mixed|null COMMENT
+ * @property mixed|null RESPONSIBLE_ID
+ * @property mixed|null REST_PATH
+ * @property mixed|null ID
  */
 class CBPItBizonSendLeadRest extends CBPActivity
 {
@@ -119,7 +131,7 @@ class CBPItBizonSendLeadRest extends CBPActivity
             $obj = json_decode($result);
 
             $this->ID = $obj->result;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->WriteToTrackingService($e->getMessage());
         }
 
