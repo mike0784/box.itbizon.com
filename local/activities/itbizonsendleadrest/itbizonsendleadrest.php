@@ -97,7 +97,7 @@ class CBPItBizonSendLeadRest extends CBPActivity
                     "SOURCE_ID" =>  $this->SOURCE_ID,
                     "COMMENTS" =>  $this->COMMENT,
                     "OPENED" => "Y",
-                    "ASSIGNED_BY_ID" => 9, // change
+                    "ASSIGNED_BY_ID" => 1,
                     "PHONE" => $phoneData,
                     "EMAIL" => $emailData,
                 ]),
