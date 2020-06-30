@@ -94,17 +94,32 @@ class CBPItBizonSendLeadRest extends CBPActivity
             $uf = (array)json_decode($this->USER_FIELD);
 
             $phoneData = [];
-            $phones = explode(';', $this->PHONE);
-            foreach ($phones as $phone){
-                $partPhone = explode(': ', $phone);
-                $phoneData[] = ["VALUE" => isset($partPhone[1]) ? $partPhone[1] : $phone, "VALUE_TYPE" => "WORK"];
+            if(!is_array($this->PHONE)) {
+                $phones = explode(';', $this->PHONE);
+                foreach ($phones as $phone){
+                    $partPhone = explode(': ', $phone);
+                    $phoneData[] = ["VALUE" => isset($partPhone[1]) ? $partPhone[1] : $phone, "VALUE_TYPE" => "WORK"];
+                }
+            } else {
+                if(array_key_exists('PHONE', $this->PHONE))
+                    $phoneData = array_values($this->PHONE['PHONE']);
+                else
+                    $phoneData = array_values($this->PHONE);
             }
 
             $emailData = [];
-            $emails = explode(';', $this->EMAIL);
-            foreach ($emails as $email)
-                $partEmail = explode(': ', $email);
-                $emailData[] = ["VALUE" => isset($partEmail[1]) ? $partEmail[1] : $email, "VALUE_TYPE" => "WORK"];
+            if(!is_array($this->EMAIL)) {
+                $emails = explode(';', $this->EMAIL);
+                foreach ($emails as $email) {
+                    $partEmail = explode(': ', $email);
+                    $emailData[] = ["VALUE" => isset($partEmail[1]) ? $partEmail[1] : $email, "VALUE_TYPE" => "WORK"];
+                }
+            } else {
+                if(array_key_exists('EMAIL', $this->EMAIL))
+                    $emailData = array_values($this->EMAIL['EMAIL']);
+                else
+                    $emailData = array_values($this->EMAIL);
+            }
 
             $queryData = http_build_query([
                 'fields' => array_merge($uf, [
