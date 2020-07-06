@@ -15,8 +15,10 @@
         <tr>
             <td><?= $task['TITLE'] ?></td>
             <td><?= $task['DESCRIPTION'] ?></td>
-            <td>0</td>
-            <td>0</td>
+            <td><?= (new \DateTime())->diff((new \Datetime($task['DATE_START'])))->format('%a'); ?></td>
+            <td>
+                <?= (new \DateTime())->diff((new \Datetime($task['DEADLINE'])))->format('%a'); ?>
+            </td>
             <td><?= $task['DATE_START'] ?></td>
             <td><?= $task['DEADLINE'] ?></td>
         </tr>

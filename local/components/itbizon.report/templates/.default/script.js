@@ -32,6 +32,7 @@ $(document).ready(function() {
     });
 
     $(".task-done-list").on("click", showTaskTable);
+    $(".task-list").on("click", showTaskTable);
 
 });
 
@@ -85,15 +86,17 @@ function createPopup(html, name, func = ()=>{}) {
 function showTaskTable() {
 
     const id = $(this).parents("tr").first().attr("id");
+    const done = $(this).hasClass("task-done-list");
 
-    console.log(this, id);
+    console.log(this, done);
 
     $.ajax({
         type: "GET",
         url: pathAjax
             + "?REPORT_FROM=" + BX.getCookie("REPORT_FROM")
             + "&REPORT_TO=" + BX.getCookie("REPORT_TO")
-            + "&TASK_DONE_FUSER=" + id,
+            + "&TASK_FUSER=" + id
+            + "&TASK_DONE=" + done,
         success: function (response) {
             console.log(response);
             createPopup(response.data, "task-done", function() {

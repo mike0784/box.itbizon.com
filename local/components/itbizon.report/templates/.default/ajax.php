@@ -21,7 +21,7 @@ try {
     if (!Loader::includeModule("tasks"))
         throw new Exception("Модуль tasks не найден");
 
-    if ($_SERVER['REQUEST_METHOD'] === "GET" && isset($_REQUEST['TASK_DONE_FUSER']))
+    if ($_SERVER['REQUEST_METHOD'] === "GET" && isset($_REQUEST['TASK_FUSER']))
     {
         $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 
@@ -31,15 +31,26 @@ try {
         $dateFrom = DateTime::createFromFormat(DATE_FORMAT_OUTPUT, $strDateFrom);
         $dateTo = DateTime::createFromFormat(DATE_FORMAT_OUTPUT, $strDateTo);
 
-        $id = $_REQUEST['TASK_DONE_FUSER'];
+        $id = $_REQUEST['TASK_FUSER'];
+
         if($id)
         {
+            if(isset($_REQUEST['TASK_DONE']))
+            {
+                if($_REQUEST['TASK_DONE'] == "true")
+                    $filter['=REAL_STATUS'] = CTasks::STATE_COMPLETED;
+                else
+                    $filter['<REAL_STATUS'] = CTasks::STATE_COMPLETED;
+            }
+//            die(var_dump($filter));
+
             $tasksList = CTasks::GetList([],
                 [
+//                    '::LOGIC'       => 'AND',
                     'CREATED_BY'    => $id,
                     '>=DEADLINE'    => $dateFrom->format(DATE_FORMAT_FILTER),
                     '<=DEADLINE'    => $dateTo->format(DATE_FORMAT_FILTER),
-                    '=REAL_STATUS'  => '5'
+                    $filter
                 ],
                 [
                     "ID",
