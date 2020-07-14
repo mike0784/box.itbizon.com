@@ -1,46 +1,67 @@
 <?php
 
 use \Bitrix\Main\Loader;
-use Bitrix\Main\UI\Extension;
+use \Bitrix\Main\UI\Extension;
+use Bitrix\Tasks\Integration\Intranet\Department;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
-$APPLICATION->SetTitle("Модель НМ. Тест");
+$APPLICATION->SetTitle("Test");
 
 try {
-    if (!Loader::includeModule('itbizon.meleshev'))
-        throw new Exception('error load module itbizon.meleshev');
+    if (!Loader::includeModule('bizon.main'))
+        throw new Exception('error load module bizon.main');
+    
+    i_show($_REQUEST);
+    
+    foreach ($_POST['TEST_SELECT'] as $item)
+        i_show($item);
+    
+    // get Department list
+    $list = Department::getCompanyStructure();
+    $departments = [];
+    foreach ($list as $department)
+        $departments[$department['ID']] = $department['NAME'];
+    
+    // get Group list
+    $list = \Bitrix\Main\GroupTable::getList();
+    $groups = [];
+    while($item = $list->fetch())
+        $groups[$item['ID']] = $item['NAME'];
+    
+    i_show($departments);
+    i_show($groups);
+    
+    $user = \Bitrix\Main\UserTable::getList([
+        'filter'=>[
+            '=ID'=>14,
+        ],
+        'select'=>[
+            '*',
+            'UF_SKILLS',
+            'UF_DEPARTMENT',
+        ],
+    ])->fetch();
+    i_show($user);
+    
+    $test = \Bitrix\Main\UserGroupTable::getList()->fetchAll();
+    i_show($test);
 
 } catch (Exception $ex) {
     echo $ex->getMessage();
 }
+
+?>
+<form method="POST" enctype="multipart/form-data">
+    <select name="TEST_SELECT[]" multiple>
+        <option value="0">Test1</option>
+        <option value="1">Test2</option>
+        <option value="2">Test3</option>
+    </select>
+    <input type="submit">
+</form>
+<?
+
 Extension::load('ui.bootstrap4');
-
-$APPLICATION->IncludeComponent(
-    "bizon:meleshev.index",
-    "",
-    Array(
-        "SEF_FOLDER" => "/mtest/",
-        "SEF_MODE" => "Y",
-//        "SEF_URL_TEMPLATES" => Array("edit"=>"edit/#ID#/","index"=>"list/")
-    )
-);
-
-
-/*$shopId = 1;
-$count = ShopTable::getCountOfAllAuto($shopId);
-$shop = ShopTable::getById($shopId)->fetch();
-$parameters = [
-    'select' => ['*'],
-    'filter' => ['=SHOP_ID' => $shopId]
-];
-var_dump($shop);
-echo "<br />In show with id = 0 all cars is = $count with AMOUNT = {$shop["AMOUNT"]} and COUNT = {$shop["COUNT"]}";
-
-$cars = AutoTable::getList($parameters)->fetchAll();
-foreach ($cars as $car) {
-
-    echo "<br />Машина №{$car["ID"]} с маркой {$car["MARK"]}";
-}*/
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
