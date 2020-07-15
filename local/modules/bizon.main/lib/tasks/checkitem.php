@@ -5,6 +5,7 @@ namespace Bizon\Main\Tasks;
 
 
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\Event;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use Bitrix\Main\ObjectPropertyException;
@@ -146,13 +147,15 @@ class CheckItem
     }
 
     /**
-     * @param $taskId
+     * @param $task
+     * @param $oldFields
+     * @param $newFields
      * @throws ArgumentException
      * @throws LoaderException
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function recalcCompletePrc($taskId)
+    public static function recalcCompletePrc($taskId, $oldFields, $newFields)
     {
         $countItem = 0;
         $countCheckItem = 0;
@@ -169,8 +172,60 @@ class CheckItem
             }
         }
         $completePrc = ($countItem > 0) ? $countCheckItem/$countItem * 100 : 0;
-
+        
         $task = \CTaskItem::getInstance($taskId, 1);
-        $task->update(['UF_AUTO_161831137323' => $completePrc]);
+        $task->update(['UF_AUTO_161831137323' => round($completePrc,2)]);
+    }
+
+    public static function onTaskUpdate($task, $oldFields, $newFields)
+    {
+        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/test.log', '['.date('H:i:s').'] onTaskUpdate '.$task.PHP_EOL, FILE_APPEND);
+    }
+
+    public static function onAfterTaskCheckListItemAdd($task, $oldFields, $newFields)
+    {
+        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/test.log', '['.date('H:i:s').'] onAfterTaskCheckListItemAdd '.PHP_EOL, FILE_APPEND);
+    }
+    
+    /**
+     * @param \Bitrix\Main\Event $arFields
+     * @throws ArgumentException
+     * @throws LoaderException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function onAfterCheckListUpdate(Event $arFields)
+    {
+        $params = $arFields->getParameters();
+    
+        if(Loader::includeModule('tasks'))
+        {
+            $checkItemId = $params['id']['ID'];
+            $taskId = CheckListTable::getById($checkItemId)->fetch()['TASK_ID'];
+            self::recalcCompletePrc($taskId, null, null);
+            $log = new \Bizon\Main\Log('check_list');
+            $log->Add('onAfterCheckListUpdate -> Изменен чек-лист в задаче: '.$taskId);
+        }
+        else
+        {
+            $log = new \Bizon\Main\Log('check_list');
+            $log->Add('onAfterCheckListUpdate -> Ошибка загрузки модуля tasks');
+        }
+    }
+    
+    /**
+     * @param Event $arFields
+     * @throws ArgumentException
+     * @throws LoaderException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function onAfterCheckListAdd(Event $arFields)
+    {
+        $taskId = $arFields->getParameter('fields')['TASK_ID'];
+        self::recalcCompletePrc($taskId, null, null);
+        
+        $log = new \Bizon\Main\Log('check_list');
+        $log->Add('onAfterCheckListAdd -> Добавлен элемент чек-листа в задаче: '.$taskId);
     }
 }

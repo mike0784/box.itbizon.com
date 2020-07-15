@@ -214,4 +214,27 @@ $eventManager->addEventHandler(
     }
 );
 
+// ----------------------------------------
+// Tasks check list test
+// ----------------------------------------
+$eventManager->addEventHandler(
+    'tasks',
+    '\Bitrix\Tasks\Internals\Task\CheckList::onAfterAdd',
+    function(&$arFields)
+    {
+        if(Loader::includeModule('bizon.main'))
+            \Bizon\Main\Tasks\CheckItem::onAfterCheckListAdd($arFields);
+    }
+);
+
+$eventManager->addEventHandler(
+    'tasks',
+    '\Bitrix\Tasks\Internals\Task\CheckList::onAfterUpdate',
+    function(&$arFields)
+    {
+        if(Loader::includeModule('bizon.main'))
+            \Bizon\Main\Tasks\CheckItem::onAfterCheckListUpdate($arFields);
+    }
+);
+
 ?>
