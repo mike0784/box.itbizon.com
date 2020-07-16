@@ -237,4 +237,15 @@ $eventManager->addEventHandler(
     }
 );
 
+//Перед добавление задачи
+$eventManager->addEventHandler(
+    'tasks',
+    'OnTaskAdd',
+    function (&$taskId) {
+        if (Loader::includeModule('bizon.main') && Loader::includeModule('tasks')) {
+            $userId = CUser::GetId();
+            \Bizon\Main\Utils\AssistantAdministrator::changeTaskManager($taskId, $userId);
+        }
+    }
+);
 ?>
