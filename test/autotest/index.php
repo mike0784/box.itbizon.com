@@ -184,67 +184,7 @@ class TestCase
 try
 {
     /* BEGIN OF USER CODE SECTION */
-    /*function search(array $data, int $number) : int
-    {
-        if(count($data) == 0)
-            return -1;
-        $start_index = 0;
-        $end_index = count($data)-1;
-        $elem = -1;
-        $center = round(($start_index+$end_index)/2);
-        while($number!=$elem){
-            if($number>$data[$center]){
-                $start_index = $center;
-            }elseif($number<$data[$center]){
-                $end_index = $center;
-            }else{
-                return $center;
-            }
-            $center = round(($start_index+$end_index)/2);
-            if($start_index == $end_index)
-                break;
-        }
-        return -1;
-    }*/
-    function weekend (string $begin, string $end) : int
-    {
-        $date_diff = (strtotime($end) - strtotime($begin))/86400;
-        $weekends = $date_diff/7*2;
-        if (date("l", strtotime($end)) == "Sunday" || date("l", strtotime($end)) == "Saturday" || date("l", strtotime($begin)) == "Sunday" || date("l", strtotime($begin)) == "Saturday")
-            $weekends++;
-        return $weekends;
-    }
-    function getcount(string $test) : array
-    {
-        $result = array();
-        foreach (str_split($test) as $letter){
-            $result[$letter] = 0;
-        }
-        foreach (str_split($test) as $letter){
-            $result[$letter]++;
-        }
-        return $result;
-    }
-    function fiborow(int $limit) : string
-    {
-        $num1 = 1;
-        $num2 = 1;
-        $sum = 0;
-        $result = array(0);
-        if ($limit > 0){
-            $result[] = 1;
-            $result[] = 1;
-        }
-        while($sum < $limit){
-            $result[] = ($num1+$num2);
-            $sum = $num1 + $num2;
-            $num1 = $num2;
-            $num2 = $sum;
-        }
-        if (end($result)>$limit)
-            array_pop($result);
-        return implode(" ", $result);
-    }
+
     /* END OF USER CODE SECTION */
 
     $cases = [
@@ -330,7 +270,6 @@ try
         {
             echo '<p>Тест '.$testNum.'/'.$countTests.' ... '.(($result->getResult()) ? 'OK' : 'FAIL').'</p>';
             echo implode('<br>', $result->getLog());
-            echo '<p>--------------------------------------------------------------</p>';
             if($result->getResult())
                 $successCnt++;
             $testNum++;
