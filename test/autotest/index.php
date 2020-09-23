@@ -183,68 +183,113 @@ class TestCase
 
 try
 {
-    /* BEGIN OF USER CODE SECTION */
-    /*function search(array $data, int $number) : int
-    {
-        if(count($data) == 0)
-            return -1;
-        $start_index = 0;
-        $end_index = count($data)-1;
-        $elem = -1;
-        $center = round(($start_index+$end_index)/2);
-        while($number!=$elem){
-            if($number>$data[$center]){
-                $start_index = $center;
-            }elseif($number<$data[$center]){
-                $end_index = $center;
-            }else{
-                return $center;
+    if (!function_exists('array_key_first')) {
+        function array_key_first(array $arr) {
+            foreach($arr as $key => $unused) {
+                return $key;
             }
-            $center = round(($start_index+$end_index)/2);
-            if($start_index == $end_index)
-                break;
+            return NULL;
         }
-        return -1;
-    }*/
-    function weekend (string $begin, string $end) : int
+    }
+    if (! function_exists("array_key_last")) {
+        function array_key_last($array) {
+            if (!is_array($array) || empty($array)) {
+                return NULL;
+            }
+
+            return array_keys($array)[count($array)-1];
+        }
+    }
+    /* BEGIN OF USER CODE SECTION */
+
+    //Калинин
+
+    function search(array $data, int $number) : int
     {
-        $date_diff = (strtotime($end) - strtotime($begin))/86400;
-        $weekends = $date_diff/7*2;
-        if (date("l", strtotime($end)) == "Sunday" || date("l", strtotime($end)) == "Saturday" || date("l", strtotime($begin)) == "Sunday" || date("l", strtotime($begin)) == "Saturday")
-            $weekends++;
+        $low = 0;
+        $high = count($data) - 1;
+
+        while ($low <= $high)
+        {
+            $mid = intval(($low + $high) / 2);
+            if ($number < $data[$mid])
+                $high = $mid - 1;
+            elseif ($number > $data[$mid])
+                $low = $mid + 1;
+            else
+                return $mid;
+        }
+
+        return -1;
+    }
+    function weekend(string $begin, string $end) : int
+    {
+        $weekends = 0;
+        $dt_begin = strtotime($begin);
+        $dt_end = strtotime($end);
+
+        if(!$dt_begin || !$dt_end)
+            return 0; // можно выдать исключение но оставлю так
+
+        $number_day = intval(($dt_end - $dt_begin) / (60 * 60 * 24));
+        for($i = 0; $i <= $number_day; $i++)
+        {
+            $week_day = intval(date("w", $dt_begin)); // получаем id дня недели
+        if ($week_day == 6 || $week_day == 0) // если день недели 6 (суббота) или 0 (воскресенье)
+            $weekends++; // то увеличиваем счётчик выходных
+        $dt_begin += 60 * 60 * 24; // увеличиваем дату на 1 день
+        }
+
         return $weekends;
     }
     function getcount(string $test) : array
     {
-        $result = array();
-        foreach (str_split($test) as $letter){
-            $result[$letter] = 0;
-        }
-        foreach (str_split($test) as $letter){
-            $result[$letter]++;
-        }
-        return $result;
+        $strarr = str_split($test);
+        return array_count_values($strarr);;
     }
     function fiborow(int $limit) : string
     {
-        $num1 = 1;
-        $num2 = 1;
-        $sum = 0;
-        $result = array(0);
-        if ($limit > 0){
-            $result[] = 1;
-            $result[] = 1;
-        }
-        while($sum < $limit){
-            $result[] = ($num1+$num2);
-            $sum = $num1 + $num2;
-            $num1 = $num2;
-            $num2 = $sum;
-        }
-        if (end($result)>$limit)
-            array_pop($result);
-        return implode(" ", $result);
+        $fib_arr = [];
+        for ($i = 0; $i <= $limit; $i++)
+            array_push($fib_arr, round(pow((sqrt(5)+1)/2, $i) / sqrt(5)));
+
+        return join($glue=" ", $fib_arr);
     }
+
+    //Строганов
+    /*function search(array $data, int $number)
+    {
+        return $data[$number];
+    }
+
+    function getcount(string $test) : array
+    {
+
+        $string_to_array = str_split($test);
+
+        $count_character = array_count_values($string_to_array);
+
+        return $count_character;
+    }
+
+    function fiborow($n) {
+
+        $res = array(0, 1);
+
+        for( $i=0; $i < ($n-2); $i++ ) {
+
+            $cur = $res[$i] + $res[$i+1];
+
+            if ($cur > $n) {
+                break;
+            }
+
+            array_push( $res, $cur );
+        }
+
+        return implode(" ", $res);
+    }*/
+
     /* END OF USER CODE SECTION */
 
     $cases = [
