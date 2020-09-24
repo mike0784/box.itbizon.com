@@ -176,4 +176,69 @@ $eventManager->addEventHandler(
         }
     }
 );
+
+// Тестовый доступ к сущностям CRM для дополнительного пользователя на примере Лидов
+$eventManager->addEventHandler(
+    'crm',
+    'onBeforeCrmLeadUpdate',
+    function(&$arFields) {
+        if(Loader::includeModule('bizon.main')
+            && Loader::includeModule('crm'))
+        {
+            $log = new Log('crmAccessTest');
+            $log->Add('leadBEFOREupdate');
+            $log->Add($arFields);
+            
+            if(isset($arFields['UF_CRM_ACCESS_USER']))
+            {
+                $prevAccessUser = \Bitrix\Crm\LeadTable::getList([
+                    'filter'=>['=ID'=>$arFields['ID']],
+                    'select'=>['UF_CRM_ACCESS_USER']
+                ])->fetch()['UF_CRM_ACCESS_USER'];
+                if($prevAccessUser)
+                {
+                    $accessId = \Bizon\Main\CrmAccess\Model\CrmEntityPermsTable::getList([
+                        'filter'=>[
+                            'ENTITY'=>'LEAD',
+                            'ENTITY_ID'=>$arFields['ID'],
+                            'ATTR'=>'U'.$prevAccessUser,
+                        ],
+                        'select'=>['ID'],
+                    ])->fetch()['ID'];
+                    
+                    $log->Add('AccessId: '.$accessId);
+                    \Bizon\Main\CrmAccess\Model\CrmEntityPermsTable::delete($accessId);
+                }
+            }
+        }
+    }
+);
+
+$eventManager->addEventHandler(
+    'crm',
+    'onAfterCrmLeadUpdate',
+    function(&$arFields) {
+        if(Loader::includeModule('bizon.main'))
+        {
+            $log = new Log('crmAccessTest');
+            $log->Add('leadAFTERupdate');
+            $log->Add($arFields);
+            
+            if(isset($arFields['UF_CRM_ACCESS_USER']) && intval($arFields['UF_CRM_ACCESS_USER']) > 0)
+            {
+                $result = \Bizon\Main\CrmAccess\Model\CrmEntityPermsTable::add([
+                    'ENTITY'=>'LEAD',
+                    'ENTITY_ID'=>$arFields['ID'],
+                    'ATTR'=>'U'.$arFields['UF_CRM_ACCESS_USER'],
+                ]);
+                if(!$result->isSuccess())
+                {
+                    $log->Add('Ошибка добавления доступа: ');
+                    $log->Add($result->getErrorMessages());
+                }
+            }
+        }
+    }
+);
+
 ?>
