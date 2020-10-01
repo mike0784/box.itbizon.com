@@ -27,7 +27,7 @@ class itbizon_kalinin extends CModule {
     {
         global $APPLICATION, $DOCUMENT_ROOT;
         RegisterModule($this->MODULE_ID);
-        CAdminMessage::ShowNote("Module is installed");
+        $APPLICATION->IncludeAdminFile("Install itbizon.kalinin", $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/step1.php");
     }
 
     /**
@@ -35,8 +35,9 @@ class itbizon_kalinin extends CModule {
      */
     public function DoUninstall()
     {
-        RegisterModule($this->MODULE_ID);
-        CAdminMessage::ShowNote("Module is uninstalled");
+        global $APPLICATION, $DOCUMENT_ROOT;
+        UnRegisterModule($this->MODULE_ID);
+        $APPLICATION->IncludeAdminFile("Uninstall itbizon.kalinin", $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/unstep1.php");
     }
 
 
