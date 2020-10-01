@@ -1,8 +1,5 @@
 <?php
 
-use Bitrix\Main\Application;
-use Bitrix\Main\ModuleManager;
-
 class itbizon_kalinin extends CModule {
 
     /**
@@ -28,17 +25,9 @@ class itbizon_kalinin extends CModule {
      */
     public function DoInstall()
     {
-        if (!ModuleManager::isModuleInstalled($this->MODULE_ID))
-        {
-            CAdminMessage::ShowNote('Test module is installed');
-//            $this->InstallDB();
-        }
-        else
-        {
-            CAdminMessage::ShowNote('Installation error');
-        }
-
-        ModuleManager::registerModule($this->MODULE_ID);
+        global $APPLICATION, $DOCUMENT_ROOT;
+        RegisterModule($this->MODULE_ID);
+        CAdminMessage::ShowNote("Module is installed");
     }
 
     /**
@@ -46,17 +35,8 @@ class itbizon_kalinin extends CModule {
      */
     public function DoUninstall()
     {
-        if (ModuleManager::isModuleInstalled($this->MODULE_ID))
-        {
-            CAdminMessage::ShowNote('Test module is deleted');
-//            $this->UnInstallDB();
-        }
-        else
-        {
-            CAdminMessage::ShowNote('Uninstallation error');
-        }
-
-        ModuleManager::unRegisterModule($this->MODULE_ID);
+        RegisterModule($this->MODULE_ID);
+        CAdminMessage::ShowNote("Module is uninstalled");
     }
 
 
