@@ -1,13 +1,19 @@
 <?php
 
-use Bitrix\Main\UI\Extension;
-use Itbizon\Template\TestClass;
+use \Bitrix\Main\Loader;
 
 require($_SERVER['DOCUMENT_ROOT'] . "/bitrix/header.php");
-$APPLICATION->SetTitle("");
+$APPLICATION->SetTitle("Проверка тестового модуля");
 
-Extension::load('ui.bootstrap4');
+try
+{
+    if (!Loader::includeModule('itbizon.kalinin'))
+        throw new Exception('Ошибка подключения модуля itbizon.kalinin');
 
-echo "Hello World";
+}
+catch (Exception $e)
+{
+    echo $e->getMessage();
+}
 
 require($_SERVER['DOCUMENT_ROOT'] . "/bitrix/footer.php");
