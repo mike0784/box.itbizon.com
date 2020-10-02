@@ -1,2 +1,2 @@
 <?php
-$MESS["INSTALLED"] = "Модуль удалён";
+$MESS["UNINSTALLED"] = "Модуль удалён";
