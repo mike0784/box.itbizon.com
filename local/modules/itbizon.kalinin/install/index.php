@@ -42,34 +42,8 @@ class itbizon_kalinin extends CModule {
         $APPLICATION->IncludeAdminFile(Loc::getMessage("UNINSTALL"), $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/unstep1.php");
     }
 
-
-//    /**
-//     * @return bool
-//     */
-//    public function InstallDB()
-//    {
-//        try
-//        {
-//            return true;
-//        }
-//        catch (Exception $e)
-//        {
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * @return bool
-//     */
-//    public function UnInstallDB()
-//    {
-//        try
-//        {
-//            return true;
-//        }
-//        catch (Exception $e)
-//        {
-//            return false;
-//        }
-//    }
+    public static function SayHello($name)
+    {
+        echo "Hello, " . $name;
+    }
 }
