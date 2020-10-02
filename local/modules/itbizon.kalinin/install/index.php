@@ -1,5 +1,7 @@
 <?php
 
+use Bitrix\Main\Localization\Loc;
+
 class itbizon_kalinin extends CModule {
 
     /**
@@ -14,30 +16,30 @@ class itbizon_kalinin extends CModule {
             $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
         }
         $this->MODULE_ID = "itbizon.kalinin";
-        $this->MODULE_NAME = "[BizON] Тестовый модуль";
-        $this->MODULE_DESCRIPTION = "Тестовый модуль";
+        $this->MODULE_NAME = Loc::getMessage('M_NAME'); //"[BizON] Тестовый модуль";
+        $this->MODULE_DESCRIPTION = Loc::getMessage('M_DESC'); //"Тестовый модуль";
         $this->PARTNER_NAME = 'BizON';
         $this->PARTNER_URI = 'https://itbizon.com';
     }
 
     /**
-     *
+     * Installation
      */
     public function DoInstall()
     {
         global $APPLICATION, $DOCUMENT_ROOT;
         RegisterModule($this->MODULE_ID);
-        $APPLICATION->IncludeAdminFile("Install itbizon.kalinin", $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/step1.php");
+        $APPLICATION->IncludeAdminFile(Loc::getMessage("INSTALL"), $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/step1.php");
     }
 
     /**
-     *
+     * Uninstallation
      */
     public function DoUninstall()
     {
         global $APPLICATION, $DOCUMENT_ROOT;
         UnRegisterModule($this->MODULE_ID);
-        $APPLICATION->IncludeAdminFile("Uninstall itbizon.kalinin", $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/unstep1.php");
+        $APPLICATION->IncludeAdminFile(Loc::getMessage("UNINSTALL"), $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/unstep1.php");
     }
 
 

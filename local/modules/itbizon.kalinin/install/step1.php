@@ -1,2 +1,2 @@
 <?php
-CAdminMessage::ShowNote("Module is installed");
+CAdminMessage::ShowNote(\Bitrix\Main\Localization\Loc::getMessage("INSTALLED"));

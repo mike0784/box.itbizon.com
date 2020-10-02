@@ -1,2 +1,2 @@
 <?php
-CAdminMessage::ShowNote("Module is uninstalled");
+CAdminMessage::ShowNote(\Bitrix\Main\Localization\Loc::getMessage("UNINSTALLED"));
