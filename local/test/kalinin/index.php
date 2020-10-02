@@ -10,6 +10,8 @@ try
     if (!Loader::includeModule('itbizon.kalinin'))
         throw new Exception('Ошибка подключения модуля itbizon.kalinin');
 
+    itbizon_kalinin::SayHello("BizON");
+
 }
 catch (Exception $e)
 {
