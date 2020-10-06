@@ -1,5 +1,9 @@
 <?php
 
+/*
+    WRONG... SHOULD DELETE LATER.
+*/
+
 namespace Itbizon\Kalinin\Lib\Model;
 
 use Bitrix\Main\ORM\Data\DataManager;

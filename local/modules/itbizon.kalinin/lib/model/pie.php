@@ -1,4 +1,7 @@
 <?php
+/*
+    WRONG... SHOULD DELETE LATER.
+*/
 
 namespace Itbizon\Kalinin\Lib\Model;
 
