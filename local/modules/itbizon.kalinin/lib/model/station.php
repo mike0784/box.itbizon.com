@@ -3,9 +3,11 @@
 namespace Itbizon\Kalinin\Lib\Model;
 
 use Bitrix\Main\ORM\Data\DataManager;
+use Bitrix\Main\ORM\Event;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\Type\Date;
+use Itbizon\Kalinin\Lib\Log\Logger;
 use Station;
 
 class StationTable extends DataManager
@@ -68,4 +70,20 @@ class StationTable extends DataManager
             ),
         ];
     }
+
+    public static function onAfterAdd(Event $event)
+    {
+        Logger::LogInfo(
+            "Добавлена станция с id: {$event->getEntity()->getObjectClass()->getId()}"
+        );
+    }
+
+    public static function onAfterDelete(Event $event)
+    {
+        Logger::LogInfo(
+            "Удалена станция с id: {$event->getEntity()->getObjectClass()->getId()}"
+        );
+    }
+
+
 }

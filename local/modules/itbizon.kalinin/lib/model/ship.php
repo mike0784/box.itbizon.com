@@ -5,10 +5,14 @@
 
 namespace Itbizon\Kalinin\Lib\Model;
 
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ORM\Event;
 use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields;
+use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\Date;
+use Itbizon\Kalinin\Lib\Log\Logger;
 use Ship;
 
 class ShipTable extends DataManager
@@ -96,5 +100,22 @@ class ShipTable extends DataManager
             ))->configureValues('N', 'Y'),
             new Fields\TextField('COMMENT'),
         ];
+    }
+
+    public static function onAfterAdd(Event $event)
+    {
+        $ship_id = $event->getEntity()->getObjectClass()->getId();
+        $station_id = $event->getEntity()->getObjectClass()->get('STATION_ID');
+
+        Logger::LogInfo(
+            "Добавлен корабль с id: {$ship_id}. Приписан к станции с id: {$station_id}"
+        );
+    }
+
+    public static function onAfterDelete(Event $event)
+    {
+        Logger::LogInfo(
+            "Удалён корабль с id: {$event->getEntity()->getObjectClass()->getId()}"
+        );
     }
 }
