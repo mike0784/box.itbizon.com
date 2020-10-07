@@ -6,12 +6,18 @@ use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\Type\Date;
+use Station;
 
 class StationTable extends DataManager
 {
     public static function getTableName()
     {
         return 'itb_station';
+    }
+
+    public static function getObjectClass()
+    {
+        return Station::class;
     }
 
     /**

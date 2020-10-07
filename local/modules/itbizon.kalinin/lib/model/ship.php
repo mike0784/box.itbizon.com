@@ -9,12 +9,18 @@ use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\Type\Date;
+use Ship;
 
 class ShipTable extends DataManager
 {
     public static function getTableName()
     {
         return 'itb_ship';
+    }
+
+    public static function getObjectClass()
+    {
+        return Ship::class;
     }
 
     /**
@@ -40,6 +46,11 @@ class ShipTable extends DataManager
                 ShopTable::class,
                 Join::on('this.STATION_ID', 'ref.ID')
             ))->configureJoinType('left'),
+            new Fields\StringField('NAME',
+                [
+                    'required' => true
+                ]
+            ),
             new Fields\StringField('MATERIALS',
                 [
                     'required' => true
