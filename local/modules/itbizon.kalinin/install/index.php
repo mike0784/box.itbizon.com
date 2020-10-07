@@ -1,5 +1,6 @@
 <?php
 
+use Bitrix\Main\Application;
 use Bitrix\Main\Localization\Loc;
 
 class itbizon_kalinin extends CModule {
@@ -28,6 +29,7 @@ class itbizon_kalinin extends CModule {
     public function DoInstall()
     {
         global $APPLICATION, $DOCUMENT_ROOT;
+        $this->InstallDB();
         RegisterModule($this->MODULE_ID);
         $APPLICATION->IncludeAdminFile(Loc::getMessage("INSTALL"), $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/step1.php");
     }
@@ -38,12 +40,60 @@ class itbizon_kalinin extends CModule {
     public function DoUninstall()
     {
         global $APPLICATION, $DOCUMENT_ROOT;
+        $this->UnInstallDB();
         UnRegisterModule($this->MODULE_ID);
         $APPLICATION->IncludeAdminFile(Loc::getMessage("UNINSTALL"), $DOCUMENT_ROOT."/local/modules/itbizon.kalinin/install/unstep1.php");
     }
 
-    public static function SayHello($name)
+    public function InstallDB()
     {
-        echo "Hello, " . $name;
+        try
+        {
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/model/ship.php');
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/model/station.php');
+
+            $db = Application::getConnection();
+            $entities = [
+                Itbizon\Kalinin\Lib\Model\StationTable::getEntity(),
+                Itbizon\Kalinin\Lib\Model\ShipTable::getEntity(),
+            ];
+
+            foreach ($entities as $entity)
+            {
+                if (!$db->isTableExists($entity->getDBTableName()))
+                    $entity->createDbTable();
+            }
+            return true;
+        }
+        catch (Exception $e)
+        {
+            return false;
+        }
+    }
+
+    public function UnInstallDB()
+    {
+        try
+        {
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/model/ship.php');
+            require_once($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/model/station.php');
+
+            $db = Application::getConnection();
+            $entities = [
+                Itbizon\Kalinin\Lib\Model\StationTable::getEntity(),
+                Itbizon\Kalinin\Lib\Model\ShipTable::getEntity(),
+            ];
+
+            foreach ($entities as $entity)
+            {
+                if ($db->isTableExists($entity->getDBTableName()))
+                    $db->dropTable($entity->getDBTableName());
+            }
+            return true;
+        }
+        catch (Exception $e)
+        {
+            return false;
+        }
     }
 }
