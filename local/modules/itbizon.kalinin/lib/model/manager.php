@@ -3,6 +3,8 @@
 namespace Itbizon\Kalinin\Lib\Model;
 
 use Itbizon\Kalinin\Lib\Log\Logger;
+use Itbizon\Kalinin\Lib\Model\ShipTable;
+use Itbizon\Kalinin\Lib\Model\StationTable;
 
 class Manager
 {
@@ -79,6 +81,7 @@ class Manager
             $ship->setComment($comment);
 
         $station->setAmount($station->getAmount()+$value);
+        $station->setCount($station->getCount()+1);
         $station->save();
 
         $ship->save();
@@ -103,27 +106,23 @@ class Manager
 
     public function recycleStation($id)
     {
-        StationTable::getByPrimary($id)
-            ->fetchObject()
-            ->delete();
-
         $ownedShips = ShipTable::getList([
             'filter' => ['=STATION_ID' => $id]
         ]);
-
-        Logger::LogInfo($ownedShips);
 
         while ($ship = $ownedShips->fetchObject())
         {
             $ship->delete();
         }
+
+        StationTable::getByPrimary($id)
+            ->fetchObject()
+            ->delete();
     }
 
     public function getStationAndShips($station_id)
     {
         $data = [];
-
-        Logger::LogInfo("---------| Getting Station and Ships |---------");
 
         $data['station'] = StationTable::getByPrimary($station_id)->fetchObject();
 
@@ -131,16 +130,12 @@ class Manager
             'filter' => ['=STATION_ID' => $station_id]
         ]);
 
-        Logger::LogInfo($ownedShips);
-
         $data['ships'] = [];
 
         while ($ship = $ownedShips->fetchObject())
         {
             array_push($data['ships'], $ship);
         }
-
-        Logger::LogInfo("======| Getting Done |======");
 
         return $data;
     }

@@ -73,16 +73,12 @@ class StationTable extends DataManager
 
     public static function onAfterAdd(Event $event)
     {
-        Logger::LogInfo(
-            "Добавлена станция с id: {$event->getEntity()->getObjectClass()->getId()}"
-        );
+        Logger::LogInfo("Добавлена станция");
     }
 
     public static function onAfterDelete(Event $event)
     {
-        Logger::LogInfo(
-            "Удалена станция с id: {$event->getEntity()->getObjectClass()->getId()}"
-        );
+        Logger::LogInfo("Удалена станция");
     }
 
 

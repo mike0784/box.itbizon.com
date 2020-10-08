@@ -104,18 +104,11 @@ class ShipTable extends DataManager
 
     public static function onAfterAdd(Event $event)
     {
-        $ship_id = $event->getEntity()->getObjectClass()->getId();
-        $station_id = $event->getEntity()->getObjectClass()->get('STATION_ID');
-
-        Logger::LogInfo(
-            "Добавлен корабль с id: {$ship_id}. Приписан к станции с id: {$station_id}"
-        );
+        Logger::LogInfo("Добавлен корабль");
     }
 
     public static function onAfterDelete(Event $event)
     {
-        Logger::LogInfo(
-            "Удалён корабль с id: {$event->getEntity()->getObjectClass()->getId()}"
-        );
+        Logger::LogInfo("Удалён корабль");
     }
 }
