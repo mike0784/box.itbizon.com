@@ -1,27 +1,22 @@
 <?php
 
 use \Bitrix\Main\Loader;
+use Bitrix\Main\UI\Extension;
+use CModule;
 
 global $APPLICATION;
 
 require($_SERVER['DOCUMENT_ROOT'] . "/bitrix/header.php");
+Extension::load('ui.bootstrap4');
 $APPLICATION->SetTitle("Проверка тестового модуля");
 
-
-if (Loader::IncludeModule('itbizon.kalinin'))
-{
-    require_once ($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/model/manager.php');
-    require_once ($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/model/ship.php');
-    require_once ($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/model/station.php');
-    require_once ($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/ship.php');
-    require_once ($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/station.php');
-    require_once ($_SERVER['DOCUMENT_ROOT'] . '/local/modules/itbizon.kalinin/lib/logger/logger.php');
-
-    $man = new \Itbizon\Kalinin\Lib\Model\Manager();
-//    $man->createShip('MyShip', 'Plastill', 1000, 1);
-    $man->recycleStation(3);
-//    $sos = $man->getStationAndShips(2);
-}
+CModule::IncludeModule('itbizon.kalinin');
+//Loader::includeModule('itbizon.kalinin');
+$APPLICATION->IncludeComponent(
+    "itbizon.kalinin:station.index",
+    "",
+    []
+);
 
 
 require($_SERVER['DOCUMENT_ROOT'] . "/bitrix/footer.php");

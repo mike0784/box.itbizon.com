@@ -1,6 +1,6 @@
 <?php
 
-namespace Itbizon\Kalinin\Lib\Log;
+namespace Itbizon\Kalinin\Log;
 
 class Logger
 {

@@ -3,7 +3,7 @@
     WRONG... SHOULD DELETE LATER.
 */
 
-namespace Itbizon\Kalinin\Lib\Model;
+namespace Itbizon\Kalinin\Model;
 
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ORM\Event;
@@ -12,7 +12,7 @@ use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\Date;
-use Itbizon\Kalinin\Lib\Log\Logger;
+use Itbizon\Kalinin\Log\Logger;
 use Ship;
 
 class ShipTable extends DataManager

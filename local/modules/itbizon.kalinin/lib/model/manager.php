@@ -2,9 +2,9 @@
 
 namespace Itbizon\Kalinin\Lib\Model;
 
-use Itbizon\Kalinin\Lib\Log\Logger;
-use Itbizon\Kalinin\Lib\Model\ShipTable;
-use Itbizon\Kalinin\Lib\Model\StationTable;
+use Itbizon\Kalinin\Log\Logger;
+use Itbizon\Kalinin\Model\ShipTable;
+use Itbizon\Kalinin\Model\StationTable;
 
 class Manager
 {
@@ -18,7 +18,7 @@ class Manager
      * @throws \Bitrix\Main\ArgumentException
      * @throws \Bitrix\Main\SystemException
      */
-    public function createStation(string $name, int $creator_id=null, int $amount=null, int $count=null, string $comment=null)
+    public static function createStation(string $name, int $creator_id=null, int $amount=null, int $count=null, string $comment=null)
     {
         global $USER;
 
@@ -57,7 +57,7 @@ class Manager
      * @throws \Bitrix\Main\ArgumentException
      * @throws \Bitrix\Main\SystemException
      */
-    public function createShip(string $name, string $materials, int $value,
+    public static function createShip(string $name, string $materials, int $value,
                                int $station_id, int $creator_id=null,
                                bool $is_released=false, string $comment=null)
     {
@@ -97,7 +97,7 @@ class Manager
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public function recycleShip($id)
+    public static function recycleShip($id)
     {
         ShipTable::getByPrimary($id)
             ->fetchObject()
@@ -120,7 +120,7 @@ class Manager
             ->delete();
     }
 
-    public function getStationAndShips($station_id)
+    public static function getStationAndShips($station_id)
     {
         $data = [];
 

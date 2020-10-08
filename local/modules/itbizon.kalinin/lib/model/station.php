@@ -1,13 +1,13 @@
 <?php
 
-namespace Itbizon\Kalinin\Lib\Model;
+namespace Itbizon\Kalinin\Model;
 
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Event;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\Type\Date;
-use Itbizon\Kalinin\Lib\Log\Logger;
+use Itbizon\Kalinin\Log\Logger;
 use Station;
 
 class StationTable extends DataManager
