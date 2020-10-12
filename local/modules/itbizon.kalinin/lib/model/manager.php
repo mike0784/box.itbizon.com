@@ -1,10 +1,12 @@
 <?php
 
-namespace Itbizon\Kalinin\Lib\Model;
+namespace Itbizon\Kalinin\Model;
 
 use Itbizon\Kalinin\Log\Logger;
 use Itbizon\Kalinin\Model\ShipTable;
 use Itbizon\Kalinin\Model\StationTable;
+use Itbizon\Kalinin\Ship;
+use Itbizon\Kalinin\Station;
 
 class Manager
 {
@@ -14,7 +16,7 @@ class Manager
      * @param int|null $amount
      * @param int|null $count
      * @param string|null $comment
-     * @return EO_Station|null
+     * @return \Itbizon\Kalinin\Station|null
      * @throws \Bitrix\Main\ArgumentException
      * @throws \Bitrix\Main\SystemException
      */
@@ -53,8 +55,9 @@ class Manager
      * @param int|null $creator_id
      * @param bool $is_released
      * @param string|null $comment
-     * @return EO_Ship|null
+     * @return \Itbizon\Kalinin\Ship|null
      * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
     public static function createShip(string $name, string $materials, int $value,
@@ -104,7 +107,7 @@ class Manager
             ->delete();
     }
 
-    public function recycleStation($id)
+    public static function recycleStation($id)
     {
         $ownedShips = ShipTable::getList([
             'filter' => ['=STATION_ID' => $id]
@@ -124,18 +127,11 @@ class Manager
     {
         $data = [];
 
-        $data['station'] = StationTable::getByPrimary($station_id)->fetchObject();
+        $data['station'] = StationTable::getByPrimary($station_id)->fetch();
 
-        $ownedShips = ShipTable::getList([
+        $data['ships'] = ShipTable::getList([
             'filter' => ['=STATION_ID' => $station_id]
-        ]);
-
-        $data['ships'] = [];
-
-        while ($ship = $ownedShips->fetchObject())
-        {
-            array_push($data['ships'], $ship);
-        }
+        ])->fetchAll();
 
         return $data;
     }
