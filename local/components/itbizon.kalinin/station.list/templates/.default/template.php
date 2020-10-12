@@ -35,6 +35,7 @@
         <? endforeach; ?>
             <button type="submit" class="btn btn-primary">Удалить выбранные станции</button>
         </form>
+        <hr>
         <div class="mt-lg-5">
             <a class="btn btn-primary float-left" href="edit/0/">Создать станцию</a>
         </div>
