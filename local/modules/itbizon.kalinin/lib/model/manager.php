@@ -127,9 +127,9 @@ class Manager
     {
         $data = [];
 
-        $data['station'] = StationTable::getByPrimary($station_id)->fetch();
-
+        $data['station'] = StationTable::getById($station_id)->fetch();
         $data['ships'] = ShipTable::getList([
+            'select' => ['*'],
             'filter' => ['=STATION_ID' => $station_id]
         ])->fetchAll();
 

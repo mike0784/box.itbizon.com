@@ -3,6 +3,8 @@
 use \Bitrix\Main\Loader;
 use Bitrix\Main\UI\Extension;
 use CModule;
+use \Itbizon\Kalinin\Station;
+use \Itbizon\Kalinin\Ship;
 
 global $APPLICATION;
 

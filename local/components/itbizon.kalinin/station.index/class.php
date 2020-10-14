@@ -14,8 +14,8 @@ class RouteClass extends \CBitrixComponent
                 throw new Exception('Ошибка подключения модуля itbizon.kalinin');
 
             $arDefaultUrlTemplates404 = [
-                'station.list' => 'list/',
-                'station.edit' => 'edit/#ID#/',
+                'list' => 'list/',
+                'edit' => 'edit/#ID#/',
             ];
 
             $arDefaultVariableAliases404 = [];
@@ -64,8 +64,6 @@ class RouteClass extends \CBitrixComponent
             } else {
                 throw new SystemException('Режим ЧПУ должен быть включен');
             }
-
-            return false;
 
         } catch(Exception $e) {
             ShowMessage($e->getMessage());

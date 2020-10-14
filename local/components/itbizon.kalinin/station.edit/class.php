@@ -2,6 +2,8 @@
 
 use Bitrix\Main\Loader;
 use Itbizon\Kalinin\Model\Manager;
+use Itbizon\Kalinin\Station;
+use Itbizon\Kalinin\Ship;
 use Itbizon\Kalinin\Model\ShipTable;
 use Itbizon\Kalinin\Model\StationTable;
 
@@ -42,6 +44,8 @@ class EditClass extends CBitrixComponent
             'ships' => $ships
         ];
 
+        $this->IncludeComponentTemplate();
+        return true;
     }
 
     public function addOrUpdateStation($post)
@@ -70,8 +74,10 @@ class EditClass extends CBitrixComponent
     public function addOrUpdateShip($post)
     {
         $post['IS_RELEASED'] = isset($post['IS_RELEASED']) ? 'Y' : 'N';
-        if (isset($post['NEW_CAR'])) {
-            unset($post['NEW_CAR']);
+        if (isset($post['NEW_SHIP'])) {
+            unset($post['NEW_SHIP']);
+//            Manager::createShip($post['NAME'], $post['MATERIALS'], $post['VALUE'],
+//                $post['STATION_ID'], null, $post['IS_RELEASED'], $post['COMMENT']);
             $result = ShipTable::add($post);
             if (!$result->isSuccess()) {
                 $messages = $result->getErrorMessages();
@@ -79,8 +85,8 @@ class EditClass extends CBitrixComponent
             }
         }
 
-        if (isset($post['CAR'])) {
-            unset($post['CAR']);
+        if (isset($post['SHIP'])) {
+            unset($post['SHIP']);
             $result = ShipTable::update($post['ID'], $post);
             if (!$result->isSuccess()) {
                 throw new Exception("Не удалось обновить данные");
