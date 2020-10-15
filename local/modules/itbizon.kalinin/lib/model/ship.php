@@ -12,8 +12,9 @@ use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\Date;
-use Itbizon\Kalinin\Log\Logger;
-use Ship;
+use Itbizon\Kalinin\Logger\Logger;
+use Itbizon\Kalinin\Ship;
+use Itbizon\Kalinin\Station;
 
 class ShipTable extends DataManager
 {
@@ -47,7 +48,7 @@ class ShipTable extends DataManager
                 ]
             ),
             (new Fields\Relations\Reference('STATION',
-                ShopTable::class,
+                StationTable::class,
                 Join::on('this.STATION_ID', 'ref.ID')
             ))->configureJoinType('left'),
             new Fields\StringField('NAME',

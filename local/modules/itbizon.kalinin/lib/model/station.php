@@ -7,8 +7,8 @@ use Bitrix\Main\ORM\Event;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\Type\Date;
-use Itbizon\Kalinin\Log\Logger;
-use Station;
+use \Itbizon\Kalinin\Logger\Logger;
+use \Itbizon\Kalinin\Station;
 
 class StationTable extends DataManager
 {

@@ -53,17 +53,21 @@ class EditClass extends CBitrixComponent
         $id = $post['ID'];
         if ($id == 0) {
             unset($post['ID']);
-            $result = StationTable::add($post);
-            if (!$result->isSuccess()) {
-                throw new Exception("Не удалось сохранить данные");
-            }
+
+            Manager::createStation($post['NAME'], null, $post['AMOUNT'], $post['COUNT'], $post['COMMENT']);
+
+//            $result = StationTable::add($post);
+//            if (!$result->isSuccess()) {
+//                throw new Exception("Не удалось сохранить данные");
+//            }
         }
 
         if ($id > 0) {
-            $result = StationTable::update($post['ID'], $post);
-            if (!$result->isSuccess()) {
-                throw new Exception("Не удалось обновить данные");
-            }
+            Manager::updateStation($post['ID'], $post['NAME'], $post['AMOUNT'], $post['COUNT'], $post['COMMENT']);
+//            $result = StationTable::update($post['ID'], $post);
+//            if (!$result->isSuccess()) {
+//                throw new Exception("Не удалось обновить данные");
+//            }
         }
         $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $regexp = '/.*\:\d+(.*)edit\/\d/';
@@ -75,22 +79,22 @@ class EditClass extends CBitrixComponent
     {
         $post['IS_RELEASED'] = isset($post['IS_RELEASED']) ? 'Y' : 'N';
         if (isset($post['NEW_SHIP'])) {
-            unset($post['NEW_SHIP']);
-//            Manager::createShip($post['NAME'], $post['MATERIALS'], $post['VALUE'],
-//                $post['STATION_ID'], null, $post['IS_RELEASED'], $post['COMMENT']);
-            $result = ShipTable::add($post);
-            if (!$result->isSuccess()) {
-                $messages = $result->getErrorMessages();
-                throw new Exception(implode('\r\n', $messages));
-            }
+            Manager::createShip($post['NAME'], $post['MATERIALS'], $post['VALUE'],
+                $post['STATION_ID'], null, $post['IS_RELEASED'], $post['COMMENT']);
+//            $result = ShipTable::add($post);
+//            if (!$result->isSuccess()) {
+//                $messages = $result->getErrorMessages();
+//                throw new Exception(implode('\r\n', $messages));
+//            }
         }
 
         if (isset($post['SHIP'])) {
-            unset($post['SHIP']);
-            $result = ShipTable::update($post['ID'], $post);
-            if (!$result->isSuccess()) {
-                throw new Exception("Не удалось обновить данные");
-            }
+            Manager::updateShip($post['ID'], $post['NAME'], $post['MATERIALS'], $post['VALUE'],
+                $post['STATION_ID'], $post['IS_RELEASED'], $post['COMMENT']);
+//            $result = ShipTable::update($post['ID'], $post);
+//            if (!$result->isSuccess()) {
+//                throw new Exception("Не удалось обновить данные");
+//            }
         }
 
     }
