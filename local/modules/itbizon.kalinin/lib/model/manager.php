@@ -81,6 +81,11 @@ class Manager
     }
 
 
+    public static function getStationsList(array $select=array('*'))
+    {
+        return StationTable::getList(['select' => $select])->fetchAll();
+    }
+
     /**
      * @param string $name
      * @param string $materials
