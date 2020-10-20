@@ -6,15 +6,7 @@
         </div>
         <div class="form-group">
             <label for="NAME">Name</label>
-            <input type="text" class="form-control" name="NAME" value="<?=$arResult['station']['NAME']?>">
-        </div>
-        <div class="form-group">
-            <label for="AMOUNT">Amount</label>
-            <input type="number" class="form-control" name="AMOUNT" value="<?=$arResult['station']['AMOUNT']?>">
-        </div>
-        <div class="form-group">
-            <label for="COUNT">Count</label>
-            <input type="number" class="form-control" name="COUNT" value="<?=$arResult['station']['COUNT']?>">
+            <input type="text" class="form-control" name="NAME" value="<?=$arResult['station']['NAME']?>" required>
         </div>
         <div class="form-group">
             <label for="COMMENT">Comment</label>
@@ -35,16 +27,16 @@
                 <input type="hidden" name="STATION_ID" value="<?= $arResult['station']['ID'] ?>"><br />
             </div>
             <div class="form-group">
-                <label for="MARK">Название</label>
+                <label for="NAME">Название</label>
                 <input type="text" class="form-control" name="NAME" value="">
             </div>
             <div class="form-group">
                 <label for="MATERIALS">Материалы</label>
-                <input type="text" class="form-control" name="MATERIALS" value="">
+                <input type="text" class="form-control" name="MATERIALS" value="" required>
             </div>
             <div class="form-group">
                 <label for="VALUE">Цена в копейках</label>
-                <input type="number" class="form-control" name="VALUE" value="">
+                <input type="number" class="form-control" name="VALUE" value="" required>
             </div>
             <div class="form-group">
                 <label for="IS_RELEASED">Выпущен?
@@ -74,20 +66,20 @@
                     <input type="hidden" name="ID" value="<?= $ship['ID'] ?>">
                 </div>
                 <div class="form-group">
-                    <label for="SHOP_ID">ID Станции <?= $ship['STATION_ID'] ?></label>
-                    <input type="hidden" name="SHOP_ID" value="<?= $ship['STATION_ID'] ?>"><br />
+                    <label for="STATION_ID">ID Станции <?= $ship['STATION_ID'] ?></label>
+                    <input type="hidden" name="STATION_ID" value="<?= $ship['STATION_ID'] ?>"><br />
                 </div>
                 <div class="form-group">
                     <label for="NAME">Название</label>
-                    <input type="text" class="form-control" name="NAME" value="<?=$ship['NAME']?>">
+                    <input type="text" class="form-control" name="NAME" value="<?=$ship['NAME']?>" required>
                 </div>
                 <div class="form-group">
                     <label for="MATERIALS">Материалы</label>
-                    <input type="text" class="form-control" name="MATERIALS" value="<?=$ship['MATERIALS']?>">
+                    <input type="text" class="form-control" name="MATERIALS" value="<?=$ship['MATERIALS']?>" required>
                 </div>
                 <div class="form-group">
                     <label for="VALUE">Цена в копейках</label>
-                    <input type="number" class="form-control" name="VALUE" value="<?=$ship['VALUE']?>">
+                    <input type="number" class="form-control" name="VALUE" value="<?=$ship['VALUE']?>" required>
                 </div>
                 <div class="form-group">
                     <label for="IS_RELEASED">Выпущен?
@@ -104,7 +96,7 @@
             <hr />
         <? endforeach; ?>
     <? endif; ?>
-    <a class="btn btn-primary" href="/">Назад</a>
+    <a class="btn btn-primary" href="/local/test/kalinin">Назад</a>
 
 
 </div>

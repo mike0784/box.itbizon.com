@@ -1,7 +1,7 @@
 <?php
 
 use Bitrix\Main\Loader;
-use Itbizon\Kalinin\Model\Manager;
+use Itbizon\Kalinin\Manager;
 use Itbizon\Kalinin\Station;
 use Itbizon\Kalinin\Ship;
 use Itbizon\Kalinin\Model\ShipTable;
@@ -32,8 +32,6 @@ class EditClass extends CBitrixComponent
             $station = [
                 'ID' => 0,
                 'NAME' => "",
-                'AMOUNT' => 0,
-                'COUNT' => 0,
                 'COMMENT' => ""
             ];
             $ships = [];
@@ -54,20 +52,26 @@ class EditClass extends CBitrixComponent
         if ($id == 0) {
             unset($post['ID']);
 
-            Manager::createStation($post['NAME'], null, $post['AMOUNT'], $post['COUNT'], $post['COMMENT']);
+            try {
+                Manager::createStation($post);
+            } catch (\Bitrix\Main\ArgumentException $e) {
+                throw new Exception("Не удалось добавить станцию: " . $e->getMessage());
+            } catch (\Bitrix\Main\SystemException $e) {
+                throw new Exception("Не удалось добавить станцию: " . $e->getMessage());
+            }
 
-//            $result = StationTable::add($post);
-//            if (!$result->isSuccess()) {
-//                throw new Exception("Не удалось сохранить данные");
-//            }
         }
 
         if ($id > 0) {
-            Manager::updateStation($post['ID'], $post['NAME'], $post['AMOUNT'], $post['COUNT'], $post['COMMENT']);
-//            $result = StationTable::update($post['ID'], $post);
-//            if (!$result->isSuccess()) {
-//                throw new Exception("Не удалось обновить данные");
-//            }
+            try {
+                Manager::updateStation(intval($id), $post);
+            } catch (\Bitrix\Main\ObjectPropertyException $e) {
+                throw new Exception("Не удалось обновить данные: " . $e->getMessage());
+            } catch (\Bitrix\Main\ArgumentException $e) {
+                throw new Exception("Не удалось обновить данные: " . $e->getMessage());
+            } catch (\Bitrix\Main\SystemException $e) {
+                throw new Exception("Не удалось обновить данные: " . $e->getMessage());
+            }
         }
         $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $regexp = '/.*\:\d+(.*)edit\/\d/';
@@ -79,22 +83,27 @@ class EditClass extends CBitrixComponent
     {
         $post['IS_RELEASED'] = isset($post['IS_RELEASED']) ? 'Y' : 'N';
         if (isset($post['NEW_SHIP'])) {
-            Manager::createShip($post['NAME'], $post['MATERIALS'], $post['VALUE'],
-                $post['STATION_ID'], null, $post['IS_RELEASED'], $post['COMMENT']);
-//            $result = ShipTable::add($post);
-//            if (!$result->isSuccess()) {
-//                $messages = $result->getErrorMessages();
-//                throw new Exception(implode('\r\n', $messages));
-//            }
+            try {
+                Manager::createShip($post);
+            } catch (\Bitrix\Main\ObjectPropertyException $e) {
+                throw new Exception("Не удалось добавить корабль: " . $e->getMessage());
+            } catch (\Bitrix\Main\ArgumentException $e) {
+                throw new Exception("Не удалось добавить корабль: " . $e->getMessage());
+            } catch (\Bitrix\Main\SystemException $e) {
+                throw new Exception("Не удалось добавить корабль: " . $e->getMessage());
+            }
         }
 
         if (isset($post['SHIP'])) {
-            Manager::updateShip($post['ID'], $post['NAME'], $post['MATERIALS'], $post['VALUE'],
-                $post['STATION_ID'], $post['IS_RELEASED'], $post['COMMENT']);
-//            $result = ShipTable::update($post['ID'], $post);
-//            if (!$result->isSuccess()) {
-//                throw new Exception("Не удалось обновить данные");
-//            }
+            try {
+                Manager::updateShip(intval($post['ID']), $post);
+            } catch (\Bitrix\Main\ObjectPropertyException $e) {
+                throw new Exception("Не удалось обновить корабль: " . $e->getMessage());
+            } catch (\Bitrix\Main\ArgumentException $e) {
+                throw new Exception("Не удалось обновить корабль: " . $e->getMessage());
+            } catch (\Bitrix\Main\SystemException $e) {
+                throw new Exception("Не удалось обновить корабль: " . $e->getMessage());
+            }
         }
 
     }

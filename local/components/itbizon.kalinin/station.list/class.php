@@ -2,7 +2,7 @@
 
 use \Bitrix\Main\Loader;
 use \Itbizon\Kalinin\Model\StationTable;
-use Itbizon\Kalinin\Model\Manager;
+use Itbizon\Kalinin\Manager;
 
 class IndexClass extends CBitrixComponent
 {
