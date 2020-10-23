@@ -14,8 +14,6 @@
             <input type="text" class="form-control" name="COMMENT" value="<?=$arResult['station']['COMMENT']?>">
         </div>
     <hr/>
-
-    <? if ($arResult['ships']): ?>
         <h2 class="text-center">Корабли</h2>
 
         <table class="table table-bordered">
@@ -31,6 +29,7 @@
             </tr>
             </thead>
             <tbody>
+            <? if ($arResult['ships']): ?>
             <? foreach ($arResult['ships'] as $ship): ?>
                 <tr>
                     <th scope="row"><?=$ship['ID']?></th>
@@ -42,6 +41,7 @@
                     <td><a data-path="<?= $arResult['path'] . "?remove=" . $ship["ID"]; ?>" class="btn btn-danger removeShip" href="#"><i class="fa fa-trash"></i></a></td>
                 </tr>
             <? endforeach; ?>
+            <? endif; ?>
                 <tr>
                     <? if($arResult['station']['ID'] > 0): ?>
                         <td><a id="shipPopup" data-path="<?= $arResult['path'] . "?StationID=" . $arResult['station']['ID'] ?>" class="btn btn-success" href="#">+</a></td>
@@ -49,7 +49,7 @@
                 </tr>
             </tbody>
         </table>
-    <? endif; ?>
+
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
     <hr />
