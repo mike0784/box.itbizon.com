@@ -6,7 +6,6 @@ use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Itbizon\Kalinin\Exceptions\ShipExceptions\ShipCreateException;
-use Itbizon\Kalinin\Exceptions\ShipExceptions\ShipException;
 use Itbizon\Kalinin\Exceptions\ShipExceptions\StationCreateException;
 use Itbizon\Kalinin\Logger\Logger;
 use Itbizon\Kalinin\Model\ShipTable;
@@ -104,14 +103,24 @@ class Manager
         if(isset($USER) && (!isset($params['CREATOR_ID']) || is_null($params['CREATOR_ID'])))
             $params['CREATOR_ID'] = $USER->GetID();
 
+        $ship = ShipTable::createObject();
 
-        $ship = ShipTable::getByPrimary(ShipTable::add($params)->getId())->fetchObject();
+        $ship->set('NAME', $params['NAME']);
+        $ship->set('STATION_ID', $params['STATION_ID']);
+        $ship->set('CREATOR_ID', $params['CREATOR_ID']);
+        $ship->set('VALUE', $params['VALUE']);
+        $ship->set('MATERIALS', $params['MATERIALS']);
+        $ship->set('IS_RELEASED', (isset($params['IS_RELEASED']) ? $params['IS_RELEASED'] : 'N'));
+        $ship->set('COMMENT', (isset($params['COMMENT']) ? $params['COMMENT'] : ""));
+
+//        $ship = ShipTable::getByPrimary($shipAddResult->getId())->fetchObject();
 
         $station = StationTable::getByPrimary($params['STATION_ID'])->fetchObject();
-
         $station->setAmount($station->getAmount() + intval($params['VALUE']));
         $station->setCount($station->getCount() + 1);
         $station->save();
+
+        $ship->save();
 
         return $ship;
     }
@@ -124,9 +133,30 @@ class Manager
      */
     public static function updateShip(int $ship_id, array $params)
     {
-        $ship = ShipTable::update($ship_id, $params);
-        print_r($ship->getId());
-        return ShipTable::getByPrimary($ship->getId())->fetchObject();
+        $ship = ShipTable::getByPrimary($ship_id)->fetchObject();
+
+        $station = StationTable::getByPrimary($params['STATION_ID'])->fetchObject();
+
+
+
+        if (isset($params['NAME']) && !empty($params['NAME']))
+            $ship->set('NAME', $params['NAME']);
+
+        if (isset($params['VALUE']) && !empty($params['VALUE']))
+            $station->setAmount($station->getAmount() - intval($ship->getValue()));
+            $station->setAmount($station->getAmount() + intval($params['VALUE']));
+            $ship->set('VALUE', $params['VALUE']);
+
+        if (isset($params['MATERIALS']) && !empty($params['MATERIALS']))
+
+
+        if (isset($params['MATERIALS']) && !empty($params['MATERIALS']))
+            throw new ShipCreateException("Отсутствует параметр материалы корабля 'MATERIALS'");
+
+        $station->save();
+        $ship->save();
+
+        return $ship;
     }
 
 
@@ -161,9 +191,7 @@ class Manager
             $ship->delete();
         }
 
-        StationTable::getByPrimary($id)
-            ->fetchObject()
-            ->delete();
+        StationTable::delete($id);
     }
 
     public static function getStationAndShips($station_id)

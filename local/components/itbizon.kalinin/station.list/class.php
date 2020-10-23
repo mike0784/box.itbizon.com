@@ -26,13 +26,14 @@ class IndexClass extends CBitrixComponent
 
             $stations = StationTable::getList(['select' => ['*']])->fetchAll();
 
-            $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            $regexp = '/.*\:\d+\/(.*)';
-            preg_match($regexp, $currentUrl, $matches);
+
+            $path = $this->GetPath() . '/templates/.default/ajax.php';
+            $homePath = '/local/test/kalinin/';
 
             $this->arResult = [
                 'stations' => $stations,
-                'DELETE' => $matches[1]
+                'path' => $path,
+                'home_path' => $homePath
             ];
 
             $this->includeComponentTemplate();

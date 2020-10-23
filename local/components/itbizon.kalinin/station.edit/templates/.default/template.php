@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="container">
     <h2 class="text-center">Станция <?= $arResult['station']['NAME'] ?></h2>
     <form action="" method="post">
@@ -5,97 +6,53 @@
             <input type="hidden" class="form-control" name="ID" value="<?=$arResult['station']['ID']?>">
         </div>
         <div class="form-group">
-            <label for="NAME">Name</label>
+            <label for="NAME">Название</label>
             <input type="text" class="form-control" name="NAME" value="<?=$arResult['station']['NAME']?>" required>
         </div>
         <div class="form-group">
-            <label for="COMMENT">Comment</label>
+            <label for="COMMENT">Комментарий</label>
             <input type="text" class="form-control" name="COMMENT" value="<?=$arResult['station']['COMMENT']?>">
         </div>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-    </form>
-    <hr />
-
-    <? if($arResult['station']['ID'] > 0): ?>
-        <h2 class="text-center">Создать корабль</h2>
-        <form action="" method="post">
-            <div class="form-group">
-                <input type="hidden" name="NEW_SHIP" value="true">
-            </div>
-            <div class="form-group">
-                <label for="STATION_ID">ID Станции <?= $arResult['station']['ID'] ?></label>
-                <input type="hidden" name="STATION_ID" value="<?= $arResult['station']['ID'] ?>"><br />
-            </div>
-            <div class="form-group">
-                <label for="NAME">Название</label>
-                <input type="text" class="form-control" name="NAME" value="">
-            </div>
-            <div class="form-group">
-                <label for="MATERIALS">Материалы</label>
-                <input type="text" class="form-control" name="MATERIALS" value="" required>
-            </div>
-            <div class="form-group">
-                <label for="VALUE">Цена в копейках</label>
-                <input type="number" class="form-control" name="VALUE" value="" required>
-            </div>
-            <div class="form-group">
-                <label for="IS_RELEASED">Выпущен?
-                    <input type="checkbox" class="form-check-input" name="IS_RELEASED">
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="COMMENT">Комментарий</label>
-                <input type="text" class="form-control" name="COMMENT" value="">
-            </div>
-            <button type="submit" class="btn btn-primary">Добавить Корабль</button>
-        </form>
-    <? endif; ?>
-
-    <hr />
+    <hr/>
 
     <? if ($arResult['ships']): ?>
         <h2 class="text-center">Корабли</h2>
 
-        <? foreach ($arResult['ships'] as $ship): ?>
-            <h6>ID Корабля <?= $ship['ID'] ?></h6>
-            <form action="" method="post">
-                <div class="form-group">
-                    <input type="hidden" name="SHIP" value="true">
-                </div>
-                <div class="form-group">
-                    <input type="hidden" name="ID" value="<?= $ship['ID'] ?>">
-                </div>
-                <div class="form-group">
-                    <label for="STATION_ID">ID Станции <?= $ship['STATION_ID'] ?></label>
-                    <input type="hidden" name="STATION_ID" value="<?= $ship['STATION_ID'] ?>"><br />
-                </div>
-                <div class="form-group">
-                    <label for="NAME">Название</label>
-                    <input type="text" class="form-control" name="NAME" value="<?=$ship['NAME']?>" required>
-                </div>
-                <div class="form-group">
-                    <label for="MATERIALS">Материалы</label>
-                    <input type="text" class="form-control" name="MATERIALS" value="<?=$ship['MATERIALS']?>" required>
-                </div>
-                <div class="form-group">
-                    <label for="VALUE">Цена в копейках</label>
-                    <input type="number" class="form-control" name="VALUE" value="<?=$ship['VALUE']?>" required>
-                </div>
-                <div class="form-group">
-                    <label for="IS_RELEASED">Выпущен?
-                        <input type="checkbox" class="form-check-input" name="IS_RELEASED"
-                        <?= $ship['IS_RELEASED'] != "Y" ?: "checked";?>>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label for="COMMENT">Комментарий</label>
-                    <input type="text" class="form-control" name="COMMENT" value="<?=$ship['COMMENT']?>">
-                </div>
-                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-            </form>
-            <hr />
-        <? endforeach; ?>
+        <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Название</th>
+                <th scope="col">Материалы</th>
+                <th scope="col">Стоимость ($)</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Комментарий</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <? foreach ($arResult['ships'] as $ship): ?>
+                <tr>
+                    <th scope="row"><?=$ship['ID']?></th>
+                    <td><?=$ship['NAME']?></td>
+                    <td><?=$ship['MATERIALS']?></td>
+                    <td><?= intval($ship['VALUE']) / 100 ?></td>
+                    <td><?=$ship['IS_RELEASED'] == 'Y' ? "Выпущен" : "Не выпущен"?></td>
+                    <td><?=$ship['COMMENT']?></td>
+                    <td><a data-path="<?= $arResult['path'] . "?remove=" . $ship["ID"]; ?>" class="btn btn-danger removeShip" href="#"><i class="fa fa-trash"></i></a></td>
+                </tr>
+            <? endforeach; ?>
+                <tr>
+                    <? if($arResult['station']['ID'] > 0): ?>
+                        <td><a id="shipPopup" data-path="<?= $arResult['path'] . "?StationID=" . $arResult['station']['ID'] ?>" class="btn btn-success" href="#">+</a></td>
+                    <? endif; ?>
+                </tr>
+            </tbody>
+        </table>
     <? endif; ?>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+    <hr />
     <a class="btn btn-primary" href="/local/test/kalinin">Назад</a>
 
 
