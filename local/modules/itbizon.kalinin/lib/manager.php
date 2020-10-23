@@ -177,6 +177,8 @@ class Manager
         $station->setAmount($station->getAmount() - intval($ship->getValue()));
         $station->setCount($station->getCount() - 1);
 
+        $station->save();
+
         $ship->delete();
     }
 
