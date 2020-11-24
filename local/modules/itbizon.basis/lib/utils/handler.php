@@ -41,15 +41,18 @@ class Handler
             $task = CTaskItem::getInstance($id, 1);
             $groupId = intval($task['GROUP_ID']);
 
-            if ($groupId || isset($data['GROUP_ID'])) {
-                if (isset($data['GROUP_ID']) && intval($data['GROUP_ID'])) {
+            if (isset($data['GROUP_ID']) || $groupId) {
+                if (isset($data['GROUP_ID'])) {
                     $groupId = intval($data['GROUP_ID']);
                 }
-                $usersIds = self::getUsersIdsByGroupId($groupId);
-                if ($data['AUDITORS']) {
-                    $data['AUDITORS'] = array_unique(array_merge($data['AUDITORS'], $usersIds));
-                } else {
-                    $data['AUDITORS'] = $usersIds;
+
+                if ($groupId) {
+                    $usersIds = self::getUsersIdsByGroupId($groupId);
+                    if ($data['AUDITORS']) {
+                        $data['AUDITORS'] = array_unique(array_merge($data['AUDITORS'], $usersIds));
+                    } else {
+                        $data['AUDITORS'] = $usersIds;
+                    }
                 }
             }
 
