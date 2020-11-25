@@ -183,7 +183,112 @@ class TestCase
 
 try
 {
+    if (!function_exists('array_key_first')) {
+        function array_key_first(array $arr) {
+            foreach($arr as $key => $unused) {
+                return $key;
+            }
+            return NULL;
+        }
+    }
+    if (! function_exists("array_key_last")) {
+        function array_key_last($array) {
+            if (!is_array($array) || empty($array)) {
+                return NULL;
+            }
+
+            return array_keys($array)[count($array)-1];
+        }
+    }
     /* BEGIN OF USER CODE SECTION */
+
+    //Калинин
+
+    function search(array $data, int $number) : int
+    {
+        $low = 0;
+        $high = count($data) - 1;
+
+        while ($low <= $high)
+        {
+            $mid = intval(($low + $high) / 2);
+            if ($number < $data[$mid])
+                $high = $mid - 1;
+            elseif ($number > $data[$mid])
+                $low = $mid + 1;
+            else
+                return $mid;
+        }
+
+        return -1;
+    }
+    function weekend(string $begin, string $end) : int
+    {
+        $weekends = 0;
+        $dt_begin = strtotime($begin);
+        $dt_end = strtotime($end);
+
+        if(!$dt_begin || !$dt_end)
+            return 0; // можно выдать исключение но оставлю так
+
+        $number_day = intval(($dt_end - $dt_begin) / (60 * 60 * 24));
+        for($i = 0; $i <= $number_day; $i++)
+        {
+            $week_day = intval(date("w", $dt_begin)); // получаем id дня недели
+        if ($week_day == 6 || $week_day == 0) // если день недели 6 (суббота) или 0 (воскресенье)
+            $weekends++; // то увеличиваем счётчик выходных
+        $dt_begin += 60 * 60 * 24; // увеличиваем дату на 1 день
+        }
+
+        return $weekends;
+    }
+    function getcount(string $test) : array
+    {
+        $strarr = str_split($test);
+        return array_count_values($strarr);;
+    }
+    function fiborow(int $limit) : string
+    {
+        $fib_arr = [];
+        for ($i = 0; $i <= $limit; $i++)
+            array_push($fib_arr, round(pow((sqrt(5)+1)/2, $i) / sqrt(5)));
+
+        return join($glue=" ", $fib_arr);
+    }
+
+    //Строганов
+    /*function search(array $data, int $number)
+    {
+        return $data[$number];
+    }
+
+    function getcount(string $test) : array
+    {
+
+        $string_to_array = str_split($test);
+
+        $count_character = array_count_values($string_to_array);
+
+        return $count_character;
+    }
+
+    function fiborow($n) {
+
+        $res = array(0, 1);
+
+        for( $i=0; $i < ($n-2); $i++ ) {
+
+            $cur = $res[$i] + $res[$i+1];
+
+            if ($cur > $n) {
+                break;
+            }
+
+            array_push( $res, $cur );
+        }
+
+        return implode(" ", $res);
+    }*/
 
     /* END OF USER CODE SECTION */
 
@@ -270,6 +375,7 @@ try
         {
             echo '<p>Тест '.$testNum.'/'.$countTests.' ... '.(($result->getResult()) ? 'OK' : 'FAIL').'</p>';
             echo implode('<br>', $result->getLog());
+            echo '<p>--------------------------------------------------------------</p>';
             if($result->getResult())
                 $successCnt++;
             $testNum++;

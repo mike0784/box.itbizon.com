@@ -3,3 +3,5 @@
 /local/test/savich/
 /local/test/
 /local/modules/bizon.main/log/
+.DS_Store
+/local/.DS_Store
