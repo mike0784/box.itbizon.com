@@ -8,137 +8,87 @@ $APPLICATION->SetTitle("Тест");
 
 try
 {
-    if(!Loader::includeModule('bizon.main'))
-        throw new Exception('Ошибка подключения модуля bizon.main');
-
-    $test = array (
-        0 => 'ID',
-        1 => 'STAGE_ID',
-        2 => 'OPPORTUNITY',
-        3 => 'DATE_CREATE',
-        4 => 'ASSIGNED_BY_ID',
-        5 => 'CURRENCY_ID',
-        6 => 'LEAD_ID',
-        7 => 'COMMENTS',
-        8 => 'TITLE',
-        9 => 'CONTACT_ID',
-        10 => 'DATE_MODIFY',
-        11 => 'ADDITIONAL_INFO',
-        12 => 'CLOSEDATE',
-        13 => 'COMPANY_ID',
-        14 => 'TYPE_ID',
-        15 => 'CATEGORY_ID',
-        16 => 'IS_RETURN_CUSTOMER',
-        17 => 'BEGINDATE',
-        18 => 'SOURCE_ID',
-        19 => 'SOURCE_DESCRIPTION',
-        20 => 'UTM_SOURCE',
-        21 => 'UTM_MEDIUM',
-        22 => 'UTM_CAMPAIGN',
-        23 => 'UTM_CONTENT',
-        24 => 'UTM_TERM',
-        25 => 'UF_CRM_1458820460',
-        26 => 'UF_CRM_1563358173',
-        27 => 'UF_CRM_1563358234',
-        28 => 'UF_CRM_1591169973',
-        29 => 'UF_CRM_1445937206',
-        30 => 'UF_CRM_1452607034',
-        31 => 'UF_CRM_1452607166',
-        32 => 'UF_CRM_56950C04477D1',
-        33 => 'UF_CRM_1452677433',
-        34 => 'UF_CRM_1452678731',
-        35 => 'UF_CRM_1452678739',
-        36 => 'UF_CRM_1452678748',
-        37 => 'UF_CRM_1452678761',
-        38 => 'UF_CRM_1461847837',
-        39 => 'UF_CRM_1461847943',
-        40 => 'UF_CRM_1461847965',
-        41 => 'UF_CRM_1463151704',
-        42 => 'UF_CRM_577D0E7D71F73',
-        43 => 'UF_CRM_1467814958',
-        44 => 'UF_CRM_1469186000',
-        45 => 'UF_CRM_1481569820',
-        46 => 'UF_CRM_5863E85298D61',
-        47 => 'UF_CRM_1482945309',
-        48 => 'UF_CRM_1485269429',
-        49 => 'UF_CRM_1518167636730',
-        50 => 'UF_CRM_1519891110273',
-        51 => 'UF_CRM_5A98EB669FF8F',
-        52 => 'UF_CRM_1521502530274',
-        53 => 'UF_CRM_5BA219BD0DB5B',
-        54 => 'UF_CRM_1537866061229',
-        55 => 'UF_CRM_5BC6FD26D40C5',
-        56 => 'UF_CRM_5BE43DED460A9',
-        57 => 'UF_CRM_5BF66982D098B',
-        58 => 'UF_CRM_1549288279',
-        59 => 'UF_CRM_1549288291',
-        60 => 'UF_CRM_1550738735',
-        61 => 'UF_CRM_1550816190',
-        62 => 'UF_CRM_5C750AFC5347F',
-        63 => 'UF_CRM_5EEB3434E2905',
-        64 => 'UF_CRM_1595328762',
-        65 => 'UF_CRM_1596013529',
-        66 => 'UF_CRM_1562831302',
-        67 => 'UF_CRM_FULL_ADDRESS',
-        68 => 'UF_CRM_BIRTHDATE',
-        69 => 'UF_CRM_POST',
-        70 => 'UF_CRM_PHONE_HOME',
-        71 => 'UF_CRM_EMAIL_OTHER',
-        72 => 'UF_CRM_IM_OTHER',
-        73 => 'UF_CRM_WEB_OTHER',
-        74 => 'UF_CRM_PHONE_OTHER',
-        75 => 'UF_CRM_NAME',
-        76 => 'UF_CRM_ADDRESS_2',
-        77 => 'UF_CRM_IM_FACEBOOK',
-        78 => 'UF_CRM_IM_ICQ',
-        79 => 'UF_CRM_IM_JABBER',
-        80 => 'UF_CRM_IM_MSN',
-        81 => 'UF_CRM_IM_SKYPE',
-        82 => 'UF_CRM_IM_TELEGRAM',
-        83 => 'UF_CRM_IM_BITRIX24',
-        84 => 'UF_CRM_IM_VK',
-        85 => 'UF_CRM_IM_OPENLINE',
-        86 => 'UF_CRM_WEB_WORK',
-        87 => 'UF_CRM_WEB_HOME',
-        88 => 'UF_CRM_WEB_TWITTER',
-        89 => 'UF_CRM_PHONE_MOBILE',
-        90 => 'UF_CRM_COMPANY_TITLE',
-        91 => 'UF_CRM_PHONE_PAGER',
-        92 => 'UF_CRM_PHONE_FAX',
-        93 => 'UF_CRM_SECOND_NAME',
-        94 => 'UF_CRM_EMAIL_WORK',
-        95 => 'UF_CRM_PHONE_WORK',
-        96 => 'UF_CRM_WEB_FACEBOOK',
-        97 => 'UF_CRM_LAST_NAME',
-        98 => 'UF_CRM_EMAIL_HOME',
-        99 => 'UF_CRM_STATUS_ID',
-        100 => 'UF_CRM_1458578298',
-        101 => 'UF_CRM_1452071509',
-        102 => 'UF_CRM_1467647605',
-        103 => 'UF_CRM_1523260928',
-        104 => 'UF_CRM_1594038653',
-        105 => 'UF_CRM_59C252BCC7',
-        106 => 'UF_CRM_1555313886',
-        107 => 'UF_CRM_1555313924',
-        108 => 'UF_CRM_1592296257',
-        109 => 'UF_CRM_1558613550',
-        110 => 'UF_CRM_1553157185',
-        111 => 'UF_CRM_1553773767',
-        112 => 'UF_CRM_1521502614698',
-        113 => 'UF_CRM_1553773798',
-        114 => 'UF_CRM_1561474924',
-        115 => 'UF_CRM_1572954089',
-        116 => 'UF_CRM_1550519589',
-        117 => 'UF_CRM_1521634766808',
-        118 => 'UF_CRM_1525354332',
-        119 => 'UF_CRM_1525353952',
-        120 => 'UF_CRM_1534509031',
-        121 => 'price',
-        122 => 'CATEGORY_NAME',);
-    foreach($test as &$t) {
-        $t = '"'.$t.'"';
+    function test(bool $state) {
+        static $start = false;
+        if($state || !$start) {
+            $start = microtime(true);
+            $result = $start;
+        } else {
+            $result = microtime(true) - $start;
+        }
+        return $result;
     }
-    echo '<p>'.implode(', ', $test).'</p>';
+
+    function getNextDateByDayNumber(DateTime $date, int $dayNumber)
+    {
+        $day   = intval($date->format('j'));
+        $month = intval($date->format('n'));
+        $year  = intval($date->format('Y'));
+        $days  = intval($date->format('t'));
+
+        $newDay = max(1, min($days, $dayNumber));
+
+        $newDate = clone $date;
+        if($newDay < $day) {
+            $month++;
+            if($month > 12) {
+                $month = 1;
+                $year++;
+            }
+            $newDate->setDate($year, $month, 1);
+            $days = intval($newDate->format('t'));
+            $newDay = min($days, $dayNumber);
+        }
+
+        $newDate->setDate($year, $month, $newDay);
+        return $newDate;
+    }
+
+    function getNextDateByDayNumber2(DateTime $date, int $dayNumber)
+    {
+        $day   = intval($date->format('j'));
+        $month = intval($date->format('n'));
+        $year  = intval($date->format('Y'));
+        $days  = intval($date->format('t'));
+        $newDay = max(1, min($days, $dayNumber));
+
+        if($newDay < $day) {
+            $nextDate = (clone $date)->setDate($year, $month+1, 1);
+            $nextDays = intval($nextDate->format('t'));
+            $newDay = max(1, min($nextDays, $dayNumber));
+            $delta = ($days - $day) + $newDay;
+        } else {
+            $delta = $newDay - $day;
+        }
+
+        return (new DateTime())->setDate($year, $month, $day+$delta);
+    }
+
+    $dayNumber = 24;
+    $currentDate = new DateTime('2019-12-25 00:00:00');
+    $max = 100000;
+
+    $time = microtime(true);
+    $i = 0;
+    while($i < $max) {
+        $newDate = getNextDateByDayNumber2($currentDate, $dayNumber);
+
+        //echo $currentDate->format('d.m.Y H:i:s').' - '.$newDate->format('d.m.Y H:i:s').'<br>';
+        $currentDate->modify('+1 month');
+        $i++;
+    }
+    echo '<b>'.(microtime(true) - $time).'</b><br>';
+
+    /*$time = microtime(true);
+    $i = 0;
+    while($i < $max) {
+        $newDate = getNextDateByDayNumber2($currentDate, $dayNumber);
+
+        //echo $currentDate->format('d.m.Y H:i:s').' - '.$newDate->format('d.m.Y H:i:s').'<br>';
+        $currentDate->modify('+1 month');
+        $i++;
+    }
+    echo '<b>'.(microtime(true) - $time).'</b><br>';*/
 }
 catch(Exception $e)
 {
