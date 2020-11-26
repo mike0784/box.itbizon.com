@@ -5,6 +5,9 @@ namespace Itbizon\Basis\Utils;
 
 use Bitrix\Socialnetwork\UserToGroupTable;
 use Bitrix\Tasks\ActionFailedException;
+use CCrmDeal;
+use CCrmLead;
+use COption;
 use CTaskItem;
 
 class Handler
@@ -59,6 +62,79 @@ class Handler
         } catch (\Exception $e) {
             throw new ActionFailedException('Ошибка: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * @param int $id
+     * @param array $data
+     * @throws \Exception
+     */
+    public static function onActivityAdd(int $id, array $data): void
+    {
+        $dealsOrLeads = $data['BINDINGS'];
+        if ($dealsOrLeads) {
+            $customFieldLead = COption::GetOptionString("itbizon.basis", "date_last_activity_lead");
+            $customFieldDeal = COption::GetOptionString("itbizon.basis", "date_last_activity_deal");
+
+            foreach ($dealsOrLeads as $item) {
+                $dealOrLeadId = intval($item['OWNER_ID']);
+
+                if (intval($item['OWNER_TYPE_ID']) == \CCrmOwnerType::Lead && $customFieldLead && $dealOrLeadId) {
+                    self::updateLastDateLead($dealOrLeadId, $customFieldLead);
+                }
+                if ($item['OWNER_TYPE_ID'] == \CCrmOwnerType::Deal && $customFieldDeal && $dealOrLeadId) {
+                    self::updateLastDateDeal($dealOrLeadId, $customFieldDeal);
+                }
+
+            }
+        }
+    }
+
+    /**
+     * @param \Bitrix\Main\Entity\Event $event
+     * @throws \Bitrix\Main\SystemException
+     * @throws \Exception
+     */
+    public static function onAfterAddComment(\Bitrix\Main\Entity\Event $event): void
+    {
+        $application = \Bitrix\Main\Application::getInstance();
+        $request = $application->getContext()->getRequest();
+        $ownerTypeID = intval($request->getPost('OWNER_TYPE_ID'));
+        $ownerID = intval($request->getPost('OWNER_ID'));
+
+        $customFieldLead = COption::GetOptionString("itbizon.basis", "date_last_activity_lead");
+        $customFieldDeal = COption::GetOptionString("itbizon.basis", "date_last_activity_deal");
+
+        if ($ownerTypeID == \CCrmOwnerType::Lead && $ownerID && $customFieldLead) {
+            self::updateLastDateLead($ownerID, $customFieldLead);
+        }
+        if ($ownerTypeID == \CCrmOwnerType::Deal && $ownerID && $customFieldDeal) {
+            self::updateLastDateDeal($ownerID, $customFieldDeal);
+        }
+    }
+
+    /**
+     * @param int $leadId
+     * @param string $customField
+     * @throws \Exception
+     */
+    protected static function updateLastDateLead(int $leadId, string $customField): void
+    {
+        $lead = new CCrmLead(true);
+        $fields = [$customField => (new \DateTime('now'))->format('d.m.Y H:i:s')];
+        $lead->update($leadId, $fields);
+    }
+
+    /**
+     * @param int $dealId
+     * @param string $customField
+     * @throws \Exception
+     */
+    protected static function updateLastDateDeal(int $dealId, string $customField): void
+    {
+        $lead = new CCrmDeal(true);
+        $fields = [$customField => (new \DateTime('now'))->format('d.m.Y H:i:s')];
+        $lead->update($dealId, $fields);
     }
 
     /**

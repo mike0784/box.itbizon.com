@@ -71,6 +71,7 @@ class itbizon_basis extends CModule
         $eventManager->registerEventHandlerCompatible('main', 'OnUserTypeBuildList', 'itbizon.basis', \Itbizon\Basis\Types\WeekDayType::class, 'GetUserTypeDescription');
         $eventManager->registerEventHandlerCompatible('tasks', 'OnBeforeTaskAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onBeforeTaskAdd');
         $eventManager->registerEventHandlerCompatible('tasks', 'OnBeforeTaskUpdate', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onBeforeTaskUpdate');
+        $eventManager->registerEventHandlerCompatible('crm', 'OnActivityAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onActivityAdd');
     }
 
     public function UnInstallEvents()
@@ -79,5 +80,6 @@ class itbizon_basis extends CModule
         $eventManager->unRegisterEventHandler('main', 'OnUserTypeBuildList', 'itbizon.basis', \Itbizon\Basis\Types\WeekDayType::class, 'GetUserTypeDescription');
         $eventManager->unRegisterEventHandler('tasks', 'OnBeforeTaskAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onBeforeTaskAdd');
         $eventManager->unRegisterEventHandler('tasks', 'OnBeforeTaskUpdate', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onBeforeTaskUpdate');
+        $eventManager->unRegisterEventHandler('crm', 'OnActivityAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onActivityAdd');
     }
 }

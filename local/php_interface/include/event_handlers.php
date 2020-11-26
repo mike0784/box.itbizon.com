@@ -1,10 +1,9 @@
 <?php
 
-use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Loader;
 use Bizon\Main\Log;
-use Itbizon\Template\Utils\Transliteration;
+
 
 //get instance EventManager
 $eventManager = EventManager::getInstance();
@@ -44,24 +43,24 @@ $eventManager->addEventHandler('crm', 'OnAfterCrmContactUpdate',
 $eventManager->addEventHandler(
     'main',
     'OnAfterUserRegister',
-    function(&$arFields){
-        if($arFields['UF_DEPARTMENT'] && Loader::includeModule('bizon.main'))
+    function (&$arFields) {
+        if ($arFields['UF_DEPARTMENT'] && Loader::includeModule('bizon.main'))
             \Bizon\Main\Department\Helper::addUser($arFields['ID'], $arFields['UF_DEPARTMENT'], 'Register');
     }
 );
 $eventManager->addEventHandler(
     'main',
     'OnAfterUserSimpleRegister',
-    function(&$arFields){
-        if($arFields['UF_DEPARTMENT'] && Loader::includeModule('bizon.main'))
+    function (&$arFields) {
+        if ($arFields['UF_DEPARTMENT'] && Loader::includeModule('bizon.main'))
             \Bizon\Main\Department\Helper::addUser($arFields['ID'], $arFields['UF_DEPARTMENT'], 'SimpleRegister');
     }
 );
 $eventManager->addEventHandler(
     'main',
     'OnAfterUserAdd',
-    function(&$arFields){
-        if($arFields['UF_DEPARTMENT'] && Loader::includeModule('bizon.main'))
+    function (&$arFields) {
+        if ($arFields['UF_DEPARTMENT'] && Loader::includeModule('bizon.main'))
             \Bizon\Main\Department\Helper::addUser($arFields['ID'], $arFields['UF_DEPARTMENT'], 'Add');
     }
 );
@@ -69,16 +68,16 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'main',
     'OnBeforeUserUpdate',
-    function(&$arFields) {
-        if(Loader::includeModule('bizon.main'))
+    function (&$arFields) {
+        if (Loader::includeModule('bizon.main'))
             \Bizon\Main\Department\Helper::beforeUserUpdate($arFields);
     }
 );
 $eventManager->addEventHandler(
     'main',
     'OnAfterUserUpdate',
-    function(&$arFields) {
-        if(Loader::includeModule('bizon.main'))
+    function (&$arFields) {
+        if (Loader::includeModule('bizon.main'))
             \Bizon\Main\Department\Helper::afterUserUpdate($arFields);
     }
 );
@@ -89,10 +88,9 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'iblock',
     'OnAfterIBlockSectionAdd',
-    function(&$arFields){
+    function (&$arFields) {
         // Изменение руководителей
-        if($arFields['UF_HEAD'] > 0 && Loader::includeModule('bizon.main'))
-        {
+        if ($arFields['UF_HEAD'] > 0 && Loader::includeModule('bizon.main')) {
             $log = new \Bizon\Main\Log('department_change');
             $log->Add('Добавлен руководитель для нового отдела #' . $arFields['ID'] . ' - ' . $arFields['UF_HEAD']);
             \Bizon\Main\Department\Helper::saveHistoryDepartment($arFields['ID']);
@@ -102,13 +100,12 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'iblock',
     'OnBeforeIBlockSectionUpdate',
-    function(&$arFields){
-        if(Loader::includeModule('bizon.main'))
-        {
+    function (&$arFields) {
+        if (Loader::includeModule('bizon.main')) {
             $newHead = $arFields['UF_HEAD'];
             $oldHead = \Bizon\Main\Department\Helper::getStructureDepartments()[$arFields['ID']]['UF_HEAD'];
-    
-            if($oldHead != $newHead)
+
+            if ($oldHead != $newHead)
                 $arFields['OLD_HEAD'] = intval($oldHead);
         }
     }
@@ -116,10 +113,9 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'iblock',
     'OnAfterIBlockSectionUpdate',
-    function(&$arFields){
+    function (&$arFields) {
         // Изменение руководителей
-        if(isset($arFields['OLD_HEAD']) && Loader::includeModule('bizon.main'))
-        {
+        if (isset($arFields['OLD_HEAD']) && Loader::includeModule('bizon.main')) {
             $log = new \Bizon\Main\Log('department_change');
             $log->Add('Изменен руководитель отдела #' . $arFields['ID'] . ' с ' . $arFields['OLD_HEAD'] . ' на ' . $arFields['UF_HEAD']);
             \Bizon\Main\Department\Helper::saveHistoryDepartment($arFields['ID']);
@@ -130,13 +126,12 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'iblock',
     'OnAfterIBlockSectionDelete',
-    function(&$arFields){
+    function (&$arFields) {
         $head = CIntranetUtils::GetStructure()['DATA'][$arFields['ID']]['UF_HEAD'];
         // Изменение руководителей
-        if($head && Loader::includeModule('bizon.main'))
-        {
+        if ($head && Loader::includeModule('bizon.main')) {
             $log = new \Bizon\Main\Log('department_change');
-            $log->Add('Удален руководитель из отдела #'.$arFields['ID'].' - '.$head);
+            $log->Add('Удален руководитель из отдела #' . $arFields['ID'] . ' - ' . $head);
             \Bizon\Main\Department\Helper::saveHistoryDepartment($arFields['ID']);
         }
     }
@@ -148,9 +143,8 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'tasks',
     '\Bitrix\Tasks\Internals\Task\CheckList::onAfterAdd',
-    function(&$arFields)
-    {
-        if(Loader::includeModule('bizon.main'))
+    function (&$arFields) {
+        if (Loader::includeModule('bizon.main'))
             \Bizon\Main\Tasks\CheckItem::onAfterCheckListAdd($arFields);
     }
 );
@@ -158,9 +152,8 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'tasks',
     '\Bitrix\Tasks\Internals\Task\CheckList::onAfterUpdate',
-    function(&$arFields)
-    {
-        if(Loader::includeModule('bizon.main'))
+    function (&$arFields) {
+        if (Loader::includeModule('bizon.main'))
             \Bizon\Main\Tasks\CheckItem::onAfterCheckListUpdate($arFields);
     }
 );
@@ -181,32 +174,29 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'crm',
     'onBeforeCrmLeadUpdate',
-    function(&$arFields) {
-        if(Loader::includeModule('bizon.main')
-            && Loader::includeModule('crm'))
-        {
+    function (&$arFields) {
+        if (Loader::includeModule('bizon.main')
+            && Loader::includeModule('crm')) {
             $log = new Log('crmAccessTest');
             $log->Add('leadBEFOREupdate');
             $log->Add($arFields);
-            
-            if(isset($arFields['UF_CRM_ACCESS_USER']))
-            {
+
+            if (isset($arFields['UF_CRM_ACCESS_USER'])) {
                 $prevAccessUser = \Bitrix\Crm\LeadTable::getList([
-                    'filter'=>['=ID'=>$arFields['ID']],
-                    'select'=>['UF_CRM_ACCESS_USER']
+                    'filter' => ['=ID' => $arFields['ID']],
+                    'select' => ['UF_CRM_ACCESS_USER']
                 ])->fetch()['UF_CRM_ACCESS_USER'];
-                if($prevAccessUser)
-                {
+                if ($prevAccessUser) {
                     $accessId = \Bizon\Main\CrmAccess\Model\CrmEntityPermsTable::getList([
-                        'filter'=>[
-                            'ENTITY'=>'LEAD',
-                            'ENTITY_ID'=>$arFields['ID'],
-                            'ATTR'=>'U'.$prevAccessUser,
+                        'filter' => [
+                            'ENTITY' => 'LEAD',
+                            'ENTITY_ID' => $arFields['ID'],
+                            'ATTR' => 'U' . $prevAccessUser,
                         ],
-                        'select'=>['ID'],
+                        'select' => ['ID'],
                     ])->fetch()['ID'];
-                    
-                    $log->Add('AccessId: '.$accessId);
+
+                    $log->Add('AccessId: ' . $accessId);
                     \Bizon\Main\CrmAccess\Model\CrmEntityPermsTable::delete($accessId);
                 }
             }
@@ -217,22 +207,19 @@ $eventManager->addEventHandler(
 $eventManager->addEventHandler(
     'crm',
     'onAfterCrmLeadUpdate',
-    function(&$arFields) {
-        if(Loader::includeModule('bizon.main'))
-        {
+    function (&$arFields) {
+        if (Loader::includeModule('bizon.main')) {
             $log = new Log('crmAccessTest');
             $log->Add('leadAFTERupdate');
             $log->Add($arFields);
-            
-            if(isset($arFields['UF_CRM_ACCESS_USER']) && intval($arFields['UF_CRM_ACCESS_USER']) > 0)
-            {
+
+            if (isset($arFields['UF_CRM_ACCESS_USER']) && intval($arFields['UF_CRM_ACCESS_USER']) > 0) {
                 $result = \Bizon\Main\CrmAccess\Model\CrmEntityPermsTable::add([
-                    'ENTITY'=>'LEAD',
-                    'ENTITY_ID'=>$arFields['ID'],
-                    'ATTR'=>'U'.$arFields['UF_CRM_ACCESS_USER'],
+                    'ENTITY' => 'LEAD',
+                    'ENTITY_ID' => $arFields['ID'],
+                    'ATTR' => 'U' . $arFields['UF_CRM_ACCESS_USER'],
                 ]);
-                if(!$result->isSuccess())
-                {
+                if (!$result->isSuccess()) {
                     $log->Add('Ошибка добавления доступа: ');
                     $log->Add($result->getErrorMessages());
                 }
@@ -241,4 +228,10 @@ $eventManager->addEventHandler(
     }
 );
 
+Loader::includeModule('itbizon.basis');
+
+$eventManager->addEventHandler(
+    'crm',
+    '\Bitrix\Crm\Timeline\Entity\Timeline::OnAfterAdd',
+    [\Itbizon\Basis\Utils\Handler::class, 'onAfterAddComment']);
 ?>

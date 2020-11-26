@@ -5,11 +5,11 @@ use \Bitrix\Main\Loader;
 defined('B_PROLOG_INCLUDED') || die;
 
 global $APPLICATION, $USER;
-$module_id = $_GET['mid'];
+$moduleId = $_GET['mid'];
 if (!$USER->IsAdmin())
     return;
 
-Loader::includeModule($module_id);
+Loader::includeModule($moduleId);
 $tabs = [
     [
         'DIV' => 'general',
@@ -21,6 +21,11 @@ $tabs = [
         'TAB' => 'Задачи',
         'TITLE' => 'Настройка задачи'
     ],
+    [
+        'DIV' => 'crm',
+        'TAB' => 'CRM',
+        'TITLE' => 'Настройка CRM'
+    ],
 ];
 $options = [
     'general' => [
@@ -29,11 +34,15 @@ $options = [
     'tasks' => [
         ['number_week', 'Поле номера недели', '', ['text', '40']],
     ],
+    'crm' => [
+        ['date_last_activity_lead', 'Поле даты последней активности (лид)', '', ['text', '40']],
+        ['date_last_activity_deal', 'Поле даты последней активности (сделка)', '', ['text', '40']],
+    ],
 ];
 
 if (check_bitrix_sessid() && strlen($_POST['save']) > 0) {
     foreach ($options as $option) {
-        __AdmSettingsSaveOptions($module_id, $option);
+        __AdmSettingsSaveOptions($moduleId, $option);
     }
     LocalRedirect($APPLICATION->GetCurPageParam());
 }
