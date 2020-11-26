@@ -91,11 +91,12 @@ class Handler
     }
 
     /**
-     * @param \Bitrix\Main\Entity\Event $event
+     * @param int $id
+     * @param array $data
      * @throws \Bitrix\Main\SystemException
      * @throws \Exception
      */
-    public static function onAfterAddComment(\Bitrix\Main\Entity\Event $event): void
+    public static function onAfterAddComment(): void
     {
         $application = \Bitrix\Main\Application::getInstance();
         $request = $application->getContext()->getRequest();

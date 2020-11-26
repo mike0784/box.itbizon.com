@@ -72,6 +72,7 @@ class itbizon_basis extends CModule
         $eventManager->registerEventHandlerCompatible('tasks', 'OnBeforeTaskAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onBeforeTaskAdd');
         $eventManager->registerEventHandlerCompatible('tasks', 'OnBeforeTaskUpdate', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onBeforeTaskUpdate');
         $eventManager->registerEventHandlerCompatible('crm', 'OnActivityAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onActivityAdd');
+        $eventManager->registerEventHandlerCompatible('crm', '\Bitrix\Crm\Timeline\Entity\Timeline::OnAfterAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onAfterAddComment');
     }
 
     public function UnInstallEvents()
@@ -81,5 +82,6 @@ class itbizon_basis extends CModule
         $eventManager->unRegisterEventHandler('tasks', 'OnBeforeTaskAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onBeforeTaskAdd');
         $eventManager->unRegisterEventHandler('tasks', 'OnBeforeTaskUpdate', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onBeforeTaskUpdate');
         $eventManager->unRegisterEventHandler('crm', 'OnActivityAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onActivityAdd');
+        $eventManager->unRegisterEventHandler('crm', '\Bitrix\Crm\Timeline\Entity\Timeline::OnAfterAdd', 'itbizon.basis', \Itbizon\Basis\Utils\Handler::class, 'onAfterAddComment');
     }
 }

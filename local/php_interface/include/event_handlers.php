@@ -227,11 +227,4 @@ $eventManager->addEventHandler(
         }
     }
 );
-
-Loader::includeModule('itbizon.basis');
-
-$eventManager->addEventHandler(
-    'crm',
-    '\Bitrix\Crm\Timeline\Entity\Timeline::OnAfterAdd',
-    [\Itbizon\Basis\Utils\Handler::class, 'onAfterAddComment']);
 ?>
