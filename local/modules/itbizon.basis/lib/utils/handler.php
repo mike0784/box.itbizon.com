@@ -9,6 +9,7 @@ use CCrmDeal;
 use CCrmLead;
 use COption;
 use CTaskItem;
+use Bitrix\Main\Loader;
 
 class Handler
 {
@@ -142,11 +143,17 @@ class Handler
      * @param int $id
      * @return array
      * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\LoaderException
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
+     * @throws \Exception
      */
     public static function getUsersIdsByGroupId(int $id): array
     {
+        if (!Loader::includeModule('socialnetwork')) {
+            throw new \Exception('Ошибка подключения модуля Socialnetwork');
+        }
+
         $result = UserToGroupTable::getList(array(
             "filter" => [
                 "=GROUP_ID" => $id, '=ROLE' => ['A',/*Роль владельца группы*/ 'E' /*Роль модератора*/]
