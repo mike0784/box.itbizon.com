@@ -80,90 +80,89 @@ class CITBBasisActivityReport2 extends CBitrixComponent
             if (!isset($filterData['>=PERIOD']) && !isset($filterData['<=PERIOD'])) {
                 $filterOption->setupDefaultFilter([
                     'PERIOD_datesel' => 'CURRENT_MONTH',
-                ],['PERIOD']);
-
+                ], ['PERIOD']);
+                $filterData = $filterOption->getFilterLogic($filter);
             }
 
-            if (isset($filterData['>=PERIOD']) && isset($filterData['<=PERIOD'])) {
-                $users = [];
-                $result = UserTable::getList([
-                    'select' => ['ID', 'LAST_NAME', 'NAME'],
-                    'filter' => HelperActivityReport::prepareFilterUsers($filterData),
-                    'order' => $order,
-                ]);
-                while ($row = $result->fetch()) {
-                    $users[$row['ID']] = $row;
-                }
-                if (!$users) {
-                    throw new \Exception('Активных сотрудников не найдено');
-                }
-                unset($filterData['USER_ID']);
-                $userIds = array_unique(array_keys($users));
+            $users = [];
+            $result = UserTable::getList([
+                'select' => ['ID', 'LAST_NAME', 'NAME'],
+                'filter' => HelperActivityReport::prepareFilterUsers($filterData),
+                'order' => $order,
+            ]);
+            while ($row = $result->fetch()) {
+                $users[$row['ID']] = $row;
+            }
+            if (!$users) {
+                throw new \Exception('Активных сотрудников не найдено');
+            }
+            unset($filterData['USER_ID']);
+            $userIds = array_unique(array_keys($users));
 
-                foreach ($filterData as $key => $val) {
-                    $filterData[str_replace('PERIOD', 'CREATED', $key)] = $val;
-                    unset($filterData[$key]);
-                }
+            foreach ($filterData as $key => $val) {
+                $filterData[str_replace('PERIOD', 'CREATED', $key)] = $val;
+                unset($filterData[$key]);
+            }
 
-                $activities = \Bitrix\Crm\ActivityTable::getList([
-                    'select' => ['OWNER_ID', 'OWNER_TYPE_ID', 'CREATED', 'AUTHOR_ID'],
-                    'filter' => array_merge([
-                        '=AUTHOR_ID' => $userIds,
-                        '=OWNER_TYPE_ID' => [CCrmOwnerType::Lead, CCrmOwnerType::Deal]
-                    ], $filterData)
-                ]);
+            $activities = \Bitrix\Crm\ActivityTable::getList([
+                'select' => ['OWNER_ID', 'OWNER_TYPE_ID', 'CREATED', 'AUTHOR_ID'],
+                'filter' => array_merge([
+                    '=AUTHOR_ID' => $userIds,
+                    '=OWNER_TYPE_ID' => [CCrmOwnerType::Lead, CCrmOwnerType::Deal]
+                ], $filterData)
+            ]);
 
-                while ($row = $activities->fetch()) {
-                    if ($row['OWNER_TYPE_ID'] == CCrmOwnerType::Lead) {
-                        $users[$row['AUTHOR_ID']]['LEADS'][$row['OWNER_ID']][] = $row;
+            while ($row = $activities->fetch()) {
+                if ($row['OWNER_TYPE_ID'] == CCrmOwnerType::Lead) {
+                    $users[$row['AUTHOR_ID']]['LEADS'][$row['OWNER_ID']][] = $row;
 //                        $leads[$row['OWNER_ID']][] = $row;
-                    }
-                    if ($row['OWNER_TYPE_ID'] == CCrmOwnerType::Deal) {
+                }
+                if ($row['OWNER_TYPE_ID'] == CCrmOwnerType::Deal) {
 //                        $deals[$row['OWNER_ID']][] = $row;
-                        $users[$row['AUTHOR_ID']]['DEALS'][$row['OWNER_ID']][] = $row;
-                    }
-                }
-
-                $timeLineTable = \Bitrix\Crm\Timeline\Entity\TimelineTable::getList([
-                    'select' => ['*', 'BINDINGS'],
-                    'filter' => array_merge([
-                        '=TYPE_ID' => 7, //Тип комментария
-                        '=AUTHOR_ID' => $userIds,
-                        '=CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_TYPE_ID' => [CCrmOwnerType::Lead, CCrmOwnerType::Deal]
-                    ], $filterData)
-                ]);
-
-                while ($row = $timeLineTable->fetch()) {
-                    if ($row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_TYPE_ID'] == CCrmOwnerType::Lead) {
-                        $users[$row['AUTHOR_ID']]['LEADS'][$row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_ID']][] = $row;
-//                        $leads[$row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_ID']][] = $row;
-                    }
-                    if ($row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_TYPE_ID'] == CCrmOwnerType::Deal) {
-                        $users[$row['AUTHOR_ID']]['DEALS'][$row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_ID']][] = $row;
-//                        $deals[$row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_ID']][] = $row;
-                    }
-                }
-
-                $rows = [];
-
-                foreach ($users as $user) {
-                    $userId = $user['ID'];
-                    $countLeads = count(array_unique(array_keys($user['LEADS'])));
-                    $countDeals = count(array_unique(array_keys($user['DEALS'])));
-                    $data = [
-                        'data' => [
-                            'ID' => $userId['ID'],
-                            'FULL_NAME' => "<a href='/company/personal/user/{$userId}/'>{$user['LAST_NAME']} {$user['NAME']}</a>",
-                            'LEADS' => "<a href='#' class='show__popup' data-path='{$this->makeLinkShowLeads($userId,$filterData)}'>{$countLeads}</a>",
-                            'DEALS' => "<a href='#' class='show__popup' data-path='{$this->makeLinkShowDeals($userId,$filterData)}'>{$countDeals}</a>",
-                            'TOTAL' => $countLeads + $countDeals,
-                        ],
-                    ];
-                    if ($countLeads || $countDeals) {
-                        $rows[] = $data;
-                    }
+                    $users[$row['AUTHOR_ID']]['DEALS'][$row['OWNER_ID']][] = $row;
                 }
             }
+
+            $timeLineTable = \Bitrix\Crm\Timeline\Entity\TimelineTable::getList([
+                'select' => ['*', 'BINDINGS'],
+                'filter' => array_merge([
+                    '=TYPE_ID' => 7, //Тип комментария
+                    '=AUTHOR_ID' => $userIds,
+                    '=CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_TYPE_ID' => [CCrmOwnerType::Lead, CCrmOwnerType::Deal]
+                ], $filterData)
+            ]);
+
+            while ($row = $timeLineTable->fetch()) {
+                if ($row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_TYPE_ID'] == CCrmOwnerType::Lead) {
+                    $users[$row['AUTHOR_ID']]['LEADS'][$row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_ID']][] = $row;
+//                        $leads[$row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_ID']][] = $row;
+                }
+                if ($row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_TYPE_ID'] == CCrmOwnerType::Deal) {
+                    $users[$row['AUTHOR_ID']]['DEALS'][$row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_ID']][] = $row;
+//                        $deals[$row['CRM_TIMELINE_ENTITY_TIMELINE_BINDINGS_ENTITY_ID']][] = $row;
+                }
+            }
+
+            $rows = [];
+
+            foreach ($users as $user) {
+                $userId = $user['ID'];
+                $countLeads = count(array_unique(array_keys($user['LEADS'])));
+                $countDeals = count(array_unique(array_keys($user['DEALS'])));
+                $data = [
+                    'data' => [
+                        'ID' => $userId['ID'],
+                        'FULL_NAME' => "<a href='/company/personal/user/{$userId}/'>{$user['LAST_NAME']} {$user['NAME']}</a>",
+                        'LEADS' => "<a href='#' class='show__popup' data-path='{$this->makeLinkShowLeads($userId,$filterData)}'>{$countLeads}</a>",
+                        'DEALS' => "<a href='#' class='show__popup' data-path='{$this->makeLinkShowDeals($userId,$filterData)}'>{$countDeals}</a>",
+                        'TOTAL' => $countLeads + $countDeals,
+                    ],
+                ];
+                if ($countLeads || $countDeals) {
+                    $rows[] = $data;
+                }
+            }
+
             $rows = isset($rows) ? $rows : [];
             $nav->setRecordCount(count($rows));
             $pageNumber = isset($_GET[$gridId]) ? strval($_GET[$gridId]) : 0;
