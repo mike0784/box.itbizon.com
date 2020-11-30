@@ -25,14 +25,6 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
         {
             // grid
             $gridId = 'work_time_report';
-            $gridOptions = new Grid\Options($gridId);
-            $navParams = $gridOptions->getNavParams();
-            
-            // Pagination object for grid
-            $nav = new UI\PageNavigation($gridId);
-            $nav->allowAllRecords(true)
-                ->setPageSize($navParams['nPageSize'])
-                ->initFromUri();
             
             //Fields for filter
             $filter = [
@@ -97,7 +89,7 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                 ],
                 [
                     'id'      => 'WORK_TIME',
-                    'name'    => 'Трудоемкость (минут)',
+                    'name'    => 'Трудоемкость (ЧЧ:ММ)',
                     'sort'    => 'WORK_TIME',
                     'default' => true,
                 ],
@@ -116,6 +108,14 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                     'date'   => ['PERIOD'],
                 ]
             );
+            if(empty($filterList))
+            {
+                $filterOption->setupDefaultFilter([
+                    'PERIOD_datesel'=>'CURRENT_MONTH',
+                ], [
+                    'PERIOD',
+                ]);
+            }
             
             //Data for grid
             $rows = [];
@@ -141,7 +141,7 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                 $rows[] = [
                     'data'      => [
                         'ID'        => strval($item['ID']),
-                        'NAME'      => $item['NAME'],
+                        'NAME'      => $item['LINK_NAME'],
                         'STAGE'     => $item['STAGE'],
                         'WEEK_ID'   => $item['WEEK_ID'],
                         'DEADLINE'  => $item['DEADLINE'],
@@ -154,9 +154,6 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                     'parent_id' => strval($item['PARENT_ID']),
                 ];
             }
-            
-            // All count for pagination
-            $nav->setRecordCount(count($result));
         } catch (Exception $ex)
         {
             $message = $ex->getMessage();
@@ -170,7 +167,6 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
             'START_FIELDS' => $startFields,
             
             'GRID_ID' => $gridId,
-            'NAV'     => $nav,
             'FILTER'  => $filter,
             'COLUMNS' => $columns,
             'ROWS'    => $rows,
