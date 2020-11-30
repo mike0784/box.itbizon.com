@@ -3,9 +3,9 @@
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
 
-use Bitrix\Main\Grid;
 use Bitrix\Main\UI;
 use Itbizon\Basis\Utils\TaskReport;
+use Itbizon\Basis\Utils\WeekDay;
 
 /**
  * Class CITBBasisWorkTimeReport
@@ -26,6 +26,10 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
             // grid
             $gridId = 'work_time_report';
             
+            $weeks = WeekDay::getWeekList();
+            foreach ($weeks as $id => $item)
+                $weeks[$id] = $id;
+            
             //Fields for filter
             $filter = [
                 [
@@ -43,8 +47,9 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                 [
                     'id'      => 'WEEK_ID',
                     'name'    => 'Номер недели',
-                    'type'    => 'string',
+                    'type'    => 'list',
                     'default' => true,
+                    'items'    => $weeks,
                 ],
                 [
                     'id'      => 'PERIOD',
