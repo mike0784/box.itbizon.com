@@ -113,14 +113,11 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                     'date'   => ['PERIOD'],
                 ]
             );
-            if(empty($filterList))
-            {
-                $filterOption->setupDefaultFilter([
-                    'PERIOD_datesel'=>'CURRENT_MONTH',
-                ], [
-                    'PERIOD',
-                ]);
-            }
+            $filterOption->setupDefaultFilter([
+                'PERIOD_datesel'=>'CURRENT_MONTH',
+            ], [
+                'PERIOD',
+            ]);
             
             //Data for grid
             $rows = [];
