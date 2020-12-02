@@ -440,6 +440,33 @@ class TaskReport
                     $tasks[$row['PARENT_ID']]['CHILDREN'][] = $taskId;
                 $tasks[$taskId] = $row;
             }
+            foreach ($tasks as $taskId => $task)
+            {
+                if(isset($task['CHILDREN']))
+                {
+                    foreach ($times as $projectId => $user)
+                    {
+                        $uId = 0;
+                        foreach ($user as $userId => $item)
+                        {
+                            $uId = $userId;
+                            $inter = array_intersect($task['CHILDREN'], array_keys($item));
+                            $isContain = in_array($task['ID'], array_keys($item));
+                            if(!empty($inter) && !$isContain)
+                            {
+                                $times[$projectId][$userId][$task['ID']][] = [
+                                    'ID' => 0,
+                                    'TASK_ID' => $task['ID'],
+                                    'USER_ID' => $userId,
+                                    'SECONDS' => 0,
+                                    'TASK_GROUP_ID' => $projectId,
+                                ];
+                            }
+                        }
+                        if($uId) ksort($times[$projectId][$uId]);
+                    }
+                }
+            }
             
             if(!empty($projectIds)) {
                 $projectIds = array_unique($projectIds);
