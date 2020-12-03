@@ -28,7 +28,7 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
             
             $weeks = WeekDay::getWeekList();
             foreach ($weeks as $id => $item)
-                $weeks[$id] = $id;
+                $weeks[$id] = $id.' '.WeekDay::getWeekString($id);
             
             //Fields for filter
             $filter = [
