@@ -53,6 +53,7 @@ class TaskReportItem
      * TaskReportItem constructor.
      * @param int           $id
      * @param string        $name
+     * @param int           $type
      * @param DateTime|null $begin
      * @param DateTime|null $end
      * @param DateTime|null $deadLine
@@ -60,7 +61,7 @@ class TaskReportItem
      * @param int           $status
      * @param string        $weekNumber
      */
-    public function __construct(int $id, string $name, DateTime $begin = null, DateTime $end = null, DateTime $deadLine = null, int $workTime = 0, int $status = 0, $weekNumber = '')
+    public function __construct(int $id, string $name, int $type, DateTime $begin = null, DateTime $end = null, DateTime $deadLine = null, int $workTime = 0, int $status = 0, $weekNumber = '')
     {
         self::$indexCounter++;
         $this->index       = self::$indexCounter;
@@ -85,7 +86,8 @@ class TaskReportItem
             $this->overdueDays = $diff->invert ? $diff->d ? $diff->d : 1 : 0;
         }
         
-        if($this->weekNumber)
+        $this->itemType = $type;
+        if($type == self::TYPE_TASK)
             $this->stage = $this->status == Status::COMPLETED ? self::STAGE_COMPLETE : self::STAGE_IN_PROGRESS;
     }
     
@@ -100,14 +102,6 @@ class TaskReportItem
             $this->link = '/company/personal/user/'.$this->id.'/';
         elseif ($this->itemType == self::TYPE_TASK)
             $this->link = '/workgroups/group/'.$this->groupId.'/tasks/task/view/'.$this->id.'/';
-    }
-    
-    /**
-     * @param $type
-     */
-    public function setItemType($type)
-    {
-        $this->itemType = $type;
     }
     
     /**
@@ -333,8 +327,7 @@ class TaskReport
             throw new Exception('Error load module tasks');
         
         $this->taskWeekField = Option::get('itbizon.basis','number_week');
-        $this->root = new TaskReportItem(1, 'Корень');
-        $this->root->setItemType(TaskReportItem::TYPE_ROOT);
+        $this->root = new TaskReportItem(1, 'Корень', TaskReportItem::TYPE_ROOT);
         $this->beginDate = $beginDate;
         $this->endDate   = $endDate;
         
@@ -493,13 +486,11 @@ class TaskReport
                     $projectId = intval($row['ID']);
                     $begin    = $this->dateFormat($row['PROJECT_DATE_START']);
                     $end    = $this->dateFormat($row['PROJECT_DATE_FINISH']);
-                    $projectItem = new TaskReportItem($projectId, $row['NAME'], $begin, $end);
-                    $projectItem->setItemType(TaskReportItem::TYPE_PROJECT);
+                    $projectItem = new TaskReportItem($projectId, $row['NAME'], TaskReportItem::TYPE_PROJECT, $begin, $end);
                     if(isset($times[$projectId])) {
                         foreach ($times[$projectId] as $userId => $data) {
                             if(isset($users[$userId])) {
-                                $userItem = new TaskReportItem($userId, $users[$userId]['LAST_NAME'].' '.$users[$userId]['NAME']);
-                                $userItem->setItemType(TaskReportItem::TYPE_USER);
+                                $userItem = new TaskReportItem($userId, $users[$userId]['LAST_NAME'].' '.$users[$userId]['NAME'], TaskReportItem::TYPE_USER);
                                 if(isset($times[$projectId][$userId])) {
                                     foreach($times[$projectId][$userId] as $taskId => $task) {
                                         if(isset($tasks[$taskId])) {
@@ -578,6 +569,7 @@ class TaskReport
         $taskItem = new TaskReportItem(
             $task['ID'],
             $task['TITLE'],
+            TaskReportItem::TYPE_TASK,
             $begin,
             $end,
             $deadline,
@@ -585,7 +577,6 @@ class TaskReport
             $task['STATUS'],
             $task[$this->taskWeekField]
         );
-        $taskItem->setItemType(TaskReportItem::TYPE_TASK);
         $taskItem->setGroupId(array_shift($times[$taskId])['TASK_GROUP_ID']);
         
         if(isset($task['CHILDREN']))

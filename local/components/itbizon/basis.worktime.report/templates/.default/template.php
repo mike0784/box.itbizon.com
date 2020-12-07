@@ -6,7 +6,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 use Bitrix\Main\UI\Extension;
 use Bitrix\UI\Toolbar\Facade\Toolbar;
 
-Extension::load('ui.bootstrap4');
+Extension::load('ext_bootstrap4');
 
 $message = $arResult['MESSAGE'];
 $messageType = $arResult['MESSAGE_TYPE'];

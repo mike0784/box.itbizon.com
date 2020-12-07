@@ -6,6 +6,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 use Bitrix\Main\UI;
 use Bitrix\Main\UserTable;
 use Itbizon\Basis\Utils\TaskReport;
+use Itbizon\Basis\Utils\TaskReportItem;
 use Itbizon\Basis\Utils\WeekDay;
 
 /**
@@ -56,9 +57,8 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                 [
                     'id'      => 'USER_ID',
                     'name'    => 'Сотрудник',
-                    'type'    => 'list',
+                    'type'    => 'dest_selector',
                     'default' => true,
-                    'items'   =>$users,
                     'params'  =>[
                         'multiple'=>'Y',
                     ],
@@ -154,6 +154,11 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
             unset($filterData['START']);
             unset($filterData['END']);
             
+            if(isset($filterData['USER_ID']))
+            {
+                foreach ($filterData['USER_ID'] as $id => $item)
+                    $filterData['USER_ID'][$id] = str_replace('U', '', $item);
+            }
             $result = [];
             $report = new TaskReport($start, $end, $filterData);
             $root = $report->getRoot();
@@ -166,17 +171,18 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                 $actions = [];
                 
                 $item['WEEK_ID'] = $item['WEEK_ID'] ? $item['WEEK_ID'].' '.WeekDay::getWeekString($item['WEEK_ID']) : '';
-                $badgeClass = $item['OVERDUE'] > 0 ? 'badge badge-danger' : 'badge badge-secondary';
+                $overDueBadge = $item['OVERDUE'] > 0 ? 'badge badge-danger' : 'badge badge-secondary';
+                $stageBadge = $item['STAGE'] == TaskReportItem::STAGE[TaskReportItem::STAGE_IN_PROGRESS] ? 'badge badge-primary' : 'badge badge-success';
                 
                 // Add data
                 $rows[] = [
                     'data'      => [
                         'ID'        => strval($item['ID']),
                         'NAME'      => $item['LINK_NAME'],
-                        'STAGE'     => $item['STAGE'],
+                        'STAGE'     => '<h6><span class="'.$stageBadge.'">'.$item['STAGE'].'</span></h6>',
                         'WEEK_ID'   => $item['WEEK_ID'],
                         'DEADLINE'  => $item['DEADLINE'],
-                        'OVERDUE'   => '<h6><span class="'.$badgeClass.'">'.$item['OVERDUE'].'</span></h6>',
+                        'OVERDUE'   => '<h6><span class="'.$overDueBadge.'">'.$item['OVERDUE'].'</span></h6>',
                         'WORK_TIME' => $item['WORK_TIME'],
                     ],
                     'actions'   => $actions,
