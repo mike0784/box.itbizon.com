@@ -4,6 +4,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
 
 use Bitrix\Main\UI;
+use Bitrix\Main\UserTable;
 use Itbizon\Basis\Utils\TaskReport;
 use Itbizon\Basis\Utils\WeekDay;
 
@@ -30,6 +31,20 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
             foreach ($weeks as $id => $item)
                 $weeks[$id] = $id.' '.WeekDay::getWeekString($id);
             
+            $list = UserTable::getList([
+                'filter'=>[
+                    'ACTIVE'=>'Y',
+                ],
+                'select'=>[
+                    'ID',
+                    'NAME',
+                    'LAST_NAME',
+                ],
+            ]);
+            $users = [];
+            while($row = $list->fetch())
+                $users[$row['ID']] = $row['LAST_NAME']. ' ' . $row['NAME'];
+            
             //Fields for filter
             $filter = [
                 [
@@ -37,6 +52,16 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                     'name'    => 'Тэг',
                     'type'    => 'string',
                     'default' => true,
+                ],
+                [
+                    'id'      => 'USER_ID',
+                    'name'    => 'Сотрудник',
+                    'type'    => 'list',
+                    'default' => true,
+                    'items'   =>$users,
+                    'params'  =>[
+                        'multiple'=>'Y',
+                    ],
                 ],
                 [
                     'id'      => 'TASK_ID',
@@ -109,6 +134,7 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                     'simple' => [
                         'TASK_ID',
                         'WEEK_ID',
+                        'USER_ID',
                     ],
                     'date'   => ['PERIOD'],
                 ]
@@ -139,6 +165,9 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                 // Actions
                 $actions = [];
                 
+                $item['WEEK_ID'] = $item['WEEK_ID'] ? $item['WEEK_ID'].' '.WeekDay::getWeekString($item['WEEK_ID']) : '';
+                $badgeClass = $item['OVERDUE'] > 0 ? 'badge badge-danger' : 'badge badge-secondary';
+                
                 // Add data
                 $rows[] = [
                     'data'      => [
@@ -147,7 +176,7 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                         'STAGE'     => $item['STAGE'],
                         'WEEK_ID'   => $item['WEEK_ID'],
                         'DEADLINE'  => $item['DEADLINE'],
-                        'OVERDUE'   => $item['OVERDUE'],
+                        'OVERDUE'   => '<h6><span class="'.$badgeClass.'">'.$item['OVERDUE'].'</span></h6>',
                         'WORK_TIME' => $item['WORK_TIME'],
                     ],
                     'actions'   => $actions,

@@ -2,6 +2,7 @@
 
 namespace Itbizon\Basis\Utils;
 
+use Bitrix\Main\Config\Option;
 use Bitrix\Main\UserTable;
 use Bitrix\Tasks\Internals\Fields\Status;
 use Bitrix\Tasks\TagTable;
@@ -311,6 +312,7 @@ class TaskReport
     protected $beginDate;
     protected $endDate;
     protected $tasksCheck;
+    protected $taskWeekField;
     
     /**
      * TaskReport constructor.
@@ -321,6 +323,7 @@ class TaskReport
      * @throws \Bitrix\Main\LoaderException
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
+     * @throws Exception
      */
     public function __construct(DateTime $beginDate, DateTime $endDate, array $postFilter = [])
     {
@@ -329,6 +332,7 @@ class TaskReport
         if (!Loader::includeModule('socialnetwork'))
             throw new Exception('Error load module tasks');
         
+        $this->taskWeekField = Option::get('itbizon.basis','number_week');
         $this->root = new TaskReportItem(1, 'Корень');
         $this->root->setItemType(TaskReportItem::TYPE_ROOT);
         $this->beginDate = $beginDate;
@@ -365,6 +369,10 @@ class TaskReport
         // filter by task id
         if(isset($postFilter['TASK_ID']) && !$filter['=TASK_ID'])
             $filter['=TASK_ID'] = $postFilter['TASK_ID'];
+        
+        // filter by user id
+        if(isset($postFilter['USER_ID']) && is_array($postFilter['USER_ID']))
+            $filter['=USER_ID'] = $postFilter['USER_ID'];
         
         $times = [];
         $taskIds = [];
@@ -414,7 +422,7 @@ class TaskReport
                 'ZOMBIE'=>'N',
             ];
             if(isset($postFilter['WEEK_ID']))
-                $filter['UF_WEEK_NUMBER'] = $postFilter['WEEK_ID'];
+                $filter[$this->taskWeekField] = $postFilter['WEEK_ID'];
             
             $result = TaskTable::getList([
                 'select' => [
@@ -426,7 +434,7 @@ class TaskReport
                     'DEADLINE',
                     'PARENT_ID',
                     'STATUS',
-                    'UF_WEEK_NUMBER',
+                    $this->taskWeekField,
                 ],
                 'filter' => $filter,
             ]);
@@ -575,7 +583,7 @@ class TaskReport
             $deadline,
             intval($workTime),
             $task['STATUS'],
-            $task['UF_WEEK_NUMBER']
+            $task[$this->taskWeekField]
         );
         $taskItem->setItemType(TaskReportItem::TYPE_TASK);
         $taskItem->setGroupId(array_shift($times[$taskId])['TASK_GROUP_ID']);
