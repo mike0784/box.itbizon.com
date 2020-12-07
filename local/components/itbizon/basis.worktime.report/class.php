@@ -196,6 +196,20 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                     'parent_id' => strval($item['PARENT_ID']),
                 ];
             }
+            
+            // строка итого
+            $rows[] = [
+                'data'=>[
+                    'ID'=>1,
+                    'NAME'=>'<b>Итого:</b>',
+                    'STAGE'=>'',
+                    'WEEK_ID'=>'',
+                    'DEADLINE'=>'',
+                    'OVERDUE'=>'',
+                    'WORK_TIME'=>sprintf('<b>%02d:%02d</b>', $this->totalWorkTime['HOUR'], $this->totalWorkTime['MINUTE']),
+                ]
+            ];
+            
         } catch (Exception $ex)
         {
             $message = $ex->getMessage();
@@ -333,13 +347,5 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
             $this->totalWorkTime['HOUR'] += round($this->totalWorkTime['MINUTE'] / 60);
             $this->totalWorkTime['MINUTE'] %= 60;
         }
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getTotalWorkTime()
-    {
-        return $this->totalWorkTime;
     }
 }
