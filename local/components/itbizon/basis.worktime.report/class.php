@@ -14,6 +14,8 @@ use Itbizon\Basis\Utils\WeekDay;
  */
 class CITBBasisWorkTimeReport extends CBitrixComponent
 {
+    protected $totalWorkTime;
+    
     /**
      * @return bool|mixed|null
      */
@@ -174,6 +176,9 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
                 $overDueBadge = $item['OVERDUE'] > 0 ? 'badge badge-danger' : 'badge badge-secondary';
                 $stageBadge = $item['STAGE'] == TaskReportItem::STAGE[TaskReportItem::STAGE_IN_PROGRESS] ? 'badge badge-primary' : 'badge badge-success';
                 
+                if($item['TYPE'] == TaskReportItem::TYPE_PROJECT)
+                    $this->addWorkTime($item['WORK_TIME']);
+                
                 // Add data
                 $rows[] = [
                     'data'      => [
@@ -309,5 +314,32 @@ class CITBBasisWorkTimeReport extends CBitrixComponent
             }
         }
         return $filter;
+    }
+    
+    /**
+     * @param $workTime
+     */
+    protected function addWorkTime($workTime)
+    {
+        $workTime = explode(':', $workTime);
+        $hour = array_shift($workTime);
+        $minute = array_shift($workTime);
+    
+        $this->totalWorkTime['HOUR'] += intval($hour);
+        $this->totalWorkTime['MINUTE'] += intval($minute);
+        
+        if($this->totalWorkTime['MINUTE'] > 60)
+        {
+            $this->totalWorkTime['HOUR'] += round($this->totalWorkTime['MINUTE'] / 60);
+            $this->totalWorkTime['MINUTE'] %= 60;
+        }
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getTotalWorkTime()
+    {
+        return $this->totalWorkTime;
     }
 }

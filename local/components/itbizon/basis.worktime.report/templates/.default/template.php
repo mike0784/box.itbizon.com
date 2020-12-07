@@ -10,6 +10,8 @@ Extension::load('ext_bootstrap4');
 
 $message = $arResult['MESSAGE'];
 $messageType = $arResult['MESSAGE_TYPE'];
+$component = $this->getComponent();
+$totalWorkTime = $component->getTotalWorkTime();
 
 CUtil::InitJSCore(['xlsx']);
 
@@ -96,6 +98,21 @@ if (!empty($message))
                 $(v).addClass('main-grid-row-expand');
             });
         });
+
+        // строка Итого
+        let grid = $('#work_time_report_table');
+        let tbody = grid.find('tbody');
+        let row = tbody.find('tr')[0];
+        let tdCount = $(row).find('td').length - 2;
+
+        tbody.append('<tr id="total-row" class="main-grid-row main-grid-row-body main-grid-row-expand">');
+        $('#total-row').append('<td class="main-grid-cell main-grid-cell-left"><span class="main-grid-cell-content"><b>Итого:</b></span></td>');
+        while(tdCount-- > 1)
+        {
+            $('#total-row').append('<td class="main-grid-cell main-grid-cell-left"><span class="main-grid-cell-content"></span></td>');
+        }
+        $('#total-row').append('<td class="main-grid-cell main-grid-cell-left"><span class="main-grid-cell-content"><b><?=sprintf('%02d:%02d', $totalWorkTime['HOUR'], $totalWorkTime['MINUTE'])?></b></span></td>');
+        tbody.append('</tr>');
     });
     
     function downloadExcel()
@@ -140,7 +157,7 @@ if (!empty($message))
                 $(excelBodyRow[k1]).html(html + "<td>"+name+"</td>");
             });
         });
-
+        
         let type = 'xlsx';
         let dl = '';
         let fn = '';

@@ -271,6 +271,7 @@ class TaskReportItem
             'WORK_TIME'=>$this->getFormatWorkTime(),
             'HAS_CHILD'=>false,
             'PARENT_ID'=>$parentId,
+            'TYPE'=>$this->itemType,
         ];
         $deadline = $this->deadLine ? $this->deadLine : $this->end;
         $deadline = $deadline ? $deadline->format('d.m.Y') : $deadline;
