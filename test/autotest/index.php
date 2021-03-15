@@ -200,97 +200,54 @@ try
             return array_keys($array)[count($array)-1];
         }
     }
+
     /* BEGIN OF USER CODE SECTION */
+    function weekend(string $begin, string $end) : int {
+        $sub = 0;  $vos = 0;
 
-    //Калинин
+        $interval =((strtotime($end) - strtotime($begin)) / 86400);
+        $dayNumber = date("N", strtotime($begin));
 
-    function search(array $data, int $number) : int
-    {
-        $low = 0;
-        $high = count($data) - 1;
 
-        while ($low <= $high)
-        {
-            $mid = intval(($low + $high) / 2);
-            if ($number < $data[$mid])
-                $high = $mid - 1;
-            elseif ($number > $data[$mid])
-                $low = $mid + 1;
-            else
-                return $mid;
-        }
+        if ($interval >= 0) {
 
-        return -1;
-    }
-    function weekend(string $begin, string $end) : int
-    {
-        $weekends = 0;
-        $dt_begin = strtotime($begin);
-        $dt_end = strtotime($end);
+            if (($interval + $dayNumber) >= 6) {
+                if ($dayNumber == 7) {
+                    $sub = intdiv(($interval + 1), 7);
+                } else {
+                    $sub = 1 + intdiv(($interval - (6 - $dayNumber)), 7);
+                }
+            }
+            if (($interval + $dayNumber) >= 7) {
+                $vos = 1 + intdiv(($interval - (7 - $dayNumber)), 7);
 
-        if(!$dt_begin || !$dt_end)
-            return 0; // можно выдать исключение но оставлю так
-
-        $number_day = intval(($dt_end - $dt_begin) / (60 * 60 * 24));
-        for($i = 0; $i <= $number_day; $i++)
-        {
-            $week_day = intval(date("w", $dt_begin)); // получаем id дня недели
-        if ($week_day == 6 || $week_day == 0) // если день недели 6 (суббота) или 0 (воскресенье)
-            $weekends++; // то увеличиваем счётчик выходных
-        $dt_begin += 60 * 60 * 24; // увеличиваем дату на 1 день
-        }
-
-        return $weekends;
-    }
-    function getcount(string $test) : array
-    {
-        $strarr = str_split($test);
-        return array_count_values($strarr);;
-    }
-    function fiborow(int $limit) : string
-    {
-        $fib_arr = [];
-        for ($i = 0; $i <= $limit; $i++)
-            array_push($fib_arr, round(pow((sqrt(5)+1)/2, $i) / sqrt(5)));
-
-        return join($glue=" ", $fib_arr);
-    }
-
-    //Строганов
-    /*function search(array $data, int $number)
-    {
-        return $data[$number];
-    }
-
-    function getcount(string $test) : array
-    {
-
-        $string_to_array = str_split($test);
-
-        $count_character = array_count_values($string_to_array);
-
-        return $count_character;
-    }
-
-    function fiborow($n) {
-
-        $res = array(0, 1);
-
-        for( $i=0; $i < ($n-2); $i++ ) {
-
-            $cur = $res[$i] + $res[$i+1];
-
-            if ($cur > $n) {
-                break;
+            } else {
+                $vos = 0;
             }
 
-            array_push( $res, $cur );
+        } else {
+            return 0;
         }
+        return ($sub + $vos);
+    }
+    function rgb(int $r, int $g, int $b):int {
+        return $b * 65536 + $g * 256 + $r ;
+    }
+    function fiborow(int $limit) : string {
+        $f1 = 0;
+        $f2 = 1;
+        $f3 = 0;
+        $string = "0";
+        do {
 
-        return implode(" ", $res);
-    }*/
+            $string .= " ".($f1 + $f2);
+            $f3 = $f1 + $f2;
+            $f1 = $f2;
+            $f2 = $f3;
+        } while (($f1+$f2) < $limit);
 
-    /* END OF USER CODE SECTION */
+        return $string;
+    }
 
     $cases = [
         [
@@ -334,12 +291,12 @@ try
             3
         ],
         [
-            ($case = new TestCase('getcount')),
+            ($case = new TestCase('rgb')),
             [
-                $case->test(new ValidatorCountLetter([]), ''),
-                $case->test(new ValidatorCountLetter(['a' => 3, 'b' => 2, 'c' => 1, 'd' => 2, 'e' => 3]), 'aaabbcddeee'),
-                $case->test(new ValidatorCountLetter(['a' => 1, 'b' => 2, 'A' => 1, 'f' => 2, 'r' => 1, 'e' => 1, 'd' => 2]), 'abbAfreddf'),
-                $case->test(new ValidatorCountLetter([' ' => 3, 'a' => 5, 'A' => 4, '1' => 1]), ' aAaAaAaAa 1 '),
+                $case->test(new Validator(16777215), 255, 255, 255),
+                $case->test(new Validator(65535), 255, 255, 0),
+                $case->test(new Validator(16711935), 255, 0, 255),
+                $case->test(new Validator(0), 0, 0, 0),
             ],
             3
         ],
