@@ -2,6 +2,8 @@
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Тест");
 
+\Bitrix\Main\UI\Extension::load('ui.bootstrap4');
+
 class Validator
 {
     protected $plan;
@@ -131,14 +133,25 @@ class TestCase
             $this->clearMessages();
             if(!function_exists($this->funcName))
                 throw new Exception('Функция `'.$this->funcName.'` не определена');
-            $this->addMessage('Эталон: <pre>'.var_export($validator->getPlan(), true).'</pre>');
+            $argList = func_get_args();
+            array_shift($argList);
+            $temp = [];
+            foreach($argList as $arg) {
+                if(is_array($arg)) {
+                    $temp[] = '['.implode(', ', $arg).']';
+                } else {
+                    $temp[] = $arg;
+                }
+            }
+            $this->addMessage('<b>Вход: </b>'.implode(', ', $temp));
+            $this->addMessage('<b>Эталон: </b> '.var_export($validator->getPlan(), true));
             $result = call_user_func($this->funcName, ...$args);
-            $this->addMessage('Результат: <pre>'.var_export($result, true).'</pre>');
+            $this->addMessage('<b>Результат: </b> '.var_export($result, true));
             $testResult = $validator->test($result);
             if($testResult)
-                $this->addMessage('Тест пройден');
+                $this->addMessage('<span class="text-success">Тест пройден</span>');
             else
-                $this->addMessage('Тест не пройден');
+                $this->addMessage('<span class="text-danger">Тест не пройден</span>');
             return new TestResult($testResult, $this->getMessages());
         }
         catch(Exception $e)
@@ -201,148 +214,136 @@ try
         }
     }
 
-    /* BEGIN OF USER CODE SECTION */
-    function weekend(string $begin, string $end) : int {
-        $sub = 0;  $vos = 0;
+    if(isset($_GET['test'])) {
+        $test = preg_replace('/[^a-zA-z0-9]/', '', strval($_GET['test']));
+        require_once (__DIR__.'/include/'.$test.'.php');
 
-        $interval =((strtotime($end) - strtotime($begin)) / 86400);
-        $dayNumber = date("N", strtotime($begin));
-
-
-        if ($interval >= 0) {
-
-            if (($interval + $dayNumber) >= 6) {
-                if ($dayNumber == 7) {
-                    $sub = intdiv(($interval + 1), 7);
-                } else {
-                    $sub = 1 + intdiv(($interval - (6 - $dayNumber)), 7);
-                }
-            }
-            if (($interval + $dayNumber) >= 7) {
-                $vos = 1 + intdiv(($interval - (7 - $dayNumber)), 7);
-
-            } else {
-                $vos = 0;
-            }
-
-        } else {
-            return 0;
-        }
-        return ($sub + $vos);
-    }
-    function rgb(int $r, int $g, int $b):int {
-        return $b * 65536 + $g * 256 + $r ;
-    }
-    function fiborow(int $limit) : string {
-        $f1 = 0;
-        $f2 = 1;
-        $f3 = 0;
-        $string = "0";
-        do {
-
-            $string .= " ".($f1 + $f2);
-            $f3 = $f1 + $f2;
-            $f1 = $f2;
-            $f2 = $f3;
-        } while (($f1+$f2) < $limit);
-
-        return $string;
-    }
-
-    $cases = [
-        [
-            ($case = new TestCase('search')),
+        $cases = [
             [
-                $case->test(new Validator(-1), [], 1),
+                ($case = new TestCase('search')),
+                [
+                    $case->test(new Validator(-1), [], 1),
 
-                $case->test(new Validator(0), [-1, 0], -1),
-                $case->test(new Validator(1), [-1, 0], 0),
+                    $case->test(new Validator(0), [-1, 0], -1),
+                    $case->test(new Validator(1), [-1, 0], 0),
 
-                $case->test(new Validator(0), [-1, 0, 1], -1),
-                $case->test(new Validator(1), [-1, 0, 1], 0),
-                $case->test(new Validator(2), [-1, 0, 1], 1),
+                    $case->test(new Validator(0), [-1, 0, 1], -1),
+                    $case->test(new Validator(1), [-1, 0, 1], 0),
+                    $case->test(new Validator(2), [-1, 0, 1], 1),
 
-                $case->test(new Validator(0), [-123, -34, 0, 35], -123),
-                $case->test(new Validator(1), [-123, -34, 0, 35], -34),
-                $case->test(new Validator(2), [-123, -34, 0, 35], 0),
-                $case->test(new Validator(3), [-123, -34, 0, 35], 35),
+                    $case->test(new Validator(0), [-123, -34, 0, 35], -123),
+                    $case->test(new Validator(1), [-123, -34, 0, 35], -34),
+                    $case->test(new Validator(2), [-123, -34, 0, 35], 0),
+                    $case->test(new Validator(3), [-123, -34, 0, 35], 35),
 
-                $case->test(new Validator(0), [-123, -34, 0, 35, 89], -123),
-                $case->test(new Validator(1), [-123, -34, 0, 35, 89], -34),
-                $case->test(new Validator(2), [-123, -34, 0, 35, 89], 0),
-                $case->test(new Validator(3), [-123, -34, 0, 35, 89], 35),
-                $case->test(new Validator(4), [-123, -34, 0, 35, 89], 89),
+                    $case->test(new Validator(0), [-123, -34, 0, 35, 89], -123),
+                    $case->test(new Validator(1), [-123, -34, 0, 35, 89], -34),
+                    $case->test(new Validator(2), [-123, -34, 0, 35, 89], 0),
+                    $case->test(new Validator(3), [-123, -34, 0, 35, 89], 35),
+                    $case->test(new Validator(4), [-123, -34, 0, 35, 89], 89),
+                ],
+                2
             ],
-            2
-        ],
-        [
-            ($case = new TestCase('weekend')),
             [
-                $case->test(new Validator(0), '01.06.2020', '04.06.2020'),
-                $case->test(new Validator(0), '01.06.2020', '01.06.2020'),
-                $case->test(new Validator(8), '01.06.2020', '30.06.2020'),
-                $case->test(new Validator(2), '01.06.2020', '07.06.2020'),
-                $case->test(new Validator(2), '06.06.2020', '07.06.2020'),
-                $case->test(new Validator(2), '07.06.2020', '13.06.2020'),
-                $case->test(new Validator(2), '12.06.2020', '15.06.2020'),
-                $case->test(new Validator(2), '28.06.2020', '04.07.2020'),
-                $case->test(new Validator(4), '13.06.2020', '21.06.2020'),
+                ($case = new TestCase('weekend')),
+                [
+                    $case->test(new Validator(0), '01.06.2020', '04.06.2020'),
+                    $case->test(new Validator(0), '01.06.2020', '01.06.2020'),
+                    $case->test(new Validator(8), '01.06.2020', '30.06.2020'),
+                    $case->test(new Validator(2), '01.06.2020', '07.06.2020'),
+                    $case->test(new Validator(2), '06.06.2020', '07.06.2020'),
+                    $case->test(new Validator(2), '07.06.2020', '13.06.2020'),
+                    $case->test(new Validator(2), '12.06.2020', '15.06.2020'),
+                    $case->test(new Validator(2), '28.06.2020', '04.07.2020'),
+                    $case->test(new Validator(4), '13.06.2020', '21.06.2020'),
+                ],
+                3
             ],
-            3
-        ],
-        [
-            ($case = new TestCase('rgb')),
             [
-                $case->test(new Validator(16777215), 255, 255, 255),
-                $case->test(new Validator(65535), 255, 255, 0),
-                $case->test(new Validator(16711935), 255, 0, 255),
-                $case->test(new Validator(0), 0, 0, 0),
+                ($case = new TestCase('rgb')),
+                [
+                    $case->test(new Validator(0x0), 0, 0, 0),
+                    $case->test(new Validator(0xFF0000), 0, 0, 255),
+                    $case->test(new Validator(0x00FFFF), 0, 255, 255),
+                    $case->test(new Validator(0xFFFFFF), 255, 255, 255),
+                    $case->test(new Validator(0x800000), 0, 0, 128),
+                    $case->test(new Validator(0x808000), 0, 128, 128),
+                    $case->test(new Validator(0x808080), 128, 128, 128),
+                    $case->test(new Validator(0x8080FF), 128, 128, 255),
+                    $case->test(new Validator(0x80FFFF), 128, 255, 255),
+                ],
+                3
             ],
-            3
-        ],
-        [
-            ($case = new TestCase('fiborow')),
             [
-                $case->test(new Validator(''), -1),
-                $case->test(new Validator(''), 0),
-                $case->test(new Validator('0'), 1),
-                $case->test(new Validator('0 1 1'), 2),
-                $case->test(new Validator('0 1 1 2'), 3),
-                $case->test(new Validator('0 1 1 2 3 5 8'), 10),
+                ($case = new TestCase('fiborow')),
+                [
+                    $case->test(new Validator(''), -1),
+                    $case->test(new Validator(''), 0),
+                    $case->test(new Validator('0'), 1),
+                    $case->test(new Validator('0 1 1'), 2),
+                    $case->test(new Validator('0 1 1 2'), 3),
+                    $case->test(new Validator('0 1 1 2 3 5 8'), 10),
+                ],
+                2
             ],
-            2
-        ],
-    ];
-
-    $totalScore = 0;
-    foreach($cases as $item)
-    {
-        $case    = $item[0];
-        $results = $item[1];
-        $ballCnt = $item[2];
-        /** @var TestCase $case **/
-        /** @var TestResult[] $results **/
-
-        $testNum = 1;
-        $countTests = count($results);
-        $successCnt = 0;
-
-        echo '<h1>Тестирование функции: '.$case->getFuncName().'</h1>';
-        foreach($results as $result)
+        ];
+        $totalScore = 0;
+        $maxScore = 10; //TODO
+        foreach($cases as $item)
         {
-            echo '<p>Тест '.$testNum.'/'.$countTests.' ... '.(($result->getResult()) ? 'OK' : 'FAIL').'</p>';
-            echo implode('<br>', $result->getLog());
-            echo '<p>--------------------------------------------------------------</p>';
-            if($result->getResult())
-                $successCnt++;
-            $testNum++;
+            $case    = $item[0];
+            $results = $item[1];
+            $ballCnt = $item[2];
+            /** @var TestCase $case **/
+            /** @var TestResult[] $results **/
+
+            $testNum = 1;
+            $countTests = count($results);
+            $successCnt = 0;
+            ?>
+            <h1>Тестирование функции: <?= $case->getFuncName() ?></h1>
+            <table class="table table-sm table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Результат</th>
+                    <th>Лог</th>
+                </tr>
+                </thead>
+                <tbody>
+                <? foreach($results as $result): ?>
+                    <tr>
+                        <td><?= $testNum ?></td>
+                        <td><?= (($result->getResult()) ? 'OK' : 'FAIL') ?></td>
+                        <td><?= implode(' ', $result->getLog()) ?></td>
+                    </tr>
+                    <?
+                    if($result->getResult())
+                        $successCnt++;
+                    $testNum++;
+                    ?>
+                <? endforeach; ?>
+                <?
+                $prc = $successCnt/$countTests*100;
+                $score = $ballCnt/100 * $prc;
+                $totalScore += $score;
+                ?>
+                <tr>
+                    <td></td>
+                    <td>%</td>
+                    <td><?= sprintf('%.2f', $prc) ?></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Балл</td>
+                    <td><?= sprintf('%.2f', $score) ?></td>
+                </tr>
+                </tbody>
+            </table>
+            <?php
         }
-        $prc = $successCnt/$countTests*100;
-        $score = $ballCnt/100 * $prc;
-        $totalScore += $score;
-        echo '<p><b>Результат: '.sprintf('%.2f', $prc).' % - '.sprintf('%.2f', $score).' баллов</b></p>';
+        echo '<h1>Итоговый балл: '.sprintf('%.2f / %.2f', $totalScore, $maxScore).'</h1>';
     }
-    echo '<h1>Итоговый балл: '.sprintf('%.2f', $totalScore).'</h1>';
 }
 catch(Exception $e)
 {
