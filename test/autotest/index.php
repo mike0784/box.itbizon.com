@@ -264,13 +264,13 @@ try
                 [
                     $case->test(new Validator(0x0), 0, 0, 0),
                     $case->test(new Validator(0xFF0000), 0, 0, 255),
-                    $case->test(new Validator(0x00FFFF), 0, 255, 255),
+                    $case->test(new Validator(0xFFFF00), 0, 255, 255),
                     $case->test(new Validator(0xFFFFFF), 255, 255, 255),
                     $case->test(new Validator(0x800000), 0, 0, 128),
                     $case->test(new Validator(0x808000), 0, 128, 128),
                     $case->test(new Validator(0x808080), 128, 128, 128),
-                    $case->test(new Validator(0x8080FF), 128, 128, 255),
-                    $case->test(new Validator(0x80FFFF), 128, 255, 255),
+                    $case->test(new Validator(0xFF8080), 128, 128, 255),
+                    $case->test(new Validator(0xFFFF80), 128, 255, 255),
                 ],
                 3
             ],
