@@ -43,7 +43,7 @@ while($row = $result->fetchObject()) {
 <form method="post">
     <div class="form-group">
         <label for="field-start-week"><?= Loc::getMessage('ITB_FIN.PERIOD_TEMPLATE.CONFIG.TEMPLATE.FIELD.START_WEEK') ?></label>
-        <select id="field-start-week" class="form-control" name="DATA['startWeek']" required>
+        <select id="field-start-week" class="form-control" name="DATA[startWeek]" required>
             <? foreach(PeriodTable::getWeekDayNamesRu() as $index => $value): ?>
                 <option value="<?= $index ?>" <?= ($index == $options['startWeek']) ? 'selected' : '' ?> ><?= $value ?></option>
             <? endforeach; ?>

@@ -105,7 +105,9 @@ class itbizon_finance extends CModule
             'finance.operation.router' => 'operation',
             'finance.stock.list' => 'stock',
             'finance.permission.list' => 'access',
-            'finance.period.list' => 'planning'
+            'finance.period.list' => 'planning',
+            'finance.request.list' => 'request',
+            'finance.requesttemplate.list' => 'requesttemplate',
         ];
 
         CopyDirFiles(__DIR__ . '/components', $_SERVER['DOCUMENT_ROOT'] . '/local/components/itbizon', true, true);

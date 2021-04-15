@@ -32,7 +32,6 @@ class CITBFinancePeriodConfig extends Simple
                 throw new Exception(Loc::getMessage('ITB_FIN.PERIOD_TEMPLATE.CONFIG.ERROR.INCLUDE_FINANCE'));
 
             $this->setRoute($this->arParams['HELPER']);
-
             $this->options = Option::getForModule('itbizon.finance');
             $request = Application::getInstance()->getContext()->getRequest();
             $data = $request->getPost('DATA');
@@ -59,6 +58,7 @@ class CITBFinancePeriodConfig extends Simple
                 if($this->getRoute()->isInSliderMode()) {
                     $uri->addParams(['IFRAME' => 'Y']);
                 }
+                $this->options = Option::getForModule('itbizon.finance');
                 LocalRedirect($uri->getLocator());
             }
         } catch (Exception $e) {
