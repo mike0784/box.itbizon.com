@@ -1,0 +1,9 @@
+.custom-window-message {
+    text-align: center;
+    border: solid 1px #b1b1b16b;
+    padding: 40px 20px;
+    font-family: 'OpenSans-Semibold', serif;
+    font-size: initial;
+    max-width: 500px;
+    font-weight: 500;
+}

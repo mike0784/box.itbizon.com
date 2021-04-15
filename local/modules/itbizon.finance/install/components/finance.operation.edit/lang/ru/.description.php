@@ -1,0 +1,5 @@
+<?php
+$MESS['ITB_FIN.OPERATION_EDIT.NAME'] = 'Операции';
+$MESS['ITB_FIN.OPERATION_EDIT.DESCRIPTION'] = 'Компонент для управления операциями';
+$MESS['ITB_FIN.OPERATION_EDIT.PATH.NAME'] = 'Бизон';
+$MESS['ITB_FIN.OPERATION_EDIT.PATH.CHILD.NAME'] = 'Финансы';

@@ -1,0 +1,85 @@
+<?php
+
+use \Bitrix\Main\Localization\Loc;
+
+Loc::loadMessages($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/itbizon.finance/include.php");
+
+$aMenuLinks = array(
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.HOME"),
+        "/finance/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.REQUEST"),
+        "/finance/request/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.INCOME"),
+        "/finance/income/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.REQUEST_TEMPLATE"),
+        "/finance/requesttemplate/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.PLANNING"),
+        "/finance/planning/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.OPERATION"),
+        "/finance/operation/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.VAULT"),
+        "/finance/vault/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.CATEGORY"),
+        "/finance/category/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.HISTORY"),
+        "/finance/history/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.STOCK"),
+        "/finance/stock/",
+        array(),
+        array(),
+        ""
+    ),
+    array(
+        Loc::getMessage("ITB_FIN.PAGE.ACCESS"),
+        "/finance/access/",
+        array(),
+        array(),
+        ""
+    ),
+);

@@ -1,0 +1,4 @@
+<?php
+$MESS['ITB_FIN.MFMS_TEMPLATE.ADD.AJAX.ERROR.AUTH'] = 'Доступ запрещен';
+$MESS['ITB_FIN.MFMS_TEMPLATE.ADD.AJAX.ERROR.INCLUDE_MFMS'] = 'Ошибка загрузки модуля itbizon.mfms';
+$MESS['ITB_FIN.MFMS_TEMPLATE.ADD.AJAX.ANSWER.SUCCESS'] = 'Успешно';

@@ -1,0 +1,33 @@
+<?php
+$MESS['ITB_FIN.REQUEST_TABLE_ENTITY_TITLE'] = 'Заявки';
+$MESS['ITB_FIN.REQUEST_TABLE.ID'] = 'ID';
+$MESS['ITB_FIN.REQUEST_TABLE.STATUS'] = 'Статус заявки';
+$MESS['ITB_FIN.REQUEST_TABLE.NAME'] = 'Название заявки';
+$MESS['ITB_FIN.REQUEST_TABLE.DATE_CREATE'] = 'Дата создания заявки';
+$MESS['ITB_FIN.REQUEST_TABLE.DATE_APPROVE'] = 'Дата согласования заявки';
+$MESS['ITB_FIN.REQUEST_TABLE.AUTHOR_ID'] = 'ID сотрудника создавшего заявку';
+$MESS['ITB_FIN.REQUEST_TABLE.CATEGORY_ID'] = 'Категория';
+$MESS['ITB_FIN.REQUEST_TABLE.AMOUNT'] = 'Сумма заявки';
+$MESS['ITB_FIN.REQUEST_TABLE.COMMENT_SITUATION'] = 'Ситуация';
+$MESS['ITB_FIN.REQUEST_TABLE.COMMENT_DATA'] = 'Данные (контрагент)';
+$MESS['ITB_FIN.REQUEST_TABLE.COMMENT_SOLUTION'] = 'Решение';
+$MESS['ITB_FIN.REQUEST_TABLE.APPROVER_ID'] = 'ID сотрудника утвердившего/отклонившего заявку';
+$MESS['ITB_FIN.REQUEST_TABLE.APPROVER_COMMENT'] = 'Комментарии';
+$MESS['ITB_FIN.REQUEST_TABLE.VAULT_ID'] = 'ID кошелька';
+$MESS['ITB_FIN.REQUEST_TABLE.STOCK_ID'] = 'ID фонда';
+$MESS['ITB_FIN.REQUEST_TABLE.ENTITY_TYPE'] = 'Тип сущности CRM';
+$MESS['ITB_FIN.REQUEST_TABLE.ENTITY_ID'] = 'ID сущности';
+$MESS['ITB_FIN.REQUEST_TABLE.FILE_ID'] = 'Файл';
+
+$MESS['ITB_FIN.REQUEST_TABLE.STATUS.NEW'] = 'Новая';
+$MESS['ITB_FIN.REQUEST_TABLE.STATUS.APPROVE'] = 'Принята';
+$MESS['ITB_FIN.REQUEST_TABLE.STATUS.DECLINE'] = 'Отклонена';
+$MESS['ITB_FIN.REQUEST_TABLE.STATUS.CONFIRM'] = 'Подтверждена';
+$MESS['ITB_FIN.REQUEST_TABLE.STATUS.CANCEL'] = 'Отменена';
+$MESS['ITB_FIN.REQUEST_TABLE.STATUS.FIX'] = 'Проведена';
+$MESS['ITB_FIN.REQUEST_TABLE.STATUS.ERROR'] = 'Ошибка';
+
+$MESS['ITB_FIN.REQUEST_TABLE.AMOUNT.VALIDATION_ERROR'] = 'Сумма должна быть больше 0';
+$MESS["ITB_FIN.REQUEST_TABLE.STATUS.ID_ERROR"] = "Неизвестный статус";
+$MESS['ITB_FIN.REQUEST_TABLE.ERROR.PERIOD_NOT_FOUND'] = 'Отправка заявок заблокирована. Период ФП не начат';
+$MESS['ITB_FIN.REQUEST_TABLE.ERROR.PERIOD_INVALID_STATUS'] = 'Отправка заявок заблокирована. Начата процедура финансовго планирвания.';

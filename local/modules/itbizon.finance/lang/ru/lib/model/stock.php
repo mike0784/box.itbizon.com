@@ -1,0 +1,22 @@
+<?php
+$MESS['ITB_FIN.STOCK_ENTITY_TITLE'] = 'Кошелек';
+$MESS['ITB_FIN.STOCK.ID'] = 'ID';
+$MESS['ITB_FIN.STOCK.DATE_CREATE'] = 'Дата создания';
+$MESS['ITB_FIN.STOCK.GROUP_ID'] = 'Группа';
+$MESS['ITB_FIN.STOCK.NAME'] = 'Наименование';
+$MESS['ITB_FIN.STOCK.TYPE'] = 'Тип';
+$MESS['ITB_FIN.STOCK.RESPONSIBLE_ID'] = 'Ответственный';
+$MESS['ITB_FIN.STOCK.BALANCE'] = 'Баланс';
+$MESS['ITB_FIN.STOCK.TYPE.CASHBOX'] = 'Касса';
+$MESS['ITB_FIN.STOCK.TYPE.ACCOUNT'] = 'Счет';
+$MESS['ITB_FIN.STOCK.TYPE.CARD'] = 'Карта';
+$MESS['ITB_FIN.STOCK.TYPE.UNKNOWN'] = 'Неизвестно';
+$MESS['ITB_FIN.STOCK.ACCESS_ERROR'] = 'Доступ запрещен';
+$MESS['ITB_FIN.STOCK.DELETE_ERROR'] = 'Баланс кошелька должен быть равен 0';
+$MESS['ITB_FIN.STOCK.HIDE_ON_PLANNING'] = 'Не показывать на ФП';
+$MESS['ITB_FIN.STOCK.STOCK_GROUP_ID'] = 'Группа фонда';
+$MESS['ITB_FIN.STOCK.GROUP.INCOME'] = 'Доход';
+$MESS['ITB_FIN.STOCK.GROUP.MARGIN'] = 'Маржа';
+$MESS['ITB_FIN.STOCK.GROUP.CORRECT_PROFIT'] = 'Скорректированный доход';
+$MESS['ITB_FIN.STOCK.GROUP.UNKNOWN'] = 'Неизвестная группа';
+$MESS['ITB_FIN.STOCK.PERCENT'] = 'Процент';

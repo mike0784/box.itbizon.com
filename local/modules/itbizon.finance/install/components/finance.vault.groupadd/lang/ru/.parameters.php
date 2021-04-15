@@ -1,0 +1,6 @@
+<?php
+$MESS['ITB_FIN.VAULT_GROUP_ADD.PARAMETER.FOLDER'] = 'Базовый путь';
+$MESS['ITB_FIN.VAULT_GROUP_ADD.PARAMETER.TEMPLATE_LIST'] = 'Шаблон пути списка';
+$MESS['ITB_FIN.VAULT_GROUP_ADD.PARAMETER.TEMPLATE_ADD'] = 'Шаблон пути создания';
+$MESS['ITB_FIN.VAULT_GROUP_ADD.PARAMETER.TEMPLATE_ADD_GROUP'] = 'Шаблон пути создания группы';
+$MESS['ITB_FIN.VAULT_GROUP_ADD.PARAMETER.TEMPLATE_EDIT'] = 'Шаблон пути редактирования';

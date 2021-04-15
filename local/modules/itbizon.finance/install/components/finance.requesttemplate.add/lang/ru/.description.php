@@ -1,0 +1,4 @@
+<?
+$MESS["ITB_FIN.REQ_TEMPLATE.ADD.NAME"] = "Добавление шаблона заявки";
+$MESS['ITB_FIN.REQ_TEMPLATE.ADD.PATH.NAME'] = 'Бизон';
+$MESS['ITB_FIN.REQ_TEMPLATE.ADD.CHILD.NAME'] = 'Финансы';

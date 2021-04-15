@@ -1,0 +1,7 @@
+#field-entity-id option:disabled {
+    display: none;
+}
+
+#field-entity-id {
+    transition: 0.3s;
+}

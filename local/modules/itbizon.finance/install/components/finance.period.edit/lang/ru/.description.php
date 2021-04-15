@@ -1,0 +1,5 @@
+<?php
+$MESS['ITB_FIN.PERIOD_TEMPLATE.EDIT.NAME'] = 'Финансовое планирование';
+$MESS['ITB_FIN.PERIOD_TEMPLATE.EDIT.DESCRIPTION'] = 'Компонент для рпроведения ФП';
+$MESS['ITB_FIN.PERIOD_TEMPLATE.EDIT.PATH.NAME'] = 'Бизон';
+$MESS['ITB_FIN.PERIOD_TEMPLATE.EDIT.PATH.CHILD.NAME'] = 'Финансы';

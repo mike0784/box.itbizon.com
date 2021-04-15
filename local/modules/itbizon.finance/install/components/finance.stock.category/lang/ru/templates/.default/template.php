@@ -1,0 +1,3 @@
+<?php
+$MESS['ITB_FIN.STOCK.CATEGORY.TEMPLATE.TITLE'] = 'Привязка категорий';
+$MESS['ITB_FIN.STOCK.CATEGORY.STOCK'] = 'Фонд';

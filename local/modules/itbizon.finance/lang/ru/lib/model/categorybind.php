@@ -1,0 +1,4 @@
+<?php
+$MESS['ITB_FIN.CATEGORY_BIND_ENTITY_TITLE'] = 'Привязка категорий';
+$MESS['ITB_FIN.CATEGORY_BIND.CATEGORY_ID'] = 'ID категории';
+$MESS['ITB_FIN.CATEGORY_BIND.STOCK_ID'] = 'ID фонда';

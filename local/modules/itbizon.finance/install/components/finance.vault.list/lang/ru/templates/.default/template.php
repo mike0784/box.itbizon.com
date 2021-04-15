@@ -1,0 +1,3 @@
+<?php
+$MESS['ITB_FIN.VAULT_LIST.BUTTON.CREATE_VAULT'] = 'Создать кошелек';
+$MESS['ITB_FIN.VAULT_LIST.BUTTON.CREATE_VAULT_GROUP'] = 'Создать группу';

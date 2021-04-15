@@ -1,0 +1,5 @@
+<?php
+$MESS['ITB_FIN.STOCK.LIST.PAGE_TITLE'] = 'Список фондов';
+$MESS['ITB_FIN.STOCK.LIST.BUTTON.CREATE'] = 'Добавить фонд';
+$MESS['ITB_FIN.STOCK.LIST.BUTTON.CATEGORY_BIND'] = 'Привязка категорий';
+$MESS['ITB_FIN.STOCK.LIST.BUTTON.TRANSFER'] = 'Перевод';

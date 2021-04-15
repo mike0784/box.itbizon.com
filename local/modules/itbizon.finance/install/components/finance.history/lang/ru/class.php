@@ -1,0 +1,11 @@
+<?php
+$MESS['ITB_FIN.HISTORY.ERROR.INCLUDE_FIN'] = 'Ошибка загрузки модуля itbizon.finance';
+
+$MESS['ITB_FIN.HISTORY.FIELDS.ID'] = 'ID';
+$MESS['ITB_FIN.HISTORY.FIELDS.VAULT'] = 'Кошелек';
+$MESS['ITB_FIN.HISTORY.FIELDS.BALANCE'] = 'Сумма';
+$MESS['ITB_FIN.HISTORY.FIELDS.DATE_CREATE'] = 'Дата';
+$MESS['ITB_FIN.HISTORY.FIELDS.RESPONSIBLE'] = 'Ответственный';
+$MESS['ITB_FIN.HISTORY.FIELDS.OPERATION'] = 'Операция';
+
+$MESS['ITB_FIN.HISTORY.OPERATION_EMPTY'] = 'Создание кошелька';

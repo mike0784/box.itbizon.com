@@ -1,0 +1,6 @@
+<?php
+$MESS['ITB_FIN.PERIOD_TEMPLATE.CONFIG.ERROR.INCLUDE_FINANCE'] = 'Ошибка загрузки модуля itbizon.finance';
+$MESS['ITB_FIN.PERIOD_TEMPLATE.CONFIG.ERROR.ACCESS_DENY'] = 'Нет доступа';
+$MESS["ITB_FIN.PERIOD_TEMPLATE.CONFIG.AJAX_WINDOW_CLOSE"] = "Это окно будет закрыто через 5 секунд.";
+$MESS['ITB_FIN.PERIOD_TEMPLATE.CONFIG.ERROR.INVALID_WEEK_START'] = 'Некоректный день недели';
+$MESS['ITB_FIN.PERIOD_TEMPLATE.CONFIG.AJAX_SUCCESS'] = 'Настройки сохранены';

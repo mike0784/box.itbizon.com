@@ -1,0 +1,12 @@
+<?php
+$MESS ['ACTIVITY.FINANCE.OPERATION.ERROR.LOAD_FINANCE'] = 'Ошибка загрузки модуля itbizon.finance';
+$MESS ['ACTIVITY.FINANCE.OPERATION.ERROR.LOAD_CRM'] = 'Ошибка загрузки модуля bitrix:crm';
+$MESS ['ACTIVITY.FINANCE.OPERATION.ERROR.TYPE_UNDEFINED'] = 'Неизвестный тип';
+$MESS ['ACTIVITY.FINANCE.OPERATION.ERROR.OPERATION_CREATE'] = 'Не удалось создать операцию';
+$MESS ['ACTIVITY.FINANCE.OPERATION.ERROR.INVALID_FIELD'] = 'Поле #FIELDNAME# не может быть пустым';
+$MESS ['ACTIVITY.FINANCE.OPERATION.ERROR.INVALID_CRM_TYPE'] = 'Неизвестный тип CRM';
+
+$MESS ['ACTIVITY.FINANCE.OPERATION.MODE.C'] = '[C] Создать';
+$MESS ['ACTIVITY.FINANCE.OPERATION.MODE.CW'] = '[CW] Создать и ждать проведения';
+$MESS ['ACTIVITY.FINANCE.OPERATION.MODE.CP'] = '[CP] Создать и провести';
+

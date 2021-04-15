@@ -1,0 +1,19 @@
+<?php
+$MESS['ITB_FIN.VAULT_ENTITY_TITLE'] = 'Кошелек';
+$MESS['ITB_FIN.VAULT.ID'] = 'ID';
+$MESS['ITB_FIN.VAULT.DATE_CREATE'] = 'Дата создания';
+$MESS['ITB_FIN.VAULT.GROUP_ID'] = 'Группа';
+$MESS['ITB_FIN.VAULT.NAME'] = 'Наименование';
+$MESS['ITB_FIN.VAULT.TYPE'] = 'Тип';
+$MESS['ITB_FIN.VAULT.RESPONSIBLE_ID'] = 'Ответственный';
+$MESS['ITB_FIN.VAULT.BALANCE'] = 'Баланс';
+$MESS['ITB_FIN.VAULT.TYPE.CASHBOX'] = 'Касса';
+$MESS['ITB_FIN.VAULT.TYPE.ACCOUNT'] = 'Счет';
+$MESS['ITB_FIN.VAULT.TYPE.CARD'] = 'Карта';
+$MESS['ITB_FIN.VAULT.TYPE.VIRTUAL'] = 'Виртуальный';
+$MESS['ITB_FIN.VAULT.TYPE.UNKNOWN'] = 'Неизвестно';
+$MESS['ITB_FIN.VAULT.ACCESS_ERROR'] = 'Доступ запрещен';
+$MESS['ITB_FIN.VAULT.DELETE_ERROR'] = 'Баланс кошелька должен быть равен 0';
+$MESS["ITB_FIN.VAULT.HIDE_ON_PLANNING"] = "Не показывать на ФП";
+$MESS['ITB_FIN.VAULT.STOCK_GROUP_ID'] = 'Группа фонда';
+$MESS['ITB_FIN.VAULT.PERCENT'] = 'Процент';

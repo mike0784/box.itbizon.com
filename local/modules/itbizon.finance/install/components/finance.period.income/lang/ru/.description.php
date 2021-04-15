@@ -1,0 +1,5 @@
+<?php
+$MESS['ITB_FIN.PERIOD_TEMPLATE.INCOME.NAME'] = 'распределение выручки';
+$MESS['ITB_FIN.PERIOD_TEMPLATE.INCOME.DESCRIPTION'] = 'Компонент для распределения выручки на ФП';
+$MESS['ITB_FIN.PERIOD_TEMPLATE.INCOME.PATH.NAME'] = 'Бизон';
+$MESS['ITB_FIN.PERIOD_TEMPLATE.INCOME.PATH.CHILD.NAME'] = 'Финансы';
