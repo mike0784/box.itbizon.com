@@ -5,6 +5,9 @@ namespace Itbizon\Scratch\Model;
 use Bitrix\Main\Entity;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Main\Type\DateTime;
+use Itbizon\Scratch\Box;
+
 
 class BoxTable extends Entity\DataManager
 {
@@ -32,7 +35,7 @@ class BoxTable extends Entity\DataManager
                 ]),
             new Entity\DateField('CREATION_DATE',
                 [
-                    'default_value' => new \DateTime()
+                    'default_value' => new DateTime()
                 ]),
             new Entity\IntegerField('CREATOR_ID',
                 [

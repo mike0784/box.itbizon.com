@@ -5,7 +5,11 @@ namespace Itbizon\Scratch\Model;
 use Bitrix\Main\Entity;
 use Bitrix\Main\ORM\Data\DataManager;;
 use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Main\Type\DateTime;
+use Bitrix\Main\ORM\Fields\Relations\Reference;
+use Bitrix\Main\ORM\Query\Join;
 use Itbizon\Scratch\Model\BoxTable;
+use Itbizon\Scratch\Thing;
 
 class ThingTable extends Entity\DataManager
 {
@@ -35,7 +39,7 @@ class ThingTable extends Entity\DataManager
             new Entity\StringField('DESCRIPTION'),
             new Entity\DateField('CREATION_DATE',
                 [
-                    'default_value' => new \DateTime()
+                    'default_value' => new DateTime()
                 ]),
             new Entity\IntegerField('CREATOR_ID',
                 [

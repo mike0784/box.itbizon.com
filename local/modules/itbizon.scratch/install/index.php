@@ -38,8 +38,9 @@ class itbizon_scratch extends CModule
 
     public function DoInstall()
     {
-        if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
-            $this->InstallDB();
+        if (!ModuleManager::isModuleInstalled($this->MODULE_ID))
+        {
+            //$this->InstallDB();
             $this->InstallEvents();
             CAdminMessage::ShowNote(Loc::getMessage('ITB_TEST.MODULE.INSTALLED'));
         } else
@@ -51,9 +52,11 @@ class itbizon_scratch extends CModule
     public function DoUninstall()
     {
         if (ModuleManager::isModuleInstalled($this->MODULE_ID))
+        {
             //$this->UnInstallDB(); // fixme for test
             $this->UnInstallEvents();
             CAdminMessage::ShowNote(Loc::getMessage('ITB_TEST.MODULE.UNSTALLED'));
+        }
         else
             CAdminMessage::ShowNote(Loc::getMessage('ITB_TEST.MODULE.UNSTALLERROR'));
         ModuleManager::unRegisterModule($this->MODULE_ID);
