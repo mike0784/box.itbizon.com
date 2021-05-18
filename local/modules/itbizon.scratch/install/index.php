@@ -4,9 +4,9 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
+use Bitrix\Main\EventManager;
 
 use Itbizon\Scratch\Model\Box;
-
 
 Loc::loadMessages(__FILE__);
 
@@ -38,12 +38,11 @@ class itbizon_scratch extends CModule
 
     public function DoInstall()
     {
-        if (!ModuleManager::isModuleInstalled($this->MODULE_ID))
-        {
+        if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             $this->InstallDB();
+            $this->InstallEvents();
             CAdminMessage::ShowNote(Loc::getMessage('ITB_TEST.MODULE.INSTALLED'));
-        }
-        else
+        } else
             CAdminMessage::ShowNote(Loc::getMessage('ITB_TEST.MODULE.INSTALLERROR'));
 
         ModuleManager::registerModule($this->MODULE_ID);
@@ -52,7 +51,8 @@ class itbizon_scratch extends CModule
     public function DoUninstall()
     {
         if (ModuleManager::isModuleInstalled($this->MODULE_ID))
-            //$this->UnInstallDB();
+            //$this->UnInstallDB(); // fixme for test
+            $this->UnInstallEvents();
             CAdminMessage::ShowNote(Loc::getMessage('ITB_TEST.MODULE.UNSTALLED'));
         else
             CAdminMessage::ShowNote(Loc::getMessage('ITB_TEST.MODULE.UNSTALLERROR'));
@@ -64,7 +64,7 @@ class itbizon_scratch extends CModule
      */
     public function InstallDB()
     {
-        /*
+        //* new method
         global $DB;
         $this->errors = false;
         $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/local/modules/itbizon.scratch/install/db/mysql/install.sql");
@@ -73,8 +73,9 @@ class itbizon_scratch extends CModule
             return true;
         } else
             return $this->errors;
-        // */
+        // end new method */
 
+        /* old method
         $files = [
             'box',
             'thing',
@@ -89,20 +90,19 @@ class itbizon_scratch extends CModule
             Itbizon\Scratch\Model\ThingTable::getEntity(),
         ];
 
-        /** @var Bitrix\Main\ORM\Entity $entity */
+        // @var Bitrix\Main\ORM\Entity $entity
         foreach ($tables as $entity) {
             if (!$db->isTableExists($entity->getDBTableName()))
                 $entity->createDbTable();
         }
+        // end old method */
 
         return true;
-
-        //return true;
     }
 
     public function UnInstallDB()
     {
-        /*
+        //*
         global $DB;
         $this->errors = false;
         $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/local/modules/itbizon.scratch/install/db/mysql/uninstall.sql");
@@ -111,7 +111,21 @@ class itbizon_scratch extends CModule
         } else
             return $this->errors;
         // */
-        return true;
+        //return true;
+    }
+
+    public function InstallEvents()
+    {
+        $eventManager = EventManager::getInstance();
+
+    }
+
+
+    public function UnInstallEvents()
+    {
+        $eventManager = EventManager::getInstance();
+
+
     }
 
 }
