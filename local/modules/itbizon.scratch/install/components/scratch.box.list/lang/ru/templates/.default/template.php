@@ -1,2 +1,2 @@
 <?php
-$MESS['ITB_FIN.CATEGORY_LIST.BUTTON.CREATE_CATEGORY'] = 'Создать категорию';
+$MESS['ITB_SCRATCH.BOX_LIST.BUTTON.CREATE_BOX'] = 'Создать контейнер';

@@ -1,5 +1,5 @@
 <?php
-$MESS['ITB_FIN.CATEGORY_EDIT.NAME'] = 'Категория';
-$MESS['ITB_FIN.CATEGORY_EDIT.DESCRIPTION'] = 'Компонент для управления категорией';
-$MESS['ITB_FIN.CATEGORY_EDIT.PATH.NAME'] = 'Бизон';
-$MESS['ITB_FIN.CATEGORY_EDIT.PATH.CHILD.NAME'] = 'Финансы';
+$MESS['ITB_SCRATCH.BOX_EDIT.NAME'] = 'Контейнер';
+$MESS['ITB_SCRATCH.BOX_EDIT.DESCRIPTION'] = 'Компонент для управления контейнерами';
+$MESS['ITB_SCRATCH.BOX_EDIT.PATH.NAME'] = 'Бизон';
+$MESS['ITB_SCRATCH.BOX_EDIT.PATH.CHILD.NAME'] = 'Тесты';

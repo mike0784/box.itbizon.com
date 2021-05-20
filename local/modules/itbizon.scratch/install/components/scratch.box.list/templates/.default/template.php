@@ -12,11 +12,11 @@ use Itbizon\Scratch\Box;
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 Loc::loadMessages(__FILE__);
-//Extension::load('itbizon.scratch.bootstrap4');
+Extension::load('itbizon.scratch.bootstrap4'); // fixme
 
 /**@var $APPLICATION CAllMain * */
 /**@var $arResult array * */
-/**@var CITBFinanceCategoryList $component * */
+/**@var CITBScratchBoxList $component * */
 $component = $this->getComponent();
 ?>
 <?php if ($component->getError()): ?>

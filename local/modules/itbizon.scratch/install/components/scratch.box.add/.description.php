@@ -14,7 +14,7 @@ $arComponentDescription = [
         'ID' => 'itbizon',
         'NAME' => Loc::getMessage('ITB_SCRATCH.BOX_ADD.PATH.NAME'),
         'CHILD' => [
-            'ID' => 'finance',
+            'ID' => 'scratch',
             'NAME' => Loc::getMessage('ITB_SCRATCH.BOX_ADD.PATH.CHILD.NAME'),
         ]
     ],

@@ -20,7 +20,7 @@ class CITBScratchBoxList extends CBitrixComponent
     public function executeComponent()
     {
         try {
-        	/*
+        	//*
             CJSCore::RegisterExt(
                 'landInit',
                 [
@@ -121,23 +121,20 @@ class CITBScratchBoxList extends CBitrixComponent
 
                 //Actions
                 $actions = [];
-                /*
+                //*
                 //Edit
-                if (Finance\Permission::getInstance()->isAllowCategoryView($category)) {
-                    $actions[] = [
-                        'text' => Loc::getMessage('ITB_SCRATCH.BOX_LIST.ACTION.EDIT'),
-                        'default' => true,
-                        'onclick' => 'document.location.href="' . $this->makeEditLink($category->getId()) . '";',
-                    ];
-                }
-                //Delete
-                if (Finance\Permission::getInstance()->isAllowCategoryDelete($category)) {
-                    $actions[] = [
-                        'text' => Loc::getMessage('ITB_SCRATCH.BOX_LIST.ACTION.DELETE'),
-                        'default' => true,
-                        'onclick' => 'remove("' . $this->makeRemoveLink($category->getId()) . '");'
-                    ];
-                }
+	            $actions[] = [
+		            'text' => Loc::getMessage('ITB_SCRATCH.BOX_LIST.ACTION.EDIT'),
+		            'default' => true,
+		            'onclick' => 'document.location.href="' . $this->makeEditLink($box->getId()) . '";',
+	            ];
+
+	            //Delete
+	            $actions[] = [
+		            'text' => Loc::getMessage('ITB_SCRATCH.BOX_LIST.ACTION.DELETE'),
+		            'default' => true,
+		            'onclick' => 'remove("' . $this->makeRemoveLink($box->getId()) . '");'
+	            ];
                 // */
 
                 //Add data
@@ -145,7 +142,6 @@ class CITBScratchBoxList extends CBitrixComponent
                     'data' => $temp,
                     'actions' => $actions
                 ];
-
             }
 
             //All count for pagination
@@ -174,28 +170,17 @@ class CITBScratchBoxList extends CBitrixComponent
         return $this->arParams['FOLDER'] . $this->arParams['TEMPLATE_ADD'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getError()
     {
         return $this->error;
     }
 
-    /**
-     * @param $id
-     * @return string
-     */
     protected function makeEditLink($id)
     {
         return $this->arParams['FOLDER'] . str_replace('#ID#', $id, $this->arParams['TEMPLATE_EDIT']);
     }
 
-    /**
-     * @param $id
-     * @return string
-     */
-    /*
+    //*
     protected function makeRemoveLink($id)
     {
         return $this->GetPath() . '/templates/.default/ajax.php?remove=' . $id;

@@ -7,7 +7,7 @@ use Bitrix\Main\UI\Extension;
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 Loc::loadMessages(__FILE__);
-//Extension::load('itbizon.finance.bootstrap4');
+Extension::load('itbizon.finance.bootstrap4'); // fixme - already installed in test box
 
 /**@var $APPLICATION CAllMain * */
 /**@var $arResult array * */

@@ -1,3 +1,3 @@
 <?php
-$MESS['ITB_FIN.CATEGORY_LIST.MESS.CONFIRM.DELETE_CATEGORY'] = 'Вы уверены что хотите удалить категорию?';
-$MESS['ITB_FIN.CATEGORY_LIST.MESS.ERROR.UNKNOWN'] = 'Неизвестная ошибка';
+$MESS['ITB_SCRATCH.BOX_LIST.MESS.CONFIRM.DELETE_BOX'] = 'Вы уверены что хотите удалить контейнер?';
+$MESS['ITB_SCRATCH.BOX_LIST.MESS.ERROR.UNKNOWN'] = 'Неизвестная ошибка';

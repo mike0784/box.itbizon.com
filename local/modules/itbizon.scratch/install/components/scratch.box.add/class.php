@@ -29,7 +29,7 @@ class CITBScratchBoxAdd extends CBitrixComponent
                 $val = new Box();
                 $val->setTitle($_REQUEST['DATA']['TITLE']);
                 $val->setAmount(isset($_REQUEST['DATA']['AMOUNT']));
-                $val->setCount(isset($_REQUEST['DATA']['Count']));
+                $val->setCount(isset($_REQUEST['DATA']['COUNT']));
                 $val->setComment(isset($_REQUEST['DATA']['COMMENT']));
 
                 /** @var AddResult $result */
