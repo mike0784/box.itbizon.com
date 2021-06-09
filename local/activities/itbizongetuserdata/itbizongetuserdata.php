@@ -302,9 +302,13 @@ class CBPItbizonGetUserData extends CBPActivity
 	    {
 		    $type = FieldType::INT; // fixme default value
 
-		    if ($item['USER_TYPE_ID'] == 'string' || $item['USER_TYPE_ID'] == 'string_formatted' || $item['USER_TYPE_ID'] == 'url') {
+		    if ($item['USER_TYPE_ID'] == 'string'
+			    || $item['USER_TYPE_ID'] == 'string_formatted'
+			    || $item['USER_TYPE_ID'] == 'url'
+			    || $item['USER_TYPE_ID'] == 'crm') {
 			    $type = FieldType::STRING;
-		    } elseif ($item['USER_TYPE_ID'] == 'int' || $item['USER_TYPE_ID'] == 'enumeration') {
+		    } elseif ($item['USER_TYPE_ID'] == 'int'
+			    || $item['USER_TYPE_ID'] == 'enumeration') {
 			    $type = FieldType::INT;
 		    } elseif ($item['USER_TYPE_ID'] == 'date') {
 			    $type = FieldType::DATE;
