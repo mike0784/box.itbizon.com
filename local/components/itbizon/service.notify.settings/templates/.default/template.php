@@ -6,8 +6,8 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\UI\Extension;
 
 Loc::loadMessages(__FILE__);
-Extension::load('itbizon.finance.bootstrap4');
-Extension::load(['jquery', 'ui.alerts']);
+Extension::load('itbizon.finance.select2');
+Extension::load(['jquery', 'ui.alerts', 'itbizon.select2', 'itbizon.bootstrap4']);
 
 //$APPLICATION->SetAdditionalCSS("/bitrix/components/main.ui.filter/templates/style.css");
 //$APPLICATION->SetAdditionalCSS("/bitrix/components/bitrix/main.ui.filter/templates/.default/style.css");
@@ -19,7 +19,7 @@ Extension::load(['jquery', 'ui.alerts']);
 /**@var CITBServiceNotifySettings $component */
 $component = $this->getComponent();
 $res = $component->getTable();
-$users = $component->users;
+$usersList = $component->usersList;
 $fromUser = $component->fromUser;
 $toUsers = $component->toUsers;
 ?>
@@ -31,25 +31,20 @@ $toUsers = $component->toUsers;
         </div>
     <?php endif; ?>
 
-<!--    <div class="card" style='width:450px; float:left; min-height: 235px;'> -->
-
     <div class="card" style='width:900px; '>
     <form method='POST'>
         <input type='hidden' name='select_from_user' value='true'>
         <div class="card-body">
         <div class="form-group">
-            <label for="FROM_USER_ID" class="card-title">Выберите исходного пользователя</label>
-            <select name="FROM_USER_ID" id="FROM_USER_ID" class="form-control">
-            <? foreach ($users as $key => $user): ?>
-                <? if ($user['ID'] == $fromUser): ?>
-                    <option selected value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ".$user['SECOND_NAME'] ?></option>
-                <? else: ?>
-                    <option value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ". $user['SECOND_NAME'] ?></option>
-                <? endif; ?>
+            <h5 class="card-title">Загрузить настройки</h5>
+            <select style="option:first {color: #999;}" name="FROM_USER_ID" id="FROM_USER_ID" class="form-control">
+                <option style="color: grey" value="" disabled selected>Выберите пользователя</option>
+            <? foreach ($usersList as $key => $user): ?>
+                <option value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ". $user['SECOND_NAME'] ?></option>
             <? endforeach; ?>
             </select>
         </div>
-        <button class='btn btn-primary' type='submit'>Прочитать настройки</button>
+        <button class='btn btn-primary' type='submit'>Загрузить</button>
         </div>
         
     </form>
@@ -60,37 +55,21 @@ $toUsers = $component->toUsers;
         <div class="card" style='width:900px;'>
             <div class="card-body">
                 <div class="form-group">
-                    <label for="TO_USER_ID" class="card-title">Выберите пользователей для записи настроек</label>
+                    <h5 class="card-title">Сохранить настройки</h5>
                     <select name="TO_USER_ID[]" id="TO_USER_ID" class="form-control" multiple>
-                        <? foreach ($users as $key => $user): ?>
-                            <? if (in_array($user['ID'], $toUsers)): ?>
-                                <option selected value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ".$user['SECOND_NAME'] ?></option>
-                            <? else: ?>
-                                <option value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ". $user['SECOND_NAME']." (".$user['ID'].")" ?></option>
-                            <? endif; ?>
+                        <? foreach ($usersList as $key => $user): ?>
+                            <option value="<?= $user['ID'] ?>" <?= (in_array($user['ID'], $toUsers))?'selected':''  ?>    ><?= $user['LAST_NAME']." ". $user['NAME']." ".$user['SECOND_NAME'] ?></option>
                         <? endforeach; ?>
                     </select>
                 </div>
-                <button class='btn btn-primary' type='submit'>Записать настройки</button>
+                <button class='btn btn-primary' type='submit'>Сохранить</button>
             </div>
         </div>
 
-<!--
-    </form>
--->
 
     <div class='bx-messenger-settings-contents' style='width:900px;'>
-<!--
-    <form method='POST'>
--->
     <input type='hidden' name='form_notify_table' value='true'>
     <div style='display: block;' id='bx-messenger-settings-content-notify' class='bx-messenger-settings-content' >
-<!--
-    <div class='form-group'>
-        <button class='btn btn-primary ui-btn ui-btn-lg ui-btn-primary' type='submit'>Сохранить</button>
-    </div>
--->
-    
     <table  class='bx-messenger-settings-table bx-messenger-settings-table-style-notify bx-messenger-settings-table-extra' >
     <tr><th></th><th>Сайт и<br>приложения</th><th>Электронная почта</th><th>Push уведомления</th></tr>
 
