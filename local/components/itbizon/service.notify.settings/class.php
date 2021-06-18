@@ -58,24 +58,34 @@ class CITBServiceNotifySettings extends CBitrixComponent // fixme extends Simple
             }
     
             // select users
-            $this->users = UserTable::getList()->fetchAll();
+            $this->users = UserTable::getList([
+                'filter' => ['=ACTIVE' => 'Y'],
+                'order' => ['LAST_NAME' => 'DESC',  'NAME' => 'DESC'],
+                ]
+            )->fetchAll();
             
+            
+            //echo "\n<br>DEBUG post = <pre>".print_r($_POST, True)."</pre>"; // fixme
     
             //foreach ($this->users as $key => $user) echo "\n<br>DEBUG $key => $user ".$user['ID']." ".$user['NAME']." ".$user['LAST_NAME']; // fixme
             //print_r($user);
 
             // select source user id
             if ($_POST['select_from_user']){
-                echo "\n<br>Selected user id = ".$_POST['FROM_USER_ID']."<br>"; // fixme
+                echo "\n<br>Selected _from_ user id = ".$_POST['FROM_USER_ID']."<br>"; // fixme
                 $this->fromUser = intval($_POST['FROM_USER_ID']);
                 
             }
     
             // save data to selected user
-            if ($_POST['select_to_user']){
-                echo "\n<br>Selected _to_ user id = ".$_POST['TO_USER_ID']."<br>"; // fixme
+            if ($_POST['select_to_user'] && is_array($_POST['TO_USER_ID'])){
+                echo "\n<br>Selected _to_ user id = ".print_r($_POST['TO_USER_ID'], True)."<br>"; // fixme
                 //$this->toUsers = intval($_POST['TO_USER_ID']);
-                $this->toUsers[] = intval($_POST['TO_USER_ID']);
+                foreach($_POST['TO_USER_ID'] as $to_user_id)
+                {
+                    $this->toUsers[] = intval($to_user_id);
+                }
+                //$this->toUsers[] = intval($_POST['TO_USER_ID']);
                 // save data
         
             }

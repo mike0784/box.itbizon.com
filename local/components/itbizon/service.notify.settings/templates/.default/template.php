@@ -31,45 +31,47 @@ $toUsers = $component->toUsers;
         </div>
     <?php endif; ?>
 
+<!--    <div class="card" style='width:450px; float:left; min-height: 235px;'> -->
+
+    <div class="card" style='width:900px; '>
     <form method='POST'>
         <input type='hidden' name='select_from_user' value='true'>
-        <div class="card">
         <div class="card-body">
         <div class="form-group">
-            <label for="FROM_USER_ID" class="">Выбрать исходного пользователя</label>
-            <select name="FROM_USER_ID" id="FROM_USER_ID" class="form-control is-valid ">
+            <label for="FROM_USER_ID" class="card-title">Выберите исходного пользователя</label>
+            <select name="FROM_USER_ID" id="FROM_USER_ID" class="form-control">
             <? foreach ($users as $key => $user): ?>
                 <? if ($user['ID'] == $fromUser): ?>
-                    <option selected value="<?= $user['ID'] ?>"><?= $user['NAME']." ". $user['SECOND_NAME']." ".$user['LAST_NAME'] ?></option>
+                    <option selected value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ".$user['SECOND_NAME'] ?></option>
                 <? else: ?>
-                    <option value="<?= $user['ID'] ?>"><?= $user['NAME']." ". $user['SECOND_NAME']." ". $user['LAST_NAME'] ?></option>
+                    <option value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ". $user['SECOND_NAME'] ?></option>
                 <? endif; ?>
             <? endforeach; ?>
             </select>
         </div>
-        <button class='btn ui-btn ui-btn-success' type='submit'>Прочитать настройки</button>
-        </div>
+        <button class='btn btn-primary' type='submit'>Прочитать настройки</button>
         </div>
         
     </form>
+    </div>
 
     <form method='POST'>
         <input type='hidden' name='select_to_user' value='true'>
-        <div class="card">
+        <div class="card" style='width:900px;'>
             <div class="card-body">
                 <div class="form-group">
-                    <label for="TO_USER_ID" class="">Выбрать пользователя для записи настроек</label>
-                    <select name="TO_USER_ID" id="TO_USER_ID" class="form-control is-valid ">
+                    <label for="TO_USER_ID" class="card-title">Выберите пользователей для записи настроек</label>
+                    <select name="TO_USER_ID[]" id="TO_USER_ID" class="form-control" multiple>
                         <? foreach ($users as $key => $user): ?>
                             <? if (in_array($user['ID'], $toUsers)): ?>
-                                <option selected value="<?= $user['ID'] ?>"><?= $user['NAME']." ". $user['SECOND_NAME']." ".$user['LAST_NAME'] ?></option>
+                                <option selected value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ".$user['SECOND_NAME'] ?></option>
                             <? else: ?>
-                                <option value="<?= $user['ID'] ?>"><?= $user['NAME']." ". $user['SECOND_NAME']." ". $user['LAST_NAME']." (".$user['ID'].")" ?></option>
+                                <option value="<?= $user['ID'] ?>"><?= $user['LAST_NAME']." ". $user['NAME']." ". $user['SECOND_NAME']." (".$user['ID'].")" ?></option>
                             <? endif; ?>
                         <? endforeach; ?>
                     </select>
                 </div>
-                <button class='btn ui-btn ui-btn-success' type='submit'>Записать настройки</button>
+                <button class='btn btn-primary' type='submit'>Записать настройки</button>
             </div>
         </div>
 
@@ -77,7 +79,7 @@ $toUsers = $component->toUsers;
     </form>
 -->
 
-    <div class='bx-messenger-settings-contents' style='width:800px;'>
+    <div class='bx-messenger-settings-contents' style='width:900px;'>
 <!--
     <form method='POST'>
 -->
