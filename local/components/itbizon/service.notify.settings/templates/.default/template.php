@@ -23,15 +23,14 @@ $usersList = $component->usersList;
 $fromUser = $component->fromUser;
 $toUsers = $component->toUsers;
 ?>
-<?php if ($component->getHelper()->getAction() == 'list') : ?>
-    <?php $APPLICATION->SetTitle(Loc::getMessage('ITB_SERVICE.NOTIFY.SETTINGS.PAGE_TITLE')); ?>
-    <?php if ($component->getError()): ?>
-        <div class="ui-alert ui-alert-danger">
-            <span class="ui-alert-message"><?= $component->getError() ?></span>
-        </div>
-    <?php endif; ?>
+<?php $APPLICATION->SetTitle(Loc::getMessage('ITB_SERVICE.NOTIFY.SETTINGS.PAGE_TITLE')); ?>
+<?php foreach ($component->getErrors() as $error) : ?>
+    <div class="ui-alert ui-alert-danger">
+        <span class="ui-alert-message"><?= $error->getMessage() ?></span>
+    </div>
+<?php endforeach; ?>
 
-    <div class="card" style='width:900px; '>
+<div class="card" style='width:900px; '>
     <form method='POST'>
         <input type='hidden' name='select_from_user' value='true'>
         <div class="card-body">
@@ -91,8 +90,4 @@ $toUsers = $component->toUsers;
     </table>
     </div>
     </form>
-    </div>
-
-<?php else: ?>
-
-<?php endif; ?>
+</div>

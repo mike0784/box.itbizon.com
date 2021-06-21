@@ -8,19 +8,22 @@ use Bitrix\Main\UserTable;
 use Itbizon\Service\Component\GridHelper;
 use Itbizon\Service\Component\RouterHelper;
 //use Itbizon\Service\Log;
+use Itbizon\Service\Component\Simple;
 
 
 Loc::loadMessages(__FILE__);
 
+if (!Loader::includeModule('itbizon.service'))
+{
+    throw new Exception('error load module itbizon.service');
+}
+
+
 /**
  * Class CITBServiceNotifySettings
  */
-class CITBServiceNotifySettings extends CBitrixComponent // fixme extends Simple !!!
+class CITBServiceNotifySettings extends Simple
 {
-    private $error;
-    private $helper;
-    private $gridHelper;
-    
     private $arTable;
     
     public $usersList;
@@ -40,17 +43,6 @@ class CITBServiceNotifySettings extends CBitrixComponent // fixme extends Simple
             if (!Loader::includeModule('itbizon.service')) {
                 throw new Exception(Loc::getMessage('ITB_SERVICE.NOTIFY.SETTINGS.ERROR.INCLUDE_SERVICE'));
             }
-            
-            $this->setHelper(new RouterHelper(
-                $this,
-                [
-                    'list' => 'list/',
-                    //'view' => 'view/#FILE_NAME#/',
-                ],
-                'list'
-            ));
-            
-            $this->getHelper()->run();
 
             if(!CurrentUser::get()->isAdmin()) {
                 throw new Exception(Loc::getMessage('ITB_SERVICE.NOTIFY.SETTINGS.ERROR.ACCESS_DENY'));
@@ -65,13 +57,10 @@ class CITBServiceNotifySettings extends CBitrixComponent // fixme extends Simple
             
             // select source user id
             if ($_POST['select_from_user']) {
-                //echo "\n<br>Selected _from_ user id = ".$_POST['FROM_USER_ID']."<br>"; // fixme
                 $this->fromUser = intval($_POST['FROM_USER_ID']);
-        
             }
     
             if ($_POST['select_to_user'] && is_array($_POST['TO_USER_ID'])) {
-                //echo "\n<br>Selected _to_ user id = ".print_r($_POST['TO_USER_ID'], True)."<br>"; // fixme
                 foreach ($_POST['TO_USER_ID'] as $to_user_id) {
                     $this->toUsers[] = intval($to_user_id);
                 }
@@ -94,14 +83,14 @@ class CITBServiceNotifySettings extends CBitrixComponent // fixme extends Simple
             $this->arTable = $this->parseNotifyArray($arSettings, $arNotifyNames);
     
         } catch (Exception $e) {
-            echo $e->getMessage() . ' ' . $e->getTraceAsString();
+            //$this->addError($e->getMessage());
+            $this->addError($e->getMessage() . ' ' . $e->getTraceAsString());
         }
 
         //Include template
         $this->IncludeComponentTemplate();
         return true;
     }
-
     
     /**
      * @return mixed
@@ -109,46 +98,6 @@ class CITBServiceNotifySettings extends CBitrixComponent // fixme extends Simple
     public function getError()
     {
         return $this->error;
-    }
-
-    /**
-     * @param mixed $error
-     */
-    public function setError($error): void
-    {
-        $this->error = $error;
-    }
-
-    /**
-     * @return RouterHelper|null
-     */
-    public function getHelper(): ?RouterHelper
-    {
-        return $this->helper;
-    }
-
-    /**
-     * @param mixed $helper
-     */
-    public function setHelper($helper): void
-    {
-        $this->helper = $helper;
-    }
-
-    /**
-     * @return GridHelper|null
-     */
-    public function getGridHelper(): ?GridHelper
-    {
-        return $this->gridHelper;
-    }
-
-    /**
-     * @param mixed $gridHelper
-     */
-    public function setGridHelper($gridHelper): void
-    {
-        $this->gridHelper = $gridHelper;
     }
     
     /**
@@ -239,5 +188,5 @@ class CITBServiceNotifySettings extends CBitrixComponent // fixme extends Simple
         }
         return $optList;
     }
-    
+
 }
