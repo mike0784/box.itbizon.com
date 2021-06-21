@@ -93,14 +93,6 @@ class CITBServiceNotifySettings extends Simple
     }
     
     /**
-     * @return mixed
-     */
-    public function getError()
-    {
-        return $this->error;
-    }
-    
-    /**
      * @return array
      */
     public function getTable(): array
