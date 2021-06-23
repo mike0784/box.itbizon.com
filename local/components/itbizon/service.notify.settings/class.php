@@ -5,11 +5,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\UserTable;
 
-use Itbizon\Service\Component\GridHelper;
-use Itbizon\Service\Component\RouterHelper;
-//use Itbizon\Service\Log;
 use Itbizon\Service\Component\Simple;
-
 
 Loc::loadMessages(__FILE__);
 
@@ -37,8 +33,7 @@ class CITBServiceNotifySettings extends Simple
     public function executeComponent()
     {
         try {
-            global $USER;
-            $userId = $USER->GetId();
+            $userId = CurrentUser::get()->getId();
             
             if (!Loader::includeModule('itbizon.service')) {
                 throw new Exception(Loc::getMessage('ITB_SERVICE.NOTIFY.SETTINGS.ERROR.INCLUDE_SERVICE'));
@@ -50,11 +45,23 @@ class CITBServiceNotifySettings extends Simple
     
             // select users
             $this->usersList = UserTable::getList([
-                'filter' => ['=ACTIVE' => 'Y'],
-                'order' => ['LAST_NAME' => 'DESC',  'NAME' => 'DESC', ],
+                    'select' => [
+                        'ID',
+                        'NAME',
+                        'SECOND_NAME',
+                        'LAST_NAME'
+                    ],
+                    'filter' => [
+                        '=ACTIVE' => 'Y',
+                        '=IS_REAL_USER' => 'Y'
+                    ],
+                    'order' => [
+                        'LAST_NAME' => 'ASC',
+                        'NAME' => 'ASC',
+                    ],
                 ]
             )->fetchAll();
-            
+    
             // select source user id
             if ($_POST['select_from_user']) {
                 $this->fromUser = intval($_POST['FROM_USER_ID']);
@@ -83,7 +90,6 @@ class CITBServiceNotifySettings extends Simple
             $this->arTable = $this->parseNotifyArray($arSettings, $arNotifyNames);
     
         } catch (Exception $e) {
-            //$this->addError($e->getMessage());
             $this->addError($e->getMessage() . ' ' . $e->getTraceAsString());
         }
 

@@ -18,10 +18,6 @@ Extension::load(['jquery', 'ui.alerts', 'itbizon.select2', 'itbizon.bootstrap4']
 /**@var CBitrixComponentTemplate $this */
 /**@var CITBServiceNotifySettings $component */
 $component = $this->getComponent();
-$res = $component->getTable();
-$usersList = $component->usersList;
-$fromUser = $component->fromUser;
-$toUsers = $component->toUsers;
 ?>
 <?php $APPLICATION->SetTitle(Loc::getMessage('ITB_SERVICE.NOTIFY.SETTINGS.PAGE_TITLE')); ?>
 <?php foreach ($component->getErrors() as $error) : ?>
@@ -29,6 +25,13 @@ $toUsers = $component->toUsers;
         <span class="ui-alert-message"><?= $error->getMessage() ?></span>
     </div>
 <?php endforeach; ?>
+
+<?
+$res = $component->getTable();
+$usersList = $component->usersList;
+$fromUser = $component->fromUser;
+$toUsers = $component->toUsers;
+?>
 
 <div class="card" style='width:900px; '>
     <form method='POST'>
