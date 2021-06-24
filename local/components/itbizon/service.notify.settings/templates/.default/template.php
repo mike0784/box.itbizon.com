@@ -9,11 +9,6 @@ Loc::loadMessages(__FILE__);
 Extension::load('itbizon.finance.select2');
 Extension::load(['jquery', 'ui.alerts', 'itbizon.select2', 'itbizon.bootstrap4']);
 
-//$APPLICATION->SetAdditionalCSS("/bitrix/components/main.ui.filter/templates/style.css");
-//$APPLICATION->SetAdditionalCSS("/bitrix/components/bitrix/main.ui.filter/templates/.default/style.css");
-//$APPLICATION->ShowCSS();
-
-
 /**@var CAllMain $APPLICATION */
 /**@var CBitrixComponentTemplate $this */
 /**@var CITBServiceNotifySettings $component */

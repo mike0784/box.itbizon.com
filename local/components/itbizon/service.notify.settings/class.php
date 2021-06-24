@@ -155,6 +155,8 @@ class CITBServiceNotifySettings extends Simple
     {
         $arNotify = CUserOptions::GetOption('im', CIMSettings::NOTIFY, array(), $userId);  // , $userId
         $arNotify = CIMSettings::checkValues(CIMSettings::NOTIFY, $arNotify);
+    
+        $this->setNotifyScheme('expert', $userId);
         
         foreach ($arNotify as $optName => $optVal) {
             if ((substr($optName, 0, 9) == 'disabled|') || (substr($optName, 0, 10) == 'important|')) {
@@ -185,6 +187,28 @@ class CITBServiceNotifySettings extends Simple
             }
         }
         return $optList;
+    }
+    
+    /**
+     * @param string $scheme
+     * @param int|null $userId
+     * @throws Exception
+     */
+    public function setNotifyScheme(string $scheme, int $userId = null)
+    {
+        if (!$userId) {
+            $userId = CurrentUser::get()->getId();
+        }
+    
+        if (!in_array($scheme, ['simple', 'expert'])) {
+            throw new Exception('Wrong scheme name');
+        }
+    
+        $arSettings = CIMSettings::Get($userId);
+        if ($arSettings[CIMSettings::SETTINGS]['notifyScheme'] != $scheme) {
+            $arSettings[CIMSettings::SETTINGS]['notifyScheme'] = $scheme;
+            CIMSettings::Set(CIMSettings::SETTINGS,  $arSettings[CIMSettings::SETTINGS], $userId);
+        }
     }
 
 }
