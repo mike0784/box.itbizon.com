@@ -1,0 +1,2 @@
+<?php
+$MESS['ITB_SERVICE.LOG.LIST.PAGE_TITLE'] = 'Логи';

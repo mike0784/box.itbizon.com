@@ -1,0 +1,6 @@
+<?php
+$MESS['ITB_SERVICE.MAILDOMAIN.EDIT.ERROR.INCLUDE_SERVICE'] = 'Ошибка загрузки модуля itbizon.service';
+$MESS['ITB_SERVICE.MAILDOMAIN.EDIT.ERROR.NO_HELPER'] = 'Некорректный вход';
+$MESS['ITB_SERVICE.MAILDOMAIN.EDIT.ERROR.ACCESS_DENY'] = 'Доступ запрещен';
+$MESS['ITB_SERVICE.MAILDOMAIN.EDIT.ERROR.NOT_FOUND'] = 'Запись не найдена';
+

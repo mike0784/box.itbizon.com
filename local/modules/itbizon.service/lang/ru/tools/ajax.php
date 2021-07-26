@@ -1,0 +1,4 @@
+<?php
+$MESS['ITB_SERVICE.MODULE.TOOLS.AJAX.ERROR.LOAD.MODULE'] = 'Ошибка загрузки модуля #MODULE_NAME#';
+$MESS['ITB_SERVICE.MODULE.TOOLS.AJAX.ERROR.PROCESS.NOTFOUND'] = 'Команда для обработки не найдена';
+$MESS['ITB_SERVICE.MODULE.TOOLS.AJAX.ERROR.ACCESS_DENY'] = 'Доступ запрещен';
