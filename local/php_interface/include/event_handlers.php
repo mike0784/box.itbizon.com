@@ -115,6 +115,21 @@ $eventManager->addEventHandler(
         }
     }
 );
+
+
+if(Loader::includeModule('bizon.main')) {
+
+// Тест истории полей сделки
+    //*
+    $eventManager->addEventHandler(
+        'crm',
+        'OnAfterCrmDealUpdate',
+        ['\Bizon\Main\Utils\DealHandler', 'OnAfterCrmDealUpdate']
+    );
+    // */
+}
+
+
 /*
 //Add new event
 $eventManager->addEventHandler(
