@@ -117,6 +117,114 @@ $eventManager->addEventHandler(
 );
 
 
+//Test product row lock
+$eventManager->addEventHandler(
+    'crm',
+    'OnAfterCrmDealProductRowsSave',
+    function ($id, $rows) {
+        static $lock = false;
+        if ($lock) {
+            return;
+        }
+        $lock = true;
+        if (Loader::includeModule('itbizon.service')) {
+            $log = new Log('lock_row');
+            try {
+                if (!Loader::includeModule('im')) {
+                    throw new Exception('Ошибка подключения модуля im');
+                }
+
+                $log->add($id);
+                $log->add($rows);
+
+                //Check
+                $notBind = [];
+                $changeName = [];
+                foreach ($rows as $index => $row) {
+                    $productId = intval($row['PRODUCT_ID']);
+                    if ($productId === 0) {
+                        $notBind[] = $index;
+                    } else {
+                        $product = \CCrmProduct::GetByID($productId);
+                        if ($product) {
+                            if ($product['NAME'] !== $row['PRODUCT_NAME']) {
+                                $changeName[] = $index;
+                                $rows[$index]['ORIGINAL_NAME'] = $product['NAME'];
+                            }
+                        }
+                    }
+                }
+
+                //Messages
+                $messages = [];
+                foreach ($notBind as $index) {
+                    $messages[] = 'Товарная позиция #' . $index . ' "' . $rows[$index]['PRODUCT_NAME'] . '" создана вручную';
+                }
+                foreach ($changeName as $index) {
+                    $messages[] = 'В товарной позиции #' . $index . ' "' . $rows[$index]['PRODUCT_NAME'] . '" изменено название (оригинальное название "' .$rows[$index]['ORIGINAL_NAME']. '")';
+                }
+                if (!empty($messages)) {
+                    global $USER;
+                    array_unshift($messages, '[b]ВНИМАНИЕ[/b] по сделке [url=/crm/deal/details/' . $id . '/]#' . $id . '[/url] некорректно заполнены товарные позиции:');
+                    //Current user (who change)
+                    if ($USER && is_a($USER, \CUser::class)) {
+                        \CIMNotify::Add([
+                            'FROM_USER_ID' => 0,
+                            'TO_USER_ID' => $USER->GetID(),
+                            'NOTIFY_TYPE' => IM_NOTIFY_SYSTEM,
+                            'NOTIFY_MESSAGE' => implode(PHP_EOL, $messages),
+                            'NOTIFY_MODULE' => 'itbizon.service', //TODO
+                            'NOTIFY_EVENT' => 'dealproductrow|'.$id
+                        ]);
+                    }
+
+                    //Chief
+                    //TODO
+
+                    //Admins
+                    //TODO
+                }
+
+                //Change product rows
+                if (count($notBind) || count($changeName)) {
+                    $newRows = [];
+                    foreach ($rows as $index => $row) {
+                        if (in_array($index, $notBind)) {
+                            continue;
+                        }
+                        if (in_array($index, $changeName)) {
+                            $row['PRODUCT_NAME'] = $row['ORIGINAL_NAME'];
+                        }
+                        $newRows[] = [
+                            'PRODUCT_NAME' => $row['PRODUCT_NAME'],
+                            'PRODUCT_ID' => $row['PRODUCT_ID'],
+                            'QUANTITY' => $row['QUANTITY'],
+                            'MEASURE_CODE' => $row['MEASURE_CODE'],
+                            'MEASURE_NAME' => $row['MEASURE_NAME'],
+                            'PRICE' => $row['PRICE'],
+                            'PRICE_EXCLUSIVE' => $row['PRICE_EXCLUSIVE'],
+                            'PRICE_NETTO' => $row['PRICE_NETTO'],
+                            'PRICE_BRUTTO' => $row['PRICE_BRUTTO'],
+                            'DISCOUNT_TYPE_ID' => $row['DISCOUNT_TYPE_ID'],
+                            'DISCOUNT_RATE' => $row['DISCOUNT_RATE'],
+                            'DISCOUNT_SUM' => $row['DISCOUNT_SUM'],
+                            'TAX_RATE' => $row['TAX_RATE'],
+                            'TAX_INCLUDED' => $row['TAX_INCLUDED'],
+                        ];
+                    }
+                    $result = \CCrmProductRow::SaveRows('D', $id, $newRows);
+                    if (!$result) {
+                        throw new Exception('Ошибка изменения товарных позиций по сделке #' . $id . ': ' . \CCrmProductRow::GetLastError());
+                    }
+                }
+
+            } catch (Exception $e) {
+                $log->add($e->getMessage(), Log::LEVEL_ERROR);
+            }
+        }
+    }
+);
+
 if(Loader::includeModule('bizon.main')) {
 
 // Тест истории полей сделки
