@@ -57,7 +57,7 @@ class Rest {
 try {
     $url = 'https://box.itbizon.com/rest/1/s038q2ey257uxv9p/';
     $contactId = 53;
-    $mainDealId = 208;
+    $mainDealId = 210;
 
     $activityList = [];
     $taskIds = [];
@@ -99,11 +99,19 @@ try {
                 $taskIds[] = $activity['ASSOCIATED_ENTITY_ID'];
             }
         }
+        echo 'Дела: ' . count($activityList) . '<br>';
+        echo 'Задачи: ' . count($taskIds) . '<br>';
 
         $answer2 = Rest::request(
             $url . 'crm.timeline.comment.list',
             [
-                'select' => ['*'],
+                'select' => [
+                    'ID',
+                    'CREATED',
+                    'AUTHOR_ID',
+                    'COMMENT', 
+                    'FILES',
+                ],
                 'filter' => [
                     'ENTITY_ID' => $deal['ID'],
                     'ENTITY_TYPE' => 'deal',
@@ -112,8 +120,10 @@ try {
         );
         echo '<b>Комментарии</b><br>';
         foreach ($answer2['result'] as $comment) {
-            echo '<pre>' . print_r($comment, true) . '</pre>';
+            //echo '<pre>' . print_r($comment, true) . '</pre>';
+            $commentList[] = $comment;
         }
+        echo 'Всего: ' . count($commentList) . '<br>';
     }
 
     if (0) {
@@ -150,10 +160,26 @@ try {
 
         //Create comments
         foreach($commentList as $comment) {
-            $answer = Rest::request(
+            /*$answer = Rest::request(
                 $url . 'crm.timeline.comment.add',
                 [
-                    'fields' => $comment
+                    'fields' => [
+                        'ENTITY_ID' => $mainDealId,
+                        'ENTITY_TYPE' => 'deal',
+                        'CREATED' => $comment['CREATED'],
+                        'AUTHOR_ID' => $comment['AUTHOR_ID'],
+                        'COMMENT' => $comment['COMMENT']
+                    ]
+                ]
+            );*/
+            $answer = Rest::request(
+                $url . 'crm.timeline.comment.update',
+                [
+                    'id' => $comment['ID'],
+                    'fields' => [
+                        'ENTITY_ID' => $mainDealId,
+                        'ENTITY_TYPE' => 'deal',
+                    ]
                 ]
             );
             echo '<pre>' . print_r($answer, true) . '</pre>';
