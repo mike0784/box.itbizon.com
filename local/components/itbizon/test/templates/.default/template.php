@@ -24,7 +24,7 @@ Toolbar::addFilter([
 ]);
 
 foreach ($component->getLeads() as $lead) {
-    echo ($lead['ID'].' - '.$lead['TITLE'].' ('.$lead['DATE_CREATE']->format('d.m.Y').') источник: '.$lead['CRM_LEAD_SOURCE_BY_NAME'].'<br>');
+    echo ($lead['ID'].' - '.$lead['TITLE'].' (создан '.$lead['DATE_CREATE']->format('d.m.Y').') источник: '.$lead['CRM_LEAD_SOURCE_BY_NAME'].'<br>');
 }
 
 ?>

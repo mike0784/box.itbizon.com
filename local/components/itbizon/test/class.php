@@ -100,10 +100,22 @@ class CITBServiceNotifySettings extends Simple
             if($begin) {
                 $filter['>=DATE_CREATE'] = $begin->format('d.m.Y H:i:s');
                 $filter['<=DATE_CREATE'] = $end->format('d.m.Y H:i:s');
+                
+                i_show('Поиск за период: <b>'.$begin->format('d.m.Y H:i:s').' - '.$end->format('d.m.Y H:i:s').'</b>');
             }
+            else
+                i_show('Поиск за всё время');
+            
             if($source) {
                 $filter['=SOURCE_ID'] = $source;
+                $str = '';
+                foreach ($source as $sid) {
+                    $str .= '<b>'.$sources[$sid].'</b>; ';
+                }
+                i_show('По источникам: '.$str);
             }
+            else
+                i_show('По всем источникам');
             
             $this->leads = \Bitrix\Crm\LeadTable::getList([
                 'filter'=>$filter,
