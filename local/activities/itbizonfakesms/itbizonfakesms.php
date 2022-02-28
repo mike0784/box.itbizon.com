@@ -100,12 +100,12 @@ class CBPItbizonFakeSms extends Activity
 
 
             if($this->messageTo==null || trim($this->messageTo)=="")
-                new Exception('Не заполнен номер телефона');
+                throw new Exception('Не заполнен номер телефона');
 
             $authorId = CBPHelper::ExtractUsers($this->authorUser, $this->GetDocumentId(), true);
 
             if($authorId==null || $authorId==0)
-                new Exception('Автор сообщения не заполнен');
+                throw new Exception('Автор сообщения не заполнен');
 
             $bindings = array(array(
             		'OWNER_TYPE_ID' => $ownerTypeID,
@@ -138,7 +138,7 @@ class CBPItbizonFakeSms extends Activity
             ));
 
             if($message==null)
-                new Exception('Не удалось добавить сообщение');
+                throw new Exception('Не удалось добавить сообщение');
 
             //Событие, которое на таймлайн добавит запись
             (new Bitrix\Main\Event(
