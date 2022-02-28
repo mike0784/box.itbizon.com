@@ -6,7 +6,6 @@ use Itbizon\Service\Activities\Activity;
 use Itbizon\Service\Activities\Field;
 
 Loader::includeModule('itbizon.service');
-Loader::includeModule('messageservice');
 
 use Bitrix\MessageService\Internal\Entity\MessageTable;
 use Bitrix\MessageService\MessageType;
@@ -40,9 +39,9 @@ class CBPItbizonFakeSms extends Activity
                 true
             ),
             new Field(
-                'authorID',
-                'ID автора (например, id текущего пользователя)',
-                FieldType::STRING,
+                'authorUser',
+                'Автор смс',
+                FieldType::USER,
                 true
             ),
             new Field(
@@ -88,10 +87,32 @@ class CBPItbizonFakeSms extends Activity
     public function Execute()
     {
         try {
+            Loader::includeModule('crm');
+            Loader::includeModule('messageservice');
 
             $ownerTypeID = CCrmOwnerType::Deal;
             //$authorID = CCrmSecurityHelper::GetCurrentUserID();
 
+            if(is_array($this->messageTo))
+            {
+                $this->messageTo = reset($this->messageTo);
+                if(is_array($this->messageTo))
+                    $this->messageTo = $this->messageTo['VALUE'];
+            }
+
+            if($this->messageTo==null || trim($this->messageTo)=="")
+            {
+                $this->WriteToTrackingService('Не заполнен номер телефона');
+                return \CBPActivityExecutionStatus::Faulting ;
+            }
+
+            $authorId = CBPHelper::ExtractUsers($this->authorUser, $this->GetDocumentId(), true);
+
+            if($authorId==null || $authorId==0)
+            {
+                $this->WriteToTrackingService('Автор сообщения не заполнен');
+                return \CBPActivityExecutionStatus::Faulting ;
+            }
 
             $bindings = array(array(
             		'OWNER_TYPE_ID' => $ownerTypeID,
@@ -104,7 +125,7 @@ class CBPItbizonFakeSms extends Activity
             		'ENTITY_TYPE_ID' => $ownerTypeID,
             		'ENTITY_ID' => $this->ownerID,
             		'BINDINGS' => $bindings,
-            		'ACTIVITY_AUTHOR_ID' => $this->authorID,
+            		'ACTIVITY_AUTHOR_ID' => $authorId,
             		'ACTIVITY_DESCRIPTION' => $this->messageBody,
             		'MESSAGE_TO' => $this->messageTo,
             );
@@ -113,7 +134,7 @@ class CBPItbizonFakeSms extends Activity
             $message = MessageTable::add(array(
                          'TYPE' => MessageType::SMS,
                          'SENDER_ID' => $this->senderId,
-                         'AUTHOR_ID' => $this->authorID,
+                         'AUTHOR_ID' => $authorId,
                          'MESSAGE_FROM' => $this->messageFrom,
                          'MESSAGE_TO' => $this->messageTo,
                          'MESSAGE_HEADERS' => null,
@@ -122,6 +143,12 @@ class CBPItbizonFakeSms extends Activity
             			 'STATUS_ID' => MessageStatus::SENT,
             			 'EXTERNAL_ID' => 0
             ));
+
+            if($message==null)
+            {
+                $this->WriteToTrackingService('Не удалось добавить сообщение');
+                return \CBPActivityExecutionStatus::Faulting ;
+            }
 
             //Событие, которое на таймлайн добавит запись
             (new Bitrix\Main\Event(

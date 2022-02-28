@@ -1,5 +1,5 @@
-<?php
 use Bitrix\Bizproc\Activity\PropertiesDialog;
+use Bitrix\Bizproc\FieldType;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
@@ -11,11 +11,14 @@ foreach ($dialog->getMap() as $fieldId => $field):
         <td width="60%">
             <?php $filedType = $dialog->getFieldTypeObject($field);
 
-            echo $filedType->renderControl([
+			if($field['Type']==FieldType::USER)
+                echo CBPDocument::ShowParameterField(FieldType::USER, 'authorUser',  $arCurrentValues['authorUser']);
+			else echo $filedType->renderControl([
                 'Form' => $dialog->getFormName(),
                 'Field' => $field['FieldName']
             ], $dialog->getCurrentValue($field['FieldName']), true, 0);
             ?>
         </td>
+
     </tr>
 <?php endforeach;?>
