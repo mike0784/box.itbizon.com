@@ -1,16 +1,14 @@
 <?php
-
 use Bitrix\Bizproc\FieldType;
 use Bitrix\Main\Loader;
 use Itbizon\Service\Activities\Activity;
 use Itbizon\Service\Activities\Field;
-
-Loader::includeModule('itbizon.service');
-
 use Bitrix\MessageService\Internal\Entity\MessageTable;
 use Bitrix\MessageService\MessageType;
 use Bitrix\MessageService\MessageStatus;
 use Bitrix\MessageService\Sender\SmsManager;
+
+Loader::includeModule('itbizon.service');
 
 class CBPItbizonFakeSms extends Activity
 {
@@ -93,26 +91,21 @@ class CBPItbizonFakeSms extends Activity
             $ownerTypeID = CCrmOwnerType::Deal;
             //$authorID = CCrmSecurityHelper::GetCurrentUserID();
 
-            if(is_array($this->messageTo))
-            {
-                $this->messageTo = reset($this->messageTo);
-                if(is_array($this->messageTo))
-                    $this->messageTo = $this->messageTo['VALUE'];
-            }
+           if(is_array($this->messageTo))
+           {
+               $this->messageTo = reset($this->messageTo);
+               if(is_array($this->messageTo))
+                   $this->messageTo = $this->messageTo['VALUE'];
+           }
+
 
             if($this->messageTo==null || trim($this->messageTo)=="")
-            {
-                $this->WriteToTrackingService('Не заполнен номер телефона');
-                return \CBPActivityExecutionStatus::Faulting ;
-            }
+                new Exception('Не заполнен номер телефона');
 
             $authorId = CBPHelper::ExtractUsers($this->authorUser, $this->GetDocumentId(), true);
 
             if($authorId==null || $authorId==0)
-            {
-                $this->WriteToTrackingService('Автор сообщения не заполнен');
-                return \CBPActivityExecutionStatus::Faulting ;
-            }
+                new Exception('Автор сообщения не заполнен');
 
             $bindings = array(array(
             		'OWNER_TYPE_ID' => $ownerTypeID,
@@ -145,10 +138,7 @@ class CBPItbizonFakeSms extends Activity
             ));
 
             if($message==null)
-            {
-                $this->WriteToTrackingService('Не удалось добавить сообщение');
-                return \CBPActivityExecutionStatus::Faulting ;
-            }
+                new Exception('Не удалось добавить сообщение');
 
             //Событие, которое на таймлайн добавит запись
             (new Bitrix\Main\Event(
