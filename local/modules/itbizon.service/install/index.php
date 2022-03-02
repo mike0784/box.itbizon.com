@@ -1,10 +1,10 @@
 <?php
-
 use Bitrix\Main\Application;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
 
 Loc::loadMessages(__FILE__);
+
 /**
  * Class itbizon_service
  */
@@ -34,9 +34,11 @@ class itbizon_service extends CModule
     public function DoInstall()
     {
         if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
-            $this->InstallDB();
+            if(!$this->InstallDB())
+                return false;
             $this->InstallEvents();
-            $this->InstallFiles();
+            if(!$this->InstallFiles())
+                return false;
             $this->InstallAgents();
             CAdminMessage::ShowNote(Loc::getMessage('ITB_SERV_MODULE_INSTALL_OK'));
         } else {
@@ -67,30 +69,19 @@ class itbizon_service extends CModule
      */
     public function InstallDB()
     {
-        try {
-
-            $files = [
-                'maildomain' => $_SERVER['DOCUMENT_ROOT'].'/local/modules/itbizon.service/lib/mail/model/maildomain.php',
-            ];
-            foreach ($files as $entity => $file) {
-                if(file_exists($file)) {
-                    require_once($file);
-                }
-            }
-            $db = Application::getConnection();
-            $tables = [
-                Itbizon\Service\Mail\Model\MailDomainTable::getEntity(),
-            ];
-
-            /** @var Bitrix\Main\ORM\Entity $entity */
-            foreach ($tables as $entity) {
-                if (!$db->isTableExists($entity->getDBTableName()))
-                    $entity->createDbTable();
-            }
-            return true;
-        } catch (Exception $e) {
+        $db = Application::getConnection();
+        $sqlFilePath = __DIR__.'/db/'.mb_strtolower($db->getType()).'/install.sql';
+        file_put_contents(__DIR__."/log.php", var_export($sqlFilePath, true) );
+        if(!file_exists($sqlFilePath)) {
+            $GLOBALS["APPLICATION"]->ThrowException(Loc::getMessage('ITB_SERV_MODULE_ERROR_NO_FILE')." ".$sqlFilePath);
             return false;
         }
+        $errors = $db->executeSqlBatch(file_get_contents($sqlFilePath));
+        if(!empty($errors)) {
+            $GLOBALS["APPLICATION"]->ThrowException(Loc::getMessage('ITB_SERV_MODULE_ERROR_SQL')." ".var_export($errors, true));
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -122,7 +113,12 @@ class itbizon_service extends CModule
      */
     public function InstallFiles()
     {
-        return CopyDirFiles(__DIR__ . '/components', $_SERVER['DOCUMENT_ROOT'] . '/local/components/itbizon', true, true);
+        if(!CopyDirFiles(__DIR__ . '/components', $_SERVER['DOCUMENT_ROOT'] . '/local/components/itbizon', true, true))
+        {
+            $GLOBALS["APPLICATION"]->ThrowException(Loc::getMessage('ITB_SERV_MODULE_ERROR_COPY_FILES'));
+            return false;
+        }
+        return true;
     }
 
     /**
