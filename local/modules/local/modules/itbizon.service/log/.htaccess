@@ -1,0 +1,4 @@
+<FilesMatch "\.(log|zip)$">
+  Order Deny,Allow
+  Deny from all
+</FilesMatch>

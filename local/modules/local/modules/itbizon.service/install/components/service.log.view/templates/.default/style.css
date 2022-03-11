@@ -1,0 +1,22 @@
+.itb-log-content {
+    line-height: 0.5;
+}
+.itb-service-log-timestamp {
+    font-weight: bold;
+    color: #696969;
+}
+.itb-service-log-level {
+    font-weight: bold;
+}
+.itb-service-log-level-info {
+    color: #696969;
+}
+.itb-service-log-level-warn {
+    color: #FF8C00;
+}
+.itb-service-log-level-error {
+    color: #B22222;
+}
+.itb-service-log-level-ok {
+    color: #6B8E23;
+}
