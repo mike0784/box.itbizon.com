@@ -9,15 +9,15 @@ global $APPLICATION, $USER;
 
 Loc::loadMessages(__FILE__);
 
-/*Получение id модуля*/
+//Получение id модуля
 $moduleId = $_GET['mid'];
-/*Подключение модуля*/
+//Подключение модуля
 Loader::includeModule($moduleId);
 
 $tabs = [
     [
         'DIV' => 'general',
-        'TAB' => Loc::getMessage('ITB_MIKE_MODULE_OPTION_TAB_GENERAL_NAME'),
+        'TAB' => Loc::getMessage('ITB_MIKE_MODULE_OPTION_TAB_GENERAL_NAME'),    //
         'TITLE' => Loc::getMessage('ITB_MIKE_MODULE_OPTION_TAB_GENERAL_DESCRIPTION'),
     ],
     [
@@ -29,7 +29,7 @@ $tabs = [
 
 $options = [
     'general' => [
-        Loc::getMessage('ITB_MIKE_MODULE_OPTION_GENERAL_OPTIONS_MODULE'),
+        Loc::getMessage('ITB_MIKE_MODULE_OPTION_GENERAL_OPTIONS_MODULE'),   //$MESS ['ITB_MIKE_MODULE_OPTION_GENERAL_OPTIONS_MODULE'] = "Настройки параметров модуля";
         ['general_save_src', Loc::getMessage('ITB_MIKE_MODULE_OPTION_GENERAL_SAVE_SRC'), 'N', ['checkbox']],
         ['general_save_attachments', Loc::getMessage('ITB_MIKE_MODULE_OPTION_GENERAL_SAVE_ATTACHMENTS'), 'N', ['checkbox']],
         ['general_timeout', Loc::getMessage('ITB_MIKE_MODULE_OPTION_GENERAL_TIMEOUT'), '', ['text', '40']],
