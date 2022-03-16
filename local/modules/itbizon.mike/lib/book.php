@@ -22,8 +22,8 @@ class BookTable extends Main\Entity\DataManager
             new Entity\IntegerField('ID_PUBLISHER'),
             new Entity\IntegerField('ID_AUTHOR'),
             new Entity\StringField('TITLE'),
-            new Entity\DateField('CREATE_AT', array('default_value' => new DateTime)),
-            new Entity\DateField('UPDATE_AT', array('default_value' => new DateTime)),
+            new Entity\DatetimeField('CREATE_AT', array('default_value' => new DateTime)),
+            new Entity\DatetimeField('UPDATE_AT', array('default_value' => new DateTime)),
             new Reference('PUBLISHER', PublisherTable::class, Join::on('this.ID_PUBLISHER', 'ref.ID_PUBLISHER')),
             new Reference('AUTHOR', AuthorTable::class, Join::on('this.ID_AUTHOR', 'ref.ID_AUTHOR')),
         ];

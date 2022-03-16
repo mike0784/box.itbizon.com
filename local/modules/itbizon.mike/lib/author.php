@@ -19,8 +19,8 @@ class AuthorTable extends Main\Entity\DataManager
         return [
             new Entity\IntegerField('ID_AUTHOR', ['primary' => true, 'autocomplete' => true]),
             new Entity\StringField('NAME'),
-            new Entity\DateField('CREATE_AT', array('default_value' => new DateTime)),
-            new Entity\DateField('UPDATE_AT', array('default_value' => new DateTime)),
+            new Entity\DatetimeField('CREATE_AT', array('default_value' => new DateTime)),
+            new Entity\DatetimeField('UPDATE_AT', array('default_value' => new DateTime)),
             new Reference('BOOK', BookTable::class, Join::on('this.ID_AUTHOR', 'ref.ID_AUTHOR')),
         ];
     }

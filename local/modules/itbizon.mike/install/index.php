@@ -53,7 +53,7 @@ class itbizon_mike extends CModule
         if (ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             //$this->UnInstallFiles();
             $this->UnInstallEvents();
-            //$this->UnInstallAgents();
+            $this->UnInstallAgents();
 			if($this->UnInstallDB()) CAdminMessage::ShowNote(Loc::getMessage('ITB_MIKE_MODULE_UNINSTALL_DB_OK'));
 			else {
 				CAdminMessage::ShowNote(Loc::getMessage('ITB_MIKE_MODULE_UNINSTALL_DB_ERROR'));

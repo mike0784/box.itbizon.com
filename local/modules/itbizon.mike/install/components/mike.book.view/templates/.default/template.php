@@ -25,8 +25,8 @@ foreach($arResult as $key=>$value)
         "PUBLISHER" => $value['ITBIZON_MIKE_BOOK_PUBLISHER_NAME_COMPANY'],
         'AUTHOR' => $value['ITBIZON_MIKE_BOOK_AUTHOR_NAME'],
         'TITLE' => $value['TITLE'],
-        "CREATE_AT" => "Ничего",
-        "UPDATE_AT" => "НИЧЕГО"
+        "CREATE_AT" => $value['CREATE_AT'],
+        "UPDATE_AT" => $value['UPDATE_AT']
     ));
 }
 

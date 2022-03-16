@@ -21,8 +21,8 @@ foreach($arResult as $key=>$value)
     $list[] = array('data' => array(
         "ID" => $value['ID_AUTHOR'],
         "AUTHOR" => $value['NAME'],
-        "CREATE_AT" => "Ничего",
-        "UPDATE_AT" => "НИЧЕГО"
+        "CREATE_AT" => $value['CREATE_AT'],
+        "UPDATE_AT" => $value['UPDATE_AT']
     ));
 }
 
