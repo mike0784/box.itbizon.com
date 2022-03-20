@@ -1,0 +1,5 @@
+<?php
+$MESS['ITB_MIKE_PUBLISHER_VIEW_ACTION_DELETE'] = 'Удалить';
+$MESS['ITB_MIKE_PUBLISHER_VIEW_ACTION_READ'] = 'Редактировать';
+$MESS['ITB_MIKE_PUBLISHER_VIEW_NONAME'] = 'Имя отсутствует';
+$MESS['ITB_MIKE_PUBLISHER_VIEW_ERROR_INCLUDE_MODULE'] = 'Модуль Itbizon.mike не установлен';
