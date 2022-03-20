@@ -18,12 +18,26 @@ $arResult = $component->getResult();
 $list = array();
 foreach($arResult as $key=>$value)
 {
-    $list[] = array('data' => array(
-        "ID" => $value['ID_AUTHOR'],
-        "AUTHOR" => $value['NAME'],
-        "CREATE_AT" => $value['CREATE_AT'],
-        "UPDATE_AT" => $value['UPDATE_AT']
-    ));
+    $list[] = [
+        'data' => [
+            "ID" => $value['ID_AUTHOR'],
+            "AUTHOR" => $value['NAME'],
+            "CREATE_AT" => $value['CREATE_AT'],
+            "UPDATE_AT" => $value['UPDATE_AT']
+        ],
+        'actions' => [
+            [
+                'text' => 'Редактировать',
+                'default' => true,
+                //'onclick' => 'document.location.href="/accountant/reports/1/edit/"'
+            ],
+            [
+                'text' => 'Удалить',
+                'default' => true,
+                //'onclick' => 'document.location.href="/accountant/reports/1/delete/"'
+            ]
+        ]
+    ];
 }
 
 ?>
@@ -88,8 +102,8 @@ $APPLICATION->IncludeComponent(
                     'TYPE'  => 'DROPDOWN',
                     'ITEMS' => [
                         ['VALUE' => '', 'NAME' => '- Выбрать -'],
-                        ['VALUE' => 'plus', 'NAME' => 'Поступление'],
-                        ['VALUE' => 'minus', 'NAME' => 'Списание']
+                        ['VALUE' => 'plus', 'NAME' => 'Удалить'],
+                        ['VALUE' => 'minus', 'NAME' => 'Обновить']
                     ]
                 ],
                 ],

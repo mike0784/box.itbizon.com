@@ -17,11 +17,11 @@ class AuthorTable extends Main\Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField('ID_AUTHOR', ['primary' => true, 'autocomplete' => true]),
+            new Entity\IntegerField('IDAUTHOR', ['primary' => true, 'autocomplete' => true]),
             new Entity\StringField('NAME'),
-            new Entity\DatetimeField('CREATE_AT', array('default_value' => new DateTime)),
-            new Entity\DatetimeField('UPDATE_AT', array('default_value' => new DateTime)),
-            new Reference('BOOK', BookTable::class, Join::on('this.ID_AUTHOR', 'ref.ID_AUTHOR')),
+            new Entity\DatetimeField('CREATEAT', array('default_value' => new DateTime)),
+            new Entity\DatetimeField('UPDATEAT', array('default_value' => new DateTime)),
+            new Reference('BOOK', BookTable::class, Join::on('this.IDAUTHOR', 'ref.IDAUTHOR')),
         ];
     }
 }

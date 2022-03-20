@@ -18,14 +18,14 @@ class BookTable extends Main\Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField('ID_BOOK', ['primary' => true, 'autocomplete' => true]),
-            new Entity\IntegerField('ID_PUBLISHER'),
-            new Entity\IntegerField('ID_AUTHOR'),
+            new Entity\IntegerField('IDBOOK', ['primary' => true, 'autocomplete' => true]),
+            (new Entity\IntegerField('IDPUBLISHER'))->configureRequired(),
+            (new Entity\IntegerField('IDAUTHOR'))->configureRequired(),
             new Entity\StringField('TITLE'),
-            new Entity\DatetimeField('CREATE_AT', array('default_value' => new DateTime)),
-            new Entity\DatetimeField('UPDATE_AT', array('default_value' => new DateTime)),
-            new Reference('PUBLISHER', PublisherTable::class, Join::on('this.ID_PUBLISHER', 'ref.ID_PUBLISHER')),
-            new Reference('AUTHOR', AuthorTable::class, Join::on('this.ID_AUTHOR', 'ref.ID_AUTHOR')),
+            new Entity\DatetimeField('CREATEAT', array('default_value' => new DateTime)),
+            new Entity\DatetimeField('UPDATEAT', array('default_value' => new DateTime)),
+            new Reference('PUBLISHER', PublisherTable::class, Join::on('this.IDPUBLISHER', 'ref.IDPUBLISHER')),
+            new Reference('AUTHOR', AuthorTable::class, Join::on('this.IDAUTHOR', 'ref.IDAUTHOR')),
         ];
     }
 }

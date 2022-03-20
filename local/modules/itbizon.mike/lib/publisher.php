@@ -21,11 +21,11 @@ class PublisherTable extends Main\Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField('ID_PUBLISHER', ['primary' => true, 'autocomplete' => true]),
-            new Entity\StringField('NAME_COMPANY'),
-            new Entity\DatetimeField('CREATE_AT', array('default_value' => new DateTime)),
-            new Entity\DatetimeField('UPDATE_AT', array('default_value' => new DateTime)),
-            (new OneToMany('BOOK', BookTable::class, 'ID_PUBLISHER')) -> configureJoinType('inner')
+            new Entity\IntegerField('IDPUBLISHER', ['primary' => true, 'autocomplete' => true]),
+            new Entity\StringField('NAMECOMPANY'),
+            new Entity\DatetimeField('CREATEAT', array('default_value' => new DateTime)),
+            new Entity\DatetimeField('UPDATEAT', array('default_value' => new DateTime)),
+            (new OneToMany('BOOK', BookTable::class, 'IDPUBLISHER')) -> configureJoinType('inner')
         ];
     }
 }

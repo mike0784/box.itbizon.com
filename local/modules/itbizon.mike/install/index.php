@@ -29,7 +29,6 @@ class itbizon_mike extends CModule
 				CAdminMessage::ShowNote(Loc::getMessage('ITB_MIKE_MODULE_INSTALL_OK'));
 				return false;
 			}*/
-                
             if($this->InstallDB())
 			{
 				CAdminMessage::ShowNote(Loc::getMessage('ITB_MIKE_MODULE_INSTALL_DB_OK'));

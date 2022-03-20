@@ -3,6 +3,8 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Application;
 use Itbizon\Mike\BookTable;
+use Itbizon\Mike\PublisherTable;
+use Itbizon\Service\Component\Simple;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
@@ -11,6 +13,7 @@ Loc::loadMessages(__FILE__);
 class BookAdd extends CBitrixComponent
 {
     protected $mass = array();
+    public $ss = "Говно";
     /**
      * Проверка подключения модуля
      */
@@ -28,7 +31,7 @@ class BookAdd extends CBitrixComponent
      */
     public function executeComponent() {
         $this -> _checkModules();
-
+        echo "Класс";
         $this->_request = Application::getInstance()->getContext()->getRequest();
         if($this->_request->getPost('add'))
         {
@@ -39,6 +42,7 @@ class BookAdd extends CBitrixComponent
             }
         }
 
+       print "Жопа: ".$this->getTemplatePage();
         $this->includeComponentTemplate();
     }
 

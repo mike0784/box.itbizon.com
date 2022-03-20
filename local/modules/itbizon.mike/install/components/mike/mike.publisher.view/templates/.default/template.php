@@ -8,23 +8,18 @@ Loc::loadMessages(__FILE__);
 *@var CAllMain $APPLICATION
 *@var CBitrixComponentTemplate $this
 *@var array $arResult
-*@var BookView $component
+*@var PublisherView $component
  */
 
 $component = $this->getComponent();
 $arResult = $component->getResult();
 
-$actions = array(array('VALUE' => '', 'NAME' => '- Выбрать -'),
-    array('VALUE' => 'plus', 'NAME' => 'Удалить'),
-    array('VALUE' => 'minus', 'NAME' => 'Обновить'));
 $list = array();
 foreach($arResult as $key=>$value)
 {
     $list[] = array('data' => array(
         "ID" => $value['ID_PUBLISHER'],
-        "PUBLISHER" => $value['ITBIZON_MIKE_BOOK_PUBLISHER_NAME_COMPANY'],
-        'AUTHOR' => $value['ITBIZON_MIKE_BOOK_AUTHOR_NAME'],
-        'TITLE' => $value['TITLE'],
+        "PUBLISHER" => $value['NAME_COMPANY'],
         "CREATE_AT" => $value['CREATE_AT'],
         "UPDATE_AT" => $value['UPDATE_AT']
     ));
@@ -58,8 +53,6 @@ $APPLICATION->IncludeComponent(
     'COLUMNS' => [
         ['id' => 'ID', 'name' => 'ID', 'sort' => 'ID', 'default' => true],
         ['id' => 'PUBLISHER', 'name' => 'Наименование организации', 'sort' => 'DATE', 'default' => true],
-        ['id' => 'AUTHOR', 'name' => 'Автор', 'sort' => 'DATE', 'default' => true],
-        ['id' => 'TITLE', 'name' => 'Наименование книги', 'sort' => 'DATE', 'default' => true],
         ['id' => 'CREATE_AT', 'name' => 'Дата создания', 'sort' => 'AMOUNT', 'default' => true],
         ['id' => 'UPDATE_AT', 'name' => 'Дата обнавления', 'sort' => 'PAYER_INN', 'default' => true],
     ],
@@ -85,23 +78,23 @@ $APPLICATION->IncludeComponent(
     'SHOW_TOTAL_COUNTER'        => true,
     'SHOW_PAGESIZE'             => true,
     'SHOW_ACTION_PANEL'         => true,
-        'ACTION_PANEL'              => [
-            'GROUPS' => [
-                'TYPE' => [
+    'ACTION_PANEL'              => [
+        'GROUPS' => [
+            'TYPE' => [
+                'ITEMS' => [
+                [
+                    'ID'    => 'set-type',
+                    'TYPE'  => 'DROPDOWN',
                     'ITEMS' => [
-                        [
-                            'ID'    => 'set-type',
-                            'TYPE'  => 'DROPDOWN',
-                            'ITEMS' => [
-                                ['VALUE' => '', 'NAME' => '- Выбрать -'],
-                                ['VALUE' => 'plus', 'NAME' => 'Удалить'],
-                                ['VALUE' => 'minus', 'NAME' => 'Обновить']
-                            ]
-                        ],
-                    ],
-                ]
-            ],
+                        ['VALUE' => '', 'NAME' => '- Выбрать -'],
+                        ['VALUE' => 'plus', 'NAME' => 'Удалить'],
+                        ['VALUE' => 'minus', 'NAME' => 'Обновить']
+                    ]
+                ],
+                ],
+            ]
         ],
+    ],
     'ALLOW_COLUMNS_SORT'        => true,
     'ALLOW_COLUMNS_RESIZE'      => true,
     'ALLOW_HORIZONTAL_SCROLL'   => true,
