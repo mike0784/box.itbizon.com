@@ -21,7 +21,7 @@ class PublisherTable extends Main\Entity\DataManager
     public static function getMap()
     {
         return [
-            new Entity\IntegerField('IDPUBLISHER', ['primary' => true, 'autocomplete' => true]),
+            new Entity\IntegerField('ID', ['primary' => true, 'autocomplete' => true]),
             new Entity\StringField('NAMECOMPANY'),
             new Entity\DatetimeField('CREATEAT', array('default_value' => new DateTime)),
             new Entity\DatetimeField('UPDATEAT', array('default_value' => new DateTime)),

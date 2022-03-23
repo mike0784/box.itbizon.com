@@ -1,0 +1,3 @@
+<?php
+$MESS['ITB_MIKE_AUTHOR_UPDATE_DEFAULT_TEMPLETE_TITLE'] = "Редактирование имени автора";
+$MESS['ITB_MIKE_AUTHOR_UPDATE_DEFAULT_TEMPLETE_FIELD_TITLE'] = "Имя автора";
