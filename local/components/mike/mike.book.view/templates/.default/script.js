@@ -3,7 +3,7 @@ function deleteBook(id, gridId) {
         "my_answer",
         null,
         {
-            content: BX( 'ajax-add-answer'),
+            content: "Вы действительно хотите удалить эту книгу?",
             closeIcon: {right: "20px", top: "10px" },
             titleBar: "Удаление книги",
             zIndex: 0,

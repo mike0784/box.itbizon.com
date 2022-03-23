@@ -3,6 +3,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Application;
 use Bitrix\Main\Type\DateTime;
+use Bitrix\Main\Web\Uri;
 use Itbizon\Mike\AuthorTable;
 use Itbizon\Service\Component\Simple;
 use Itbizon\Service\Component\RouterHelper;
@@ -16,6 +17,7 @@ class AuthorUpdate extends Simple
 {
     protected $mass = array();
     public $id;
+    public $name;
     /**
      * Проверка подключения модуля
      */
@@ -45,15 +47,29 @@ class AuthorUpdate extends Simple
         $this->setRoute($this->arParams['HELPER']);
 
         $this->id = intval($this->getRoute()->getVariable('IDAUTHOR'));
+        $author = AuthorTable::getByPrimary($this->id)->fetchObject();
+        if(!$author) {
+            throw new Exception(Loc::getMessage('Данного автора нет'));
+        }
+        $this->name = $author->getName();
 
-        $this->_request = Application::getInstance()->getContext()->getRequest();
-        if($this->_request->getPost('update'))
+        $request = Application::getInstance()->getContext()->getRequest();
+        if($request->getPost('save') === 'Y')
         {
-            $data = $this->_request->getPostList();
+            $data = $request->getPost('DATA');
             if(!is_null($data))
             {
-                AuthorTable::update($this->id, array('NAME' => $data['NAME'], 'UPDATEAT' => new DateTime));
+                $result = AuthorTable::update($this->id, array('NAME' => $data['NAME'], 'UPDATEAT' => new DateTime));
+                if(!$result->isSuccess()){
+                    throw new Exception(implode('; ', $result->getErrorMessages()));
+                }
             }
+            $uri = (new Uri($this->getRoute()->getUrl('author.update', ['IDAUTHOR' => $this->id])));
+            if($this->getRoute()->isInSliderMode()) {
+                $uri->addParams(['IFRAME' => 'Y']);
+            }
+            LocalRedirect($uri->getLocator());
+            die();
         }
 
         $this->includeComponentTemplate();

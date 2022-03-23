@@ -10,31 +10,28 @@ Loc::loadMessages(__FILE__);
  *@var CAllMain $APPLICATION
  *@var CBitrixComponentTemplate $this
  *@var array $arResult
+ *@var AuthorAdd $component
  */
 
-/*$component = $this->getComponent();
-$arResult = $component->getResult();*/
+$component = $this->getComponent();
+
 
 ?>
+<?php $APPLICATION->SetTitle(Loc::getMessage('ITB_MIKE_AUTHOR_ADD_TEMPLATE_TITLE')); ?>
 <form method="POST">
-    <div>
-        <div>
+    <div class="form-group row">
+        <div class="col">
+            <label for="field-name"><?= Loc::getMessage('ITB_MIKE_AUTHOR_ADD_TEMPLATE_LABEL')?></label>
             <div class="ui-ctl ui-ctl-textbox">
-                <input type="text"  name="AUTHOR" class="ui-ctl-element" placeholder="Имя автора">
+                <input type="text"  name="AUTHOR" class="ui-ctl-element" placeholder="<?= Loc::getMessage('ITB_MIKE_AUTHOR_ADD_TEMPLATE_INPUT_PLACEHOLDER')?>">
             </div>
-            <?$APPLICATION->IncludeComponent('bitrix:ui.button.panel', '', [
+            <? $APPLICATION->IncludeComponent('bitrix:ui.button.panel', '', [
                 'BUTTONS' => [
-                    [
-                        'TYPE' => 'save', // тип - обязательный
-                        'CAPTION' => 'Добавить', // название - не обязательный
-                        'NAME' => 'add', // атрибут `name` инпута - не обязательный
-                        //'ID' => 'my-save-id', // атрибут `id` инпута - не обязательный
-                        'VALUE' => 'Y', // атрибут `value` инпута - не обязательный
-                        //'ONCLICK' => '', // атрибут `onclick` инпута - не обязательный
-                    ],
+                    'save',
+                    'caption' => Loc::getMessage('ITB_MIKE_AUTHOR_ADD_TEMPLATE_BUTTON_CAPTION'),
+                    'cancel' => $component->getRoute()->getUrl('view')
                 ]
-            ]);?>
-
+            ]); ?>
         </div>
     </div>
 </form>

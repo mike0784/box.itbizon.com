@@ -2,13 +2,15 @@
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Application;
+use Bitrix\Main\Web\Uri;
 use Itbizon\Mike\AuthorTable;
+use Itbizon\Service\Component\Simple;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 Loc::loadMessages(__FILE__);
 
-class AuthorAdd extends CBitrixComponent
+class AuthorAdd extends Simple
 {
     protected $result = array();
     /**
@@ -29,14 +31,26 @@ class AuthorAdd extends CBitrixComponent
     public function executeComponent() {
        $this -> _checkModules();
 
-        $this->_request = Application::getInstance()->getContext()->getRequest();
-        if($this->_request->getPost('add'))
+        $this->setRoute($this->arParams['HELPER']);
+
+        $request = Application::getInstance()->getContext()->getRequest();
+        if($request->getPost('save'))
         {
-            $data = $this->_request->getPost('AUTHOR');
+            $data = $request->getPost('AUTHOR');
             if(!is_null($data))
             {
-                AuthorTable::add(array('NAME' => $data));
+                $result = AuthorTable::add(array('NAME' => $data));
+                if (!$result->isSuccess()) {
+                    throw new Exception(implode('; ', $result->getErrorMessages()));
+                }
             }
+
+            $uri = (new Uri($this->getRoute()->getUrl('author.add')));
+            if($this->getRoute()->isInSliderMode()) {
+                $uri->addParams(['IFRAME' => 'Y']);
+            }
+            LocalRedirect($uri->getLocator());
+            die();
         }
 
         $this->includeComponentTemplate();

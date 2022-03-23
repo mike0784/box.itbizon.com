@@ -23,71 +23,80 @@ $component = $this->getComponent();
 <?php $APPLICATION->SetTitle("Список книг"); ?>
 <? if($component->getRoute()!=null): ?>
     <?php if ($component->getRoute()->getAction() == 'view') : ?>
-        <?
-        $APPLICATION->IncludeComponent(
-            "bitrix:ui.button.panel",
-            "",
-            Array(
-                "BUTTONS" => [
-                    ['TYPE'=>'save',
-                        'CAPTION'=>'Просмотр авторов',
-                        'NAME'=>'aurhorview',
-                        'ID' => 'aurhorview',
-                        'VALUE'=>'Y',
-                        'onclick' =>  'BX.ready(function(){
-                                BX.SidePanel.Instance.open(
-                                    "' . $component->getRoute()->getUrl('mike.author.view') . '",
+        <?php
+            Toolbar::addFilter([ // Добавляем на тулбар фильтр
+                'GRID_ID' => $component->getGrid()->getGridId(),
+                'FILTER_ID' => $component->getGrid()->getFilterId(),
+                'FILTER' => $component->getGrid()->getFilter(),
+                'ENABLE_LIVE_SEARCH' => true,
+                'ENABLE_LABEL' => true,
+                'RESET_TO_DEFAULT_MODE' => true,
+            ]);
+
+            Toolbar::addButton(
+                new Button([
+                        'color' => Color::PRIMARY,
+                        'click' => new JsCode(
+                            'BX.SidePanel.Instance.open(
+                                "' . $component->getRoute()->getUrl('book.add') . '",
                                     {
                                         cacheable: false,
                                         width: 600
                                     }
-                                );
-                            })'],
-                    ['TYPE'=>'save',
-                        'CAPTION'=>'Просмотр издательств',
-                        'NAME'=>'publusherview',
-                        'ID' => 'publusherview',
-                        'VALUE'=>'Y',
-                        'ONCLICK' =>  'BX.ready(function(){
-                                BX.SidePanel.Instance.open(
-                                    "' . $component->getRoute()->getUrl('mike.publisher.view') . '",
-                                    {
-                                        cacheable: false,
-                                        width: 600
-                                    }
-                                );
-                            })',
-                    ],
-                    ['TYPE'=>'save',
-                        'CAPTION'=>'Добавить книгу',
-                        'NAME'=>'bookadd',
-                        'ID' => 'bookadd',
-                        'VALUE'=>'Y',
-                        'ONCLICK' =>  'BX.ready(function(){
-                                BX.SidePanel.Instance.open(
-                                    "' . $component->getRoute()->getUrl('mike.book.add') . '",
-                                    {
-                                        cacheable: false,
-                                        width: 600
-                                    }
-                                );
-                            })',
-                    ],
-                ]
+                                );'
+                        ),
+                        'icon' => Icon::ADD,
+                        'text' => Loc::getMessage('ITB_MIKE_TEMPLATE_BUTTON_ADD'),
+                    ]
+                )
+            );
+
+            Toolbar::addButton(
+                new Button([
+                        'color' => Color::PRIMARY,
+                        'click' => new JsCode(
+                            'BX.SidePanel.Instance.open(
+                                    "' . $component->getRoute()->getUrl('publisher.view') . '",
+                                        {
+                                            cacheable: false,
+                                            width: 600
+                                        }
+                                    );'
+                        ),
+                        'icon' => Icon::ADD,
+                        'text' => Loc::getMessage('ITB_MIKE_TEMPLATE_BUTTON_VIEW_PUBLISHER'),
+                    ]
+                )
+            );
+
+            Toolbar::addButton(
+                new Button([
+                        'color' => Color::PRIMARY,
+                        'click' => new JsCode(
+                            'BX.SidePanel.Instance.open(
+                                        "' . $component->getRoute()->getUrl('author.view') . '",
+                                            {
+                                                cacheable: false,
+                                                width: 600
+                                            }
+                                        );'
+                        ),
+                        'icon' => Icon::ADD,
+                        'text' => Loc::getMessage('ITB_MIKE_TEMPLATE_BUTTON_VIEW_AUTHOR'),
+                    ]
+                )
             )
-        );?>
-
-
+        ?>
         <?php
         $APPLICATION->IncludeComponent(
         'bitrix:main.ui.grid',
         '',
             [
-            'GRID_ID' => $component->gridId,
-            'COLUMNS' => $component->gridColumns,
-            'ROWS' => $component -> gridRows,
+            'GRID_ID' => $component->getGrid()->getGridId(),
+            'COLUMNS' => $component->getGrid()->getColumns(),
+            'ROWS' => $component -> getGrid() -> getRows(),
             'SHOW_ROW_CHECKBOXES' => true,
-            'NAV_OBJECT' => $component->gridNav,
+            'NAV_OBJECT' => $component->getGrid()->getNavigation(),
             'AJAX_MODE' => 'N',
             'AJAX_ID' => \CAjax::getComponentID('bitrix:main.ui.grid', '.default', ''),
             'PAGE_SIZES' => [
@@ -139,7 +148,7 @@ $component = $this->getComponent();
             'bitrix:ui.sidepanel.wrapper',
             '',
             [
-                'POPUP_COMPONENT_NAME' => 'mike:' . $component->getRoute()->getAction(),
+                'POPUP_COMPONENT_NAME' => 'mike:mike.' . $component->getRoute()->getAction(),
                 'POPUP_COMPONENT_TEMPLATE_NAME' => '',
                 'POPUP_COMPONENT_PARAMS' => ['HELPER' => $component->getRoute(),],
                 'CLOSE_AFTER_SAVE' => true,

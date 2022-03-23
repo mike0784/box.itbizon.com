@@ -6,6 +6,7 @@ use Bitrix\UI\Buttons\JsCode;
 use Itbizon\Mike\AuthorTable;
 use Itbizon\Service\Component\Simple;
 use Itbizon\Service\Component\GridHelper;
+use Itbizon\Service\Component\RouterHelper;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
@@ -15,17 +16,6 @@ class AuthorView extends Simple
 {
     protected $result = array();
     public $gridId = 'mike_author';
-    public $gridRows = array();
-    public $gridColumns = [
-        ['id' => 'IDAUTHOR', 'name' => 'ID', 'sort' => 'ID', 'default' => true],
-        ['id' => 'AUTHOR', 'name' => 'Имя автора', 'sort' => 'AUTHOR', 'default' => true],
-        ['id' => 'CREATEAT', 'name' => 'Дата создания', 'sort' => 'CREATEAT', 'default' => true],
-        ['id' => 'UPDATEAT', 'name' => 'Дата обнавления', 'sort' => 'UPDATEAT', 'default' => true],
-    ];
-
-    public $gridNav;
-    public $listAuthor = array();
-    public $listPublisher = array();
     protected  $grid;
     /**
      * Проверка подключения модуля
@@ -34,6 +24,9 @@ class AuthorView extends Simple
     {
         if(!Loader::includeModule('itbizon.mike')){
             throw new Exception(Loc::getMessage('ITB_MIKE_AUTHOR_VIEW_ERROR_MODULE'));
+        }
+        if (!Loader::includeModule('itbizon.service')) {
+            throw new Exception("Модуль itbizon.service не найден");
         }
     }
 
@@ -46,28 +39,32 @@ class AuthorView extends Simple
     {
         $this->_checkModules();
 
+        if (!isset($this->arParams['HELPER']) || !is_a($this->arParams['HELPER'], RouterHelper::class)) {
+            throw new Exception("Некорректный вход");
+        }
+
         $this->setRoute($this->arParams['HELPER']);
 
-        $this->grid = new GridHelper($this->gridId);
-        $this->grid->setColumns($this->gridColumns);
-        $this->gridNav = $this->grid->getNavigation();
+        $grid = new GridHelper($this->gridId);
+        $this->setGrid($grid);
+        $grid->setColumns([
+            ['id' => 'IDAUTHOR', 'name' => 'ID', 'sort' => 'IDAUTHOR', 'default' => true],
+            ['id' => 'AUTHOR', 'name' => 'Имя автора', 'sort' => 'NAME', 'default' => true],
+            ['id' => 'CREATEAT', 'name' => 'Дата создания', 'sort' => 'CREATEAT', 'default' => true],
+            ['id' => 'UPDATEAT', 'name' => 'Дата обнавления', 'sort' => 'UPDATEAT', 'default' => true],
+        ]);
 
-        $this->getSelect();
+        $result = AuthorTable::getList([
+            'select' => ['*'],
+            'filter' => $grid->getFilterData(),
+            'limit' => $grid->getNavigation()->getLimit(),
+            'offset' => $grid->getNavigation()->getOffset(),
+            'order' => $grid->getSort(),
+            'count_total' => true,
+        ]);
 
-        $this->gridRows = $this->grid->getRows();
-
-        $this->includeComponentTemplate();
-    }
-
-    public function getSelect()
-    {
-        $query = new Bitrix\Main\Entity\Query(AuthorTable::getEntity());
-        $query -> setSelect(array('*'));
-        $query->setFilter(array($this->grid->getFilterData()));
-        $q = $query->exec();
-
-        while($item = $q->fetchObject()) {
-            $this->grid->addRow(
+        while($item = $result->fetchObject()) {
+            $grid->addRow(
                 [
                     'data' => [
                         'IDAUTHOR' => $item->getIdauthor(),
@@ -82,7 +79,7 @@ class AuthorView extends Simple
                             'default' => true,
                             'onclick' => 'BX.ready(function(){
                                 BX.SidePanel.Instance.open(
-                                    "' . $this->getRoute()->getUrl('mike.author.update', ['IDAUTHOR' => $item->getIdauthor()]) . '",
+                                    "' . $this->getRoute()->getUrl('author.update', ['IDAUTHOR' => $item->getIdauthor()]) . '",
                                     {
                                         cacheable: false,
                                         width: 600
@@ -100,10 +97,7 @@ class AuthorView extends Simple
                 ]
             );
         }
-    }
 
-    public function getResult()
-    {
-        return $this->result;
+        $this->includeComponentTemplate();
     }
 }

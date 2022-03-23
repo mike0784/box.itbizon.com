@@ -114,7 +114,7 @@ class itbizon_mike extends CModule
 
     public function InstallFiles()
     {
-        if(!CopyDirFiles(__DIR__ . '/components', $_SERVER['DOCUMENT_ROOT'] . '/local/components/itbizon', true, true))
+        if(!CopyDirFiles(__DIR__ . '/components', $_SERVER['DOCUMENT_ROOT'] . '/local/components/mike', true, true))
         {
             $GLOBALS["APPLICATION"]->ThrowException(Loc::getMessage('ITB_MIKE_MODULE_ERROR_COPY_FILES'));
             return false;
@@ -129,7 +129,7 @@ class itbizon_mike extends CModule
             $GLOBALS["APPLICATION"]->ThrowException(Loc::getMessage('ITB_MIKE_MODULE_ERROR_DELETE_FILES'));
             return false;
         }*/
-        $this->UnInstallDB(false);
+
         return true;
     }
 

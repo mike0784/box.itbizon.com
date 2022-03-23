@@ -2,16 +2,18 @@
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Application;
+use Bitrix\Main\Web\Uri;
 use Itbizon\Mike\BookTable;
 use Itbizon\Mike\PublisherTable;
 use Itbizon\Mike\AuthorTable;
 use Itbizon\Service\Component\Simple;
+use Itbizon\Service\Component\RouterHelper;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 Loc::loadMessages(__FILE__);
 
-class BookAdd extends CBitrixComponent
+class BookAdd extends Simple
 {
     protected $mass = array();
     public $listPublisher;
@@ -24,6 +26,10 @@ class BookAdd extends CBitrixComponent
         if(!Loader::includeModule('itbizon.mike')){
             throw new Exception(Loc::getMessage('ITB_MIKE_BOOK_VIEW_ERROR_INCLUDE_MODULE'));
         }
+
+        if (!Loader::includeModule('itbizon.service')) {
+            throw new Exception("Модуль itbizon.service не найден");
+        }
     }
 
     /**
@@ -34,50 +40,68 @@ class BookAdd extends CBitrixComponent
     public function executeComponent() {
         $this -> _checkModules();
 
+        if (!isset($this->arParams['HELPER']) || !is_a($this->arParams['HELPER'], RouterHelper::class)) {
+            throw new Exception("Некорректный вход");
+        }
+
+        $this->setRoute($this->arParams['HELPER']);
+
         $this->createListAuthor();
         $this->createListPublisher();
 
         $this->_request = Application::getInstance()->getContext()->getRequest();
-        if($this->_request->getPost('add'))
+        if($this->_request->getPost('save') === 'Y')
         {
-            $data = $this->_request->getPostList();
+            $data = $this->_request->getPost('DATA');
             if(!is_null($data))
             {
-                BookTable::add(array('IDPUBLISHER' => $data['Publisher'], 'IDAUTHOR' => $data['Author'], 'TITLE' => $data['TITLE']));
+                $result = BookTable::add(array('IDPUBLISHER' => $data['IDPUBLISHER'], 'IDAUTHOR' => $data['IDAUTHOR'], 'TITLE' => $data['TITLE']));
+                if(!$result->isSuccess()){
+                    throw new Exception(implode('; ', $result->getErrorMessages()));
+                }
             }
+
+            //Закрытие слайдера
+            $uri = (new Uri($this->getRoute()->getUrl('book.add')));
+            if($this->getRoute()->isInSliderMode()) {
+                $uri->addParams(['IFRAME' => 'Y']);
+            }
+            LocalRedirect($uri->getLocator());
+            die();
         }
 
         $this->includeComponentTemplate();
     }
 
-    public function getResult()
-    {
-        return $this->mass;
-    }
-
     public function createListPublisher(): void
     {
         $result = PublisherTable::getList([
-            'select' => ['IDPUBLISHER', 'NAMECOMPANY'],
-            'count_total' => true,
+            'select' => ['IDPUBLISHER', 'NAMECOMPANY']
         ]);
 
-        while($item = $result->fetch())
-        {
-            $this->listPublisher[] = $item;
+        while ($item = $result->fetch()) {
+            $this->listPublisher[$item["IDPUBLISHER"]] = $item['NAMECOMPANY'];
         }
     }
 
     public function createListAuthor()
     {
         $result = AuthorTable::getList([
-            'select' => ['IDAUTHOR', 'NAME'],
-            'count_total' => true,
+            'select' => ['IDAUTHOR', 'NAME']
         ]);
 
-        while($item = $result->fetch())
-        {
-            $this->listAuthor[] = $item;
+        while ($item = $result->fetch()) {
+            $this->listAuthor[$item["IDAUTHOR"]] = $item['NAME'];
         }
+    }
+
+    public function getListPublisher()
+    {
+        return $this->listPublisher;
+    }
+
+    public function getListAuthor()
+    {
+        return $this->listAuthor;
     }
 }

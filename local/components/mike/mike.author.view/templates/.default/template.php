@@ -2,6 +2,11 @@
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Localization\Loc;
+use Bitrix\UI\Buttons\Button;
+use Bitrix\UI\Buttons\Color;
+use Bitrix\UI\Buttons\Icon;
+use Bitrix\UI\Buttons\JsCode;
+use Bitrix\UI\Toolbar\Facade\Toolbar;
 \Bitrix\Main\UI\Extension::load("ui.forms");
 \Bitrix\Main\UI\Extension::load("ui.buttons");
 Loc::loadMessages(__FILE__);
@@ -13,46 +18,37 @@ Loc::loadMessages(__FILE__);
  */
 
 $component = $this->getComponent();
-$arResult = $component->getResult();
 
 $APPLICATION->SetTitle("Список авторов");
 
 ?>
-    <?php
-    $APPLICATION->IncludeComponent(
-        "bitrix:ui.button.panel",
-        "",
-        Array(
-            "BUTTONS" => [
-                ['TYPE'=>'save',
-                    'CAPTION'=>'Добавить автора',
-                    'NAME'=>'aurhorview',
-                    'ID' => 'aurhorview',
-                    'VALUE'=>'Y',
-                    'onclick' =>  'BX.ready(function(){
-                                    BX.SidePanel.Instance.open(
-                                        "' . $component->getRoute()->getUrl('mike.author.add') . '",
-                                        {
-                                            cacheable: false,
-                                            width: 600
-                                        }
-                                    );
-                                })'
-                ],
-            ]
-        )
-    );
-    ?>
-    <?php
+<?php
+Toolbar::addButton(new Button([
+    'color' => Color::PRIMARY,
+    'click' => new JsCode(
+        'BX.SidePanel.Instance.open(
+                "' . $component->getRoute()->getUrl("") .'author.add/'. '",
+                {
+                cacheable: false,
+                width: 450
+                }
+                );'
+    ),
+    'icon' => Icon::ADD,
+    'text' => "Добавить автора",
+]));
+//$component->getRoute()->getUrl('mike.author.add')
+?>
+<?php
     $APPLICATION->IncludeComponent(
     'bitrix:main.ui.grid',
     '',
         [
-        'GRID_ID' => $component->gridId,
-        'COLUMNS' => $component->gridColumns,
-        'ROWS' => $component -> gridRows,
-        'SHOW_ROW_CHECKBOXES' => true,
-        'NAV_OBJECT' => $component->gridNav,
+        'GRID_ID' => $component->getGrid()->getGridId(),
+        'COLUMNS' => $component->getGrid()->getColumns(),
+        'ROWS' => $component -> getGrid() -> getRows(),
+        'SHOW_ROW_CHECKBOXES' => false,
+        'NAV_OBJECT' => $component->getGrid()->getNavigation(),
         'AJAX_MODE' => 'N',
         'AJAX_ID' => \CAjax::getComponentID('bitrix:main.ui.grid', '.default', ''),
         'PAGE_SIZES' => [

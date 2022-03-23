@@ -7,6 +7,7 @@ use Itbizon\Mike\PublisherTable;
 use Bitrix\Main\Type;
 use Itbizon\Service\Component\Simple;
 use Itbizon\Service\Component\GridHelper;
+use Itbizon\Service\Component\RouterHelper;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
@@ -16,18 +17,9 @@ class PublisherView extends Simple
 {
     protected $result = array();
     public $gridId = 'mike_publisher';
-    public $gridRows = array();
-    public $gridColumns = [
-        ['id' => 'IDPUBLISHER', 'name' => 'ID', 'sort' => 'ID', 'default' => true],
-        ['id' => 'NAMECOMPANY', 'name' => 'Имя автора', 'sort' => 'AUTHOR', 'default' => true],
-        ['id' => 'CREATEAT', 'name' => 'Дата создания', 'sort' => 'CREATEAT', 'default' => true],
-        ['id' => 'UPDATEAT', 'name' => 'Дата обнавления', 'sort' => 'UPDATEAT', 'default' => true],
-    ];
 
     public $gridNav;
-    public $listAuthor = array();
-    public $listPublisher = array();
-    protected  $grid;
+    public  $grid;
     /**
      * Проверка подключения модуля
      */
@@ -35,6 +27,9 @@ class PublisherView extends Simple
     {
         if(!Loader::includeModule('itbizon.mike')){
             throw new Exception(Loc::getMessage('ITB_MIKE_PUBLISHER_VIEW_ERROR_INCLUDE_MODULE'));
+        }
+        if (!Loader::includeModule('itbizon.service')) {
+            throw new Exception("Модуль itbizon.service не найден");
         }
     }
 
@@ -44,29 +39,35 @@ class PublisherView extends Simple
      * всю логику стараемся разносить по классам и методам
      */
     public function executeComponent() {
-       $this -> _checkModules();
+        $this -> _checkModules();
+
+        if (!isset($this->arParams['HELPER']) || !is_a($this->arParams['HELPER'], RouterHelper::class)) {
+            throw new Exception("Некорректный вход");
+        }
 
         $this->setRoute($this->arParams['HELPER']);
 
-        $this->grid = new GridHelper($this->gridId);
-        $this->grid->setColumns($this->gridColumns);
-        $this->gridNav = $this->grid->getNavigation();
+        $grid = new GridHelper($this->gridId);
 
-        $this->getSelect();
+        $this->setGrid($grid);
+        $grid->setColumns([
+            ['id' => 'IDPUBLISHER', 'name' => 'ID', 'sort' => 'IDPUBLISHER', 'default' => true],
+            ['id' => 'NAMECOMPANY', 'name' => 'Название организации', 'sort' => 'NAMECOMPANY', 'default' => true],
+            ['id' => 'CREATEAT', 'name' => 'Дата создания', 'sort' => 'CREATEAT', 'default' => true],
+            ['id' => 'UPDATEAT', 'name' => 'Дата обнавления', 'sort' => 'UPDATEAT', 'default' => true],
+        ]);
+        $this->gridNav = $grid->getNavigation();
 
-        $this->gridRows = $this->grid->getRows();
+        $result = PublisherTable::getList([
+            'select' => ['*'],
+            'filter' => $grid->getFilterData(),
+            'limit' => $grid->getNavigation()->getLimit(),
+            'offset' => $grid->getNavigation()->getOffset(),
+            'order' => $grid->getSort(),
+            'count_total' => true,
+        ]);
 
-        $this->includeComponentTemplate();
-    }
-
-    public function getSelect()
-    {
-        $query = new Bitrix\Main\Entity\Query(PublisherTable::getEntity());
-        $query -> setSelect(array('*'));
-        $query->setFilter(array($this->grid->getFilterData()));
-        $q = $query->exec();
-
-        while($item = $q->fetchObject()) {
+        while($item = $result->fetchObject()) {
             $this->grid->addRow(
                 [
                     'data' => [
@@ -80,15 +81,12 @@ class PublisherView extends Simple
                         [
                             'text' => Loc::getMessage('ITB_MIKE_PUBLISHER_VIEW_ACTION_READ'),
                             'default' => true,
-                            'onclick' => 'BX.ready(function(){
-                                BX.SidePanel.Instance.open(
-                                    "' . $this->getRoute()->getUrl('mike.publisher.update', ['IDPUBLISHER' => $item->getIdpublisher()]) . '",
-                                    {
-                                        cacheable: false,
-                                        width: 600
-                                    }
-                                );
-                            })',
+                            'onclick' => (new JsCode(
+                                'BX.SidePanel.Instance.open("' . $this->getRoute()->getUrl('publisher.update', ['IDPUBLISHER' => $item->getIdpublisher()]) . '", {
+                                    cacheable: false,
+                                    width: 450
+                                 });'
+                            ))->getCode(),
                         ],
 
                         [
@@ -100,10 +98,7 @@ class PublisherView extends Simple
                 ]
             );
         }
-    }
-
-    public function getResult()
-    {
-        return $this->result;
+        $grid->getNavigation()->setRecordCount($result->getCount());
+        $this->includeComponentTemplate();
     }
 }

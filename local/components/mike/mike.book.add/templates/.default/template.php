@@ -1,6 +1,9 @@
 <?php
 if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
+use Bitrix\Main\Application;
+use Bitrix\Main\UI\Extension;
+use Itbizon\Service\Component\Form;
 use Bitrix\Main\Localization\Loc;
 \Bitrix\Main\UI\Extension::load("ui.forms");
 Loc::loadMessages(__FILE__);
@@ -12,47 +15,47 @@ Loc::loadMessages(__FILE__);
  */
 
 $component = $this->getComponent();
-$arResult = $component->getResult();
 ?>
-<?php $APPLICATION->SetTitle("Добавление книг"); ?>
+<?php $APPLICATION->SetTitle("Добавление книги"); ?>
 <form method="POST">
-    <div>
-        <div>
-            <div class="ui-ctl ui-ctl-textbox">
-                <select name="Publisher">
-                    <?php foreach($component->listPublisher as $value):?>
-                        <option value="<?= $value['IDPUBLISHER'] ?>"><?= $value['NAMECOMPANY']==null? 'Название не задано': $value['NAMECOMPANY'] ?></option>
-                    <?endforeach;?>
-                </select>
-            </div>
-            <br>
-            <div class="ui-ctl ui-ctl-textbox">
-                <select name="Author">
-                    <?php foreach($component->listAuthor as $value):?>
-                        <option value="<?= $value['IDAUTHOR'] ?>"><?= $value['NAME']==null? 'Имя не задано': $value['NAME'] ?></option>
-                    <? endforeach;?>
-                </select>
-            </div>
-            <br>
-            <div class="ui-ctl ui-ctl-textbox">
-                <input type="text" name="TITLE" class="ui-ctl-element" placeholder="Название книги">
-            </div>
-        </div>
-            <div>
-                <?$APPLICATION->IncludeComponent('bitrix:ui.button.panel', '', [
-                    'BUTTONS' => [
-                        [
-                            'TYPE' => 'save', // тип - обязательный
-                            'CAPTION' => 'Добавить', // название - не обязательный
-                            'NAME' => 'add', // атрибут `name` инпута - не обязательный
-                            //'ID' => 'my-save-id', // атрибут `id` инпута - не обязательный
-                            'VALUE' => 'Y', // атрибут `value` инпута - не обязательный
-                            //'ONCLICK' => '', // атрибут `onclick` инпута - не обязательный
-                        ],
+    <div class="form-group row">
+        <div class="col">
+            <?php
+            $APPLICATION->IncludeComponent(
+                'itbizon:service.form.fieldset',
+                '',
+                [
+                    'FIELDS' => [
+                        (new Form\StringField())->setName('TITLE')
+                            ->setTitle("TITLE")
+                            //->setValue("Введите название книги")
+                            ->setOption([
+                                'placeholder' => 'Введите название книги',
+                            ]),
+                        (new Form\SelectField())->setName('IDPUBLISHER')
+                            ->setTitle("PUBLISHER")
+                            //->setValue($data['PUBLISHER_ID'])
+                            ->setOption([
+                                'items' => $component->getListPublisher(),
+                                'use_empty' => true,
+                            ]),
+                        (new Form\SelectField())->setName('IDAUTHOR')
+                            ->setTitle("AUTHOR")
+                            //->setValue($data['AUTHOR_ID'])
+                            ->setOption([
+                                'items' => $component->getListAuthor(),
+                                'use_empty' => true,
+                            ]),
                     ]
-                ]);?>
-            </div>
-
+                ]
+            ); ?>
+        </div>
     </div>
+    <? $APPLICATION->IncludeComponent('bitrix:ui.button.panel', '', [
+        'BUTTONS' => [
+            'save',
+            'cancel' => $component->getRoute()->getUrl('view')
+        ]
+    ]); ?>
 </form>
 <br>

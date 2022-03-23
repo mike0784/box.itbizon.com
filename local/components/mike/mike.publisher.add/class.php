@@ -2,15 +2,16 @@
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Application;
+use Bitrix\Main\Web\Uri;
 use Itbizon\Mike\PublisherTable;
+use Itbizon\Service\Component\Simple;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 Loc::loadMessages(__FILE__);
 
-class PublisherAdd extends CBitrixComponent
+class PublisherAdd extends Simple
 {
-    protected $mass = array();
     /**
      * Проверка подключения модуля
      */
@@ -27,23 +28,30 @@ class PublisherAdd extends CBitrixComponent
      * всю логику стараемся разносить по классам и методам
      */
     public function executeComponent() {
-       $this->_checkModules();
+        $this->_checkModules();
 
-        $this->_request = Application::getInstance()->getContext()->getRequest();
-        if($this->_request->getPost('add'))
+        $this->setRoute($this->arParams['HELPER']);
+
+        $request = Application::getInstance()->getContext()->getRequest();
+        if($request->getPost('save') === 'Y')
         {
-            $data = $this->_request->getPost('PUBLISHER');
+            $data = $request->getPost('PUBLISHER');
             if(!is_null($data))
             {
-                PublisherTable::add(array('NAMECOMPANY' => $data));
+                $result = PublisherTable::add(array('NAMECOMPANY' => $data));
+                if (!$result->isSuccess()) {
+                    throw new Exception(implode('; ', $result->getErrorMessages()));
+                }
             }
+
+            $uri = (new Uri($this->getRoute()->getUrl('publisher.add')));
+            if($this->getRoute()->isInSliderMode()) {
+                $uri->addParams(['IFRAME' => 'Y']);
+            }
+            LocalRedirect($uri->getLocator());
+            die();
         }
 
         $this->includeComponentTemplate();
-    }
-
-    public function getResult()
-    {
-        return $this->mass;
     }
 }

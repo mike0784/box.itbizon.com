@@ -5,11 +5,8 @@ use Bitrix\Main\Application;
 use Bitrix\UI\Buttons\JsCode;
 use Itbizon\Mike\BookTable;
 use ItBizon\Mike\BookAdd;
-use Itbizon\Mike\PublisherTable;
-use Itbizon\Mike\AuthorTable;
 use Itbizon\Service\Component\Complex;
 use Itbizon\Service\Component\GridHelper;
-use Bitrix\Main\Entity\Query;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
@@ -57,78 +54,135 @@ class BookViewPage extends Complex
         $this->initRoute(
             [
                 'view' => '',
-                'mike.book.add' => 'mike.book.add/',
-                'mike.book.update' => 'mike.book.update/#IDBOOK#/',
-                'mike.author.view' => 'mike.author.view/',
-                'mike.publisher.view' => 'mike.publisher.view/',
-                'mike.author.add' => 'mike.author.add/',
-                'mike.publisher.add' => 'mike.publisher.add/',
-                'mike.author.update' => 'mike.author.update/#IDAUTHOR#/',
-                'mike.publisher.update' => 'mike.publisher.update/#IDPUBLISHER#/',
+                'book.add' => 'book.add/',
+                'book.update' => 'book.update/#IDBOOK#/',
+                'author.view' => 'author.view/',
+                'publisher.view' => 'mike.publisher.view/',
+                'author.add' => 'author.add/',
+                'publisher.add' => 'publisher.add/',
+                'author.update' => 'author.update/#IDAUTHOR#/',
+                'publisher.update' => 'publisher.update/#IDPUBLISHER#/',
             ],
             'view'
         );
 
         $this->getRoute()->run();
 
-        $this->grid = new GridHelper($this->gridId);
-        $this->grid->setColumns($this->gridColumns);
-        $this->gridNav = $this->grid->getNavigation();
-        $this->getSelect();
-
-        $this->includeComponentTemplate();
-    }
-
-
-
-    public function getSelect()
-    {
-        $q = new Bitrix\Main\Entity\Query(BookTable::getEntity());
-        $q->setSelect(array('IDBOOK', 'PUBLISHER', 'AUTHOR', 'TITLE', 'CREATEAT', 'UPDATEAT'));
-        $q->setFilter(array($this->grid->getFilterData()));
-        $result = $q->exec();
-
-        while($item = $result->fetchObject()) {
-            $this->grid->addRow(
+        if($this->getRoute()->getAction() == 'view')
+        {
+            $grid = new GridHelper($this->gridId);
+            $this->setGrid($grid);
+            $grid->setFilter([
                 [
-                    'data' => [
-                        'IDBOOK' => $item->getIdbook(),
-                        'PUBLISHER' => $item->getPublisher()==nulL? Loc::getMessage('ITB_MIKE_BOOK_VIEW_PUBLISHER_DEFAULT'):$item->getPublisher()->getNamecompany(),
-                        'AUTHOR' =>  $item->getAuthor()==null? Loc::getMessage('ITB_MIKE_BOOK_VIEW_AUTHOR_DEFAULT'):$item->getAuthor()->getName(),
-                        'TITLE' => $item->getTitle(),
-                        'CREATE_AT' => $item->getCreateat(),
-                        'UPDATE_AT' => $item->getUpdateat(),
+                    'id' => 'TITLE',
+                    'name' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_GRID_COLUMN_TITLE'),
+                    'type' => 'string',
+                    'default' => true,
+                ],
+                [
+                    'id' => 'PUBLISHER',
+                    'name' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_GRID_COLUMN_PUBLISHER'),
+                    'type' => 'string',
+                    'default' => true,
+                ],
+                [
+                    'id' => 'AUTHOR',
+                    'name' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_GRID_COLUMN_AUTHOR'),
+                    'type' => 'string',
+                    'default' => true,
+                ],
+            ]);
+            $grid->setColumns([
+                [
+                    'id' => 'IDBOOK', // Идентификатор
+                    'name' => 'ID', // Отображаемое название
+                    'sort' => 'IDBOOK', // По какому столбцу в БД сортировать (false - если сортировка запрещена)
+                    'default' => true, // Отображать по умолчанию
+                ],
+                [
+                    'id' => 'TITLE',
+                    'name' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_GRID_COLUMN_TITLE'),
+                    'sort' => 'TITLE',
+                    'default' => true,
+                ],
+                [
+                    'id' => 'PUBLISHER',
+                    'name' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_GRID_COLUMN_PUBLISHER'),
+                    'sort' => 'PUBLISHER.NAMECOMPANY',
+                    'default' => true,
+                ],
+                [
+                    'id' => 'AUTHOR',
+                    'name' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_GRID_COLUMN_AUTHOR'),
+                    'sort' => 'AUTHOR.NAME',
+                    'default' => true,
+                ],
+                [
+                    'id' => 'CREATEAT',
+                    'name' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_GRID_COLUMN_CREATEAT'),
+                    'sort' => 'CREATEAT',
+                    'default' => true,
+                ],
+                [
+                    'id' => 'UPDATEAT',
+                    'name' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_GRID_COLUMN_UPDATEAT'),
+                    'sort' => 'UPDATEAT',
+                    'default' => true,
+                ]
+            ]);
 
-                    ],
-                    'actions' => [
-                        [
-                            'text' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_ACTION_READ'),
-                            'default' => true,
-                            'onclick' => 'BX.ready(function(){
+            $filter = $grid->getFilterData();
+
+            $result = BookTable::getList(
+                [
+                    'limit' => $grid->getNavigation()->getLimit(), // Ограничение выборки
+                    'offset' => $grid->getNavigation()->getOffset(), // Смещение
+                    'order' => $grid->getSort(), // Сортировка SORT
+                    'filter' => $filter, // Фильтр WHERE
+                    'count_total' => true, // Нужно чтобы не получать отдельным запросом количество записей по фильтру
+                    'select'=> ['*', 'PUBLISHER.NAMECOMPANY', 'AUTHOR.NAME'], // Какие поля выбирать SELECT
+                ]
+            );
+
+            while($item = $result->fetchObject()) {
+                $grid->addRow(
+                    [
+                        'data' => [
+                            'IDBOOK' => $item->getIdbook(),
+                            'PUBLISHER' => $item->getPublisher()==nulL? Loc::getMessage('ITB_MIKE_BOOK_VIEW_PUBLISHER_DEFAULT'):$item->getPublisher()->getNamecompany(),
+                            'AUTHOR' =>  $item->getAuthor()==null? Loc::getMessage('ITB_MIKE_BOOK_VIEW_AUTHOR_DEFAULT'):$item->getAuthor()->getName(),
+                            'TITLE' => $item->getTitle(),
+                            'CREATEAT' => $item->getCreateat(),
+                            'UPDATEAT' => $item->getUpdateat(),
+
+                        ],
+                        'actions' => [
+                            [
+                                'text' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_ACTION_READ'),
+                                'default' => true,
+                                'onclick' => 'BX.ready(function(){
                                 BX.SidePanel.Instance.open(
-                                    "' . $this->getRoute()->getUrl('mike.book.update', ['IDBOOK' => $item->getIdbook()]) . '",
+                                    "' . $this->getRoute()->getUrl('book.update', ['IDBOOK' => $item->getIdbook()]) . '",
                                     {
                                         cacheable: false,
                                         width: 800
                                     }
                                 );
                             })',
-                        ],
+                            ],
 
-                        [
-                            'text' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_ACTION_DELETE'),
-                            'default' => false,
-                            'onclick' => (new JsCode('deleteBook('.$item->getIdbook().', "' . $this->grid->getGridId() . '")'))->getCode(),
+                            [
+                                'text' => Loc::getMessage('ITB_MIKE_BOOK_VIEW_ACTION_DELETE'),
+                                'default' => false,
+                                'onclick' => (new JsCode('deleteBook('.$item->getIdbook().', "' . $this->grid->getGridId() . '")'))->getCode(),
+                            ]
                         ]
                     ]
-                ]
-            );
-        }
-        $this->gridRows = $this->grid->getRows();
-    }
+                );
+            }
 
-    public function getResult()
-    {
-        return $this->result;
+            $grid->getNavigation()->setRecordCount($result->getCount()); // Устанавливаем количество выбранных записей
+        }
+        $this->includeComponentTemplate();
     }
 }

@@ -1,9 +1,10 @@
-function deleteBook(id, gridId) {
+function deletePublisher(id, gridId) {
     var addAnswer = new BX.PopupWindow(
         "my_answer",
         null,
         {
-            content: BX( 'ajax-add-answer'),
+            //content: BX( 'ajax-add-answer'),
+            content: "Вы дейчтвительно хотите удалить это издательство?",
             closeIcon: {right: "20px", top: "10px" },
             titleBar: "Удаление издательства",
             zIndex: 0,

@@ -3,7 +3,7 @@ function deleteAuthor(id, gridId) {
         "my_answer",
         null,
         {
-            content: BX( 'ajax-add-answer'),
+            content: "Вы действительно хотите удалить этого автора?",
             closeIcon: {right: "20px", top: "10px" },
             titleBar: "Удаление автора",
             zIndex: 0,

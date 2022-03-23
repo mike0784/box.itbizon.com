@@ -3,6 +3,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Application;
 use Bitrix\Main\Type\DateTime;
+use Bitrix\Main\Web\Uri;
 use Itbizon\Mike\BookTable;
 use Itbizon\Service\Component\Simple;
 use Itbizon\Service\Component\RouterHelper;
@@ -16,7 +17,7 @@ Loc::loadMessages(__FILE__);
 
 class BookUpdate extends Simple
 {
-    protected $mass = array();
+    public $book;
     public $listPublisher = array();
     public $listAuthor = array();
     public $id;
@@ -29,6 +30,10 @@ class BookUpdate extends Simple
         if(!Loader::includeModule('itbizon.mike')){
             throw new Exception(Loc::getMessage('ITB_MIKE_BOOK_VIEW_ERROR_INCLUDE_MODULE'));
         }
+
+        if (!Loader::includeModule('itbizon.service')) {
+            throw new Exception("Модуль itbizon.service не найден");
+        }
     }
 
     /**
@@ -39,6 +44,9 @@ class BookUpdate extends Simple
     public function executeComponent() {
         $this->_checkModules();
 
+        if (!isset($this->arParams['HELPER']) || !is_a($this->arParams['HELPER'], RouterHelper::class)) {
+            throw new Exception("Некорректный вход");
+        }
         $this->setRoute($this->arParams['HELPER']);
 
         $this->id = intval($this->getRoute()->getVariable('IDBOOK'));
@@ -53,33 +61,37 @@ class BookUpdate extends Simple
         $this->createListPublisher();
 
         $this->_request = Application::getInstance()->getContext()->getRequest();
-        if($this->_request->getPost('update'))
+        if($this->_request->getPost('save') === 'Y')
         {
-            $data = $this->_request->getPostList();
+            $data = $this->_request->getPost('DATA');
             if(!is_null($data))
             {
-                BookTable::update($this->id, array('IDPUBLISHER' => $data['Publisher'], 'IDAUTHOR' => $data['Author'], 'TITLE' => $data['TITLE'], 'UPDATEAT' => new DateTime));
+                $result = BookTable::update($this->id, array('IDPUBLISHER' => $data['IDPUBLISHER'], 'IDAUTHOR' => $data['IDAUTHOR'], 'TITLE' => $data['TITLE'], 'UPDATEAT' => new DateTime));
+                if(!$result->isSuccess()){
+                    throw new Exception(implode('; ', $result->getErrorMessages()));
+                }
             }
+
+            $uri = (new Uri($this->getRoute()->getUrl('book.update', ['IDBOOK' => $this->id])));
+            if($this->getRoute()->isInSliderMode()) {
+                $uri->addParams(['IFRAME' => 'Y']);
+            }
+            LocalRedirect($uri->getLocator());
+            die();
         }
 
         $this->includeComponentTemplate();
-    }
-
-    public function getResult()
-    {
-        return $this->mass;
     }
 
     public function createListPublisher(): void
     {
         $result = PublisherTable::getList([
             'select' => ['IDPUBLISHER', 'NAMECOMPANY'],
-            'count_total' => true,
         ]);
 
         while($item = $result->fetch())
         {
-            $this->listPublisher[] = $item;
+            $this->listPublisher[$item['IDPUBLISHER']] = $item['NAMECOMPANY'];
         }
     }
 
@@ -87,12 +99,31 @@ class BookUpdate extends Simple
     {
         $result = AuthorTable::getList([
             'select' => ['IDAUTHOR', 'NAME'],
-            'count_total' => true,
         ]);
 
         while($item = $result->fetch())
         {
-           $this->listAuthor[] = $item;
+           $this->listAuthor[$item['IDAUTHOR']] = $item['NAME'];
         }
+    }
+
+    public function getListPublisher()
+    {
+        return $this->listPublisher;
+    }
+
+    public function getListAuthor()
+    {
+        return $this->listAuthor;
+    }
+
+    public function getValuePublisher()
+    {
+        return $this->book->getIdpublisher();
+    }
+
+    public function getValueAuthor()
+    {
+        return $this->book->getIdauthor();
     }
 }

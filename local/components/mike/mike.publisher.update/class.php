@@ -3,6 +3,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Application;
 use Bitrix\Main\Type\DateTime;
+use Bitrix\Main\Web\Uri;
 use Itbizon\Mike\PublisherTable;
 use Itbizon\Service\Component\Simple;
 use Itbizon\Service\Component\RouterHelper;
@@ -15,6 +16,7 @@ class PublisherUpdate extends Simple
 {
     protected $mass = array();
     public $id;
+    public $nameCompany;
     /**
      * Проверка подключения модуля
      */
@@ -44,15 +46,29 @@ class PublisherUpdate extends Simple
         $this->setRoute($this->arParams['HELPER']);
 
         $this->id = intval($this->getRoute()->getVariable('IDPUBLISHER'));
+        $publisher = PublisherTable::getByPrimary($this->id)->fetchObject();
+        if(!$publisher) {
+            throw new Exception(Loc::getMessage('Данного издательства нет'));
+        }
+        $this->nameCompany = $publisher->getNamecompany();
 
-        $this->_request = Application::getInstance()->getContext()->getRequest();
-        if($this->_request->getPost('update'))
+        $request = Application::getInstance()->getContext()->getRequest();
+        if($request->getPost('save') === 'Y')
         {
-            $data = $this->_request->getPostList();
+            $data = $request->getPost('DATA');
             if(!is_null($data))
             {
-                PublisherTable::update($this->id, array('NAMECOMPANY' => $data['PUBLISHER'], 'UPDATEAT' => new DateTime));
+                $result = PublisherTable::update($this->id, array('NAMECOMPANY' => $data['NAMECOMPANY'], 'UPDATEAT' => new DateTime));
+                if(!$result->isSuccess()){
+                    throw new Exception(implode('; ', $result->getErrorMessages()));
+                }
             }
+            $uri = (new Uri($this->getRoute()->getUrl('publisher.update', ['IDPUBLISHER' => $this->id])));
+            if($this->getRoute()->isInSliderMode()) {
+                $uri->addParams(['IFRAME' => 'Y']);
+            }
+            LocalRedirect($uri->getLocator());
+            die();
         }
 
         $this->includeComponentTemplate();
